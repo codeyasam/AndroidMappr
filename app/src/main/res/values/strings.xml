@@ -3,4 +3,5 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_found_qr_place">FoundQrPlace</string>
+    <string name="title_activity_featured_category">FeaturedCategory</string>
 </resources>

@@ -29,3 +29,5 @@ dependencies {
     compile 'com.google.android.gms:play-services:8.4.0'
     compile 'com.dlazaro66.qrcodereaderview:qrcodereaderview:1.0.0'
 }
+
+
