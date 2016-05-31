@@ -12,6 +12,7 @@
     tools:context="com.example.codeyasam.mappr.FeaturedCategory"
     tools:showIn="@layout/activity_featured_category"
     android:id="@+id/categoryContainer"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:gravity="center_horizontal">
 
 </LinearLayout>
