@@ -3,7 +3,6 @@ package com.example.codeyasam.mappr;
 import android.content.Intent;
 import android.graphics.PointF;
 import android.os.Bundle;
-import android.support.annotation.MainThread;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -15,7 +14,7 @@ import android.widget.TextView;
 
 import com.dlazaro66.qrcodereaderview.QRCodeReaderView;
 
-public class MainActivity extends AppCompatActivity implements QRCodeReaderView.OnQRCodeReadListener {
+public class MapprQrCode extends AppCompatActivity implements QRCodeReaderView.OnQRCodeReadListener {
 
     private QRCodeReaderView mydecoderview;
 
@@ -78,7 +77,8 @@ public class MainActivity extends AppCompatActivity implements QRCodeReaderView.
         TextView tv = (TextView) findViewById(R.id.myTV);
         tv.setText(text);
 
-        Intent intent = new Intent(MainActivity.this, FoundQrPlace.class);
+        Intent intent = new Intent(MapprQrCode.this, MapprPlotter.class);
+        intent.putExtra(CYM_UtilityClass.MAPPR_OPT, CYM_UtilityClass.OPT_BY_QRCODE);
         intent.putExtra("branchID", text);
         startActivity(intent);
     }

@@ -15,6 +15,11 @@ import android.util.TypedValue;
  */
 public class CYM_UtilityClass {
 
+    public static final String MAPPR_ROOT_URL = "http://192.168.42.175/thesis/";
+    public static final String MAPPR_OPT = "MAPPR_OPT";
+    public static final String OPT_BY_QRCODE = "111";
+    public static final String OPT_BY_CATEGORY = "777";
+
     public static Bitmap getRoundedCornerBitmap(Bitmap bitmap) {
         Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
                 bitmap.getHeight(), Bitmap.Config.ARGB_8888);

@@ -4,11 +4,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -18,10 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.appdatasearch.Feature;
-
 import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,9 +28,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FeaturedCategory extends AppCompatActivity {
+public class MapprCategory extends AppCompatActivity {
 
-    private static final String CATEGORY_URL = "http://192.168.42.147/thesis/tests/featuredCategoryTests.php";
+    private static final String CATEGORY_URL = CYM_UtilityClass.MAPPR_ROOT_URL + "tests/featuredCategoryTests.php";
+    private static final String DISPLAY_PICTURES = CYM_UtilityClass.MAPPR_ROOT_URL + "Public/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,32 +41,6 @@ public class FeaturedCategory extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         new CategorySearcher().execute();
-    }
-
-    class EstablishmentLoader extends AsyncTask<String, String, String> {
-
-        private String categoryId;
-
-        @Override
-        protected void onPreExecute() {
-
-        }
-
-        @Override
-        protected String doInBackground(String... args) {
-            Log.i("poop", "dumaan dito" + this.categoryId);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String establishments) {
-//            Intent intent = new Intent(FeaturedCategory.this, FoundQrPlace.class);
-//            startActivity(intent);
-        }
-
-        public void setCategoryId(String categoryId) {
-            this.categoryId = categoryId;
-        }
     }
 
     class CategorySearcher extends AsyncTask<String, String, String> {
@@ -94,7 +63,7 @@ public class FeaturedCategory extends AppCompatActivity {
                     JSONObject eachCategory = featuredCategories.getJSONObject(i);
                     String categId = eachCategory.getString("id");
                     String categDp = eachCategory.getString("display_picture");
-                    Bitmap bm = loadImageFromServer("http://192.168.42.147/thesis/Public/" + categDp);
+                    Bitmap bm = loadImageFromServer(DISPLAY_PICTURES + categDp);
                     hmCategIcons.put(categId, bm);
                 }
                 return featuredCategories.toString();
@@ -118,7 +87,7 @@ public class FeaturedCategory extends AppCompatActivity {
                             LinearLayout.LayoutParams.WRAP_CONTENT
                     );
                     for (int i = 0; i < categoryArray.length();) {
-                        LinearLayout innerRow = new LinearLayout(FeaturedCategory.this);
+                        LinearLayout innerRow = new LinearLayout(MapprCategory.this);
                         innerRow.setOrientation(LinearLayout.HORIZONTAL);
                         innerRow.setGravity(Gravity.CENTER_HORIZONTAL);
 
@@ -126,8 +95,8 @@ public class FeaturedCategory extends AppCompatActivity {
                         for (int j = i; j < i + limit; j++) {
 
                             JSONObject eachCategory = categoryArray.getJSONObject(j);
-                            TextView tvCategoryName = new TextView(FeaturedCategory.this);
-                            ImageView iconContainer = new ImageView(FeaturedCategory.this);
+                            TextView tvCategoryName = new TextView(MapprCategory.this);
+                            ImageView iconContainer = new ImageView(MapprCategory.this);
                             //Bitmap bmp = CYM_UtilityClass.getRoundedCornerBitmap(hmCategIcons.get(eachCategory.get("id")));
                             iconContainer.setImageBitmap(hmCategIcons.get(eachCategory.getString("id")));
                             tvCategoryName.setText(eachCategory.getString("name"));
@@ -135,7 +104,7 @@ public class FeaturedCategory extends AppCompatActivity {
                             iconContainer.setLayoutParams(lParams);
                             //tvCategoryName.setBackgroundColor(Color.GREEN);
 
-                            LinearLayout wrapper = new LinearLayout(FeaturedCategory.this);
+                            LinearLayout wrapper = new LinearLayout(MapprCategory.this);
 
                             lParams.setMargins(10, 5, 10, 5);
                             wrapper.setLayoutParams(lParams);
@@ -146,9 +115,11 @@ public class FeaturedCategory extends AppCompatActivity {
                             wrapper.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    EstablishmentLoader task = new EstablishmentLoader();
-                                    task.setCategoryId(categoryId);
-                                    task.execute();
+                                    Log.i("poop", "category click id: " + categoryId);
+                                    Intent intent = new Intent(MapprCategory.this, MapprPlotter.class);
+                                    intent.putExtra(CYM_UtilityClass.MAPPR_OPT, CYM_UtilityClass.OPT_BY_CATEGORY);
+                                    intent.putExtra("categoryID", categoryId);
+                                    startActivity(intent);
                                 }
                             });
 
