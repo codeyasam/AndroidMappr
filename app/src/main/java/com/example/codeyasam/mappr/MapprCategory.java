@@ -31,7 +31,7 @@ import java.util.Map;
 public class MapprCategory extends AppCompatActivity {
 
     private static final String CATEGORY_URL = CYM_UtilityClass.MAPPR_ROOT_URL + "tests/featuredCategoryTests.php";
-    private static final String DISPLAY_PICTURES = CYM_UtilityClass.MAPPR_ROOT_URL + "Public/";
+//    private static final String DISPLAY_PICTURES = CYM_UtilityClass.MAPPR_ROOT_URL + "Public/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +41,12 @@ public class MapprCategory extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         new CategorySearcher().execute();
+    }
+
+    public void scanQrCode(View v) {
+        Log.i("poop", "poop");
+        Intent intent = new Intent(MapprCategory.this, MapprQrCode.class);
+        startActivity(intent);
     }
 
     class CategorySearcher extends AsyncTask<String, String, String> {
@@ -63,7 +69,7 @@ public class MapprCategory extends AppCompatActivity {
                     JSONObject eachCategory = featuredCategories.getJSONObject(i);
                     String categId = eachCategory.getString("id");
                     String categDp = eachCategory.getString("display_picture");
-                    Bitmap bm = loadImageFromServer(DISPLAY_PICTURES + categDp);
+                    Bitmap bm = loadImageFromServer(CYM_UtilityClass.DISPLAY_PICTURES + categDp);
                     hmCategIcons.put(categId, bm);
                 }
                 return featuredCategories.toString();
