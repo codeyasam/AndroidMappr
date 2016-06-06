@@ -2,6 +2,9 @@ package com.example.codeyasam.mappr;
 
 import android.graphics.Bitmap;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Created by codeyasam on 6/3/16.
  */
@@ -70,6 +73,24 @@ public class MapprEstablishment {
 
     public void setTags(String tags) {
         this.tags = tags;
+    }
+
+    public static MapprEstablishment instantiateJSONEstablishment(JSONObject eachEstab) {
+
+        try {
+            MapprEstablishment estab = new MapprEstablishment();
+            estab.setId(eachEstab.getString("id"));
+            estab.setName(eachEstab.getString("name"));
+            estab.setCategory_id(eachEstab.getString("category_id"));
+            estab.setDescription(eachEstab.getString("description"));
+            estab.setOwner_id(eachEstab.getString("owner_id"));
+            Bitmap bmp = CYM_Utility.loadImageFromServer(CYM_Utility.MAPPR_PUBLIC_URL + eachEstab.getString("display_picture"));
+            estab.setDisplay_picture(bmp);
+            return estab;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }
