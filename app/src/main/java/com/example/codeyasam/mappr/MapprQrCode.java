@@ -78,7 +78,7 @@ public class MapprQrCode extends AppCompatActivity implements QRCodeReaderView.O
         tv.setText(text);
 
         Intent intent = new Intent(MapprQrCode.this, MapprPlotter.class);
-        intent.putExtra(CYM_UtilityClass.MAPPR_OPT, CYM_UtilityClass.OPT_BY_QRCODE);
+        intent.putExtra(CYM_Utility.MAPPR_OPT, CYM_Utility.OPT_BY_QRCODE);
         intent.putExtra("branchID", text);
         startActivity(intent);
     }
