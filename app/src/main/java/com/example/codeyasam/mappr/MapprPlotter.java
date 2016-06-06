@@ -1,8 +1,14 @@
 package com.example.codeyasam.mappr;
 
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -10,6 +16,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -31,11 +40,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MapprPlotter extends AppCompatActivity implements OnMapReadyCallback {
+public class MapprPlotter extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener,
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
-    private static final String PLOTTER_URL = CYM_UtilityClass.MAPPR_ROOT_URL + "tests/getMarkerOptions.php";
+    private static final String PLOTTER_URL = CYM_Utility.MAPPR_ROOT_URL + "tests/getMarkerOptions.php";
     private GoogleMap mMap;
     private Map<String, MapprEstablishment> hmEstablishment = new HashMap<>();
+    private GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,22 +59,34 @@ public class MapprPlotter extends AppCompatActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        String mappr_opt = getIntent().getStringExtra(CYM_UtilityClass.MAPPR_OPT);
+        buildGoogleApiClient();
+        mGoogleApiClient.connect();
+
+        String mappr_opt = getIntent().getStringExtra(CYM_Utility.MAPPR_OPT);
         MarkerPlotter task = new MarkerPlotter();
         task.setMapperOpt(mappr_opt);
-        if (mappr_opt.equals(CYM_UtilityClass.OPT_BY_QRCODE)) {
+        if (mappr_opt.equals(CYM_Utility.OPT_BY_QRCODE)) {
             String branchID = getIntent().getStringExtra("branchID");
             task.setBranchID(branchID);
-        } else if (mappr_opt.equals(CYM_UtilityClass.OPT_BY_CATEGORY)) {
+        } else if (mappr_opt.equals(CYM_Utility.OPT_BY_CATEGORY)) {
             String categoryID = getIntent().getStringExtra("categoryID");
             task.setCategoryID(categoryID);
         }
         task.execute();
     }
 
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setOnInfoWindowClickListener(this);
         mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
 
             @Override
@@ -78,11 +101,86 @@ public class MapprPlotter extends AppCompatActivity implements OnMapReadyCallbac
                 ImageView estabLogo = (ImageView) v.findViewById(R.id.estabLogo);
                 TextView estabName = (TextView) v.findViewById(R.id.estabName);
                 estabLogo.setImageBitmap(estab.getDisplay_picture());
-                estabName.setText(estab.getName());
+                estabName.setText(estab.getName() + "branchid: " + marker.getTitle());
                 return v;
             }
+
         });
+
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        mMap.setMyLocationEnabled(true);
     }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        Intent intent = new Intent(MapprPlotter.this, MapprDetails.class);
+        intent.putExtra("branch_id", marker.getTitle());
+        Log.i("poop", marker.getTitle());
+        startActivity(intent);
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        Log.i("poop", "here here yeah");
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                mGoogleApiClient);
+
+        if (mLastLocation != null) {
+            LatLng ll = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+            CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, 10);
+            mMap.moveCamera(update);
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
+
 
     class MarkerPlotter extends AsyncTask<String, String, String> {
 
@@ -99,14 +197,14 @@ public class MapprPlotter extends AppCompatActivity implements OnMapReadyCallbac
         protected String doInBackground(String... args) {
             try {
                 List<NameValuePair> params = new ArrayList<NameValuePair>();
-                if (mapperOpt.equals(CYM_UtilityClass.OPT_BY_QRCODE)) {
+                if (mapperOpt.equals(CYM_Utility.OPT_BY_QRCODE)) {
                     Log.i("POOP", "branchID: " + branchID);
-                    params.add(new BasicNameValuePair(CYM_UtilityClass.MAPPR_OPT, CYM_UtilityClass.OPT_BY_QRCODE));
+                    params.add(new BasicNameValuePair(CYM_Utility.MAPPR_OPT, CYM_Utility.OPT_BY_QRCODE));
                     params.add(new BasicNameValuePair("branch_id", branchID));
 //                    JSONObject json = JSONParser.makeHttpRequest(PLOTTER_URL, "GET", params);
 
-                } else if (mapperOpt.equals(CYM_UtilityClass.OPT_BY_CATEGORY)) {
-                    params.add(new BasicNameValuePair(CYM_UtilityClass.MAPPR_OPT, CYM_UtilityClass.OPT_BY_CATEGORY));
+                } else if (mapperOpt.equals(CYM_Utility.OPT_BY_CATEGORY)) {
+                    params.add(new BasicNameValuePair(CYM_Utility.MAPPR_OPT, CYM_Utility.OPT_BY_CATEGORY));
                     params.add(new BasicNameValuePair("category_id", categoryID));
                     //JSONObject json = JSONParser.makeHttpRequest(PLOTTER_URL, "GET", params);
 //                    JSONArray mapprEstabs = json.getJSONArray("Branches");
@@ -117,7 +215,7 @@ public class MapprPlotter extends AppCompatActivity implements OnMapReadyCallbac
 
                 for (int i = 0; i< estabs.length(); i++) {
                     JSONObject eachEstab = estabs.getJSONObject(i);
-                    hmEstablishment.put(eachEstab.getString("id"), instantiateEstablishment(eachEstab));
+                    hmEstablishment.put(eachEstab.getString("id"), MapprEstablishment.instantiateJSONEstablishment(eachEstab));
                 }
 
                 JSONArray branches = json.getJSONArray("Branches");
@@ -131,24 +229,6 @@ public class MapprPlotter extends AppCompatActivity implements OnMapReadyCallbac
             return null;
         }
 
-        private MapprEstablishment instantiateEstablishment(JSONObject eachEstab) {
-
-            try {
-                MapprEstablishment estab = new MapprEstablishment();
-                estab.setId(eachEstab.getString("id"));
-                estab.setName(eachEstab.getString("name"));
-                estab.setCategory_id(eachEstab.getString("category_id"));
-                estab.setDescription(eachEstab.getString("description"));
-                estab.setOwner_id(eachEstab.getString("owner_id"));
-                Bitmap bmp = CYM_UtilityClass.loadImageFromServer(CYM_UtilityClass.DISPLAY_PICTURES + eachEstab.getString("display_picture"));
-                estab.setDisplay_picture(bmp);
-                return estab;
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
         @Override
         protected void onPostExecute(String branchesString) {
             if (branchesString != null) {
@@ -156,16 +236,17 @@ public class MapprPlotter extends AppCompatActivity implements OnMapReadyCallbac
                     Log.i("poop", branchesString);
                     JSONArray branches = new JSONArray(branchesString);
                     JSONObject firstBranch = branches.getJSONObject(0);
+                    CYM_Utility.displayText(MapprPlotter.this, R.id.resultNos, branches.length() + " RESULTS");
                     LatLng ll = new LatLng(Double.parseDouble(firstBranch.getString("lat")), Double.parseDouble(firstBranch.getString("lng")));
                     for (int i = 0; i < branches.length(); i++) {
                         JSONObject eachBranch = branches.getJSONObject(i);
                         LatLng latlng = new LatLng(Double.parseDouble(eachBranch.getString("lat")), Double.parseDouble(eachBranch.getString("lng")));
                         MarkerOptions options = new MarkerOptions()
-                                .title(eachBranch.getString("address"))
+                                .title(eachBranch.getString("id"))
                                 .position(latlng)
                                 .snippet(eachBranch.getString("estab_id"));
 
-                        if (mapperOpt.equals(CYM_UtilityClass.OPT_BY_QRCODE)) {
+                        if (mapperOpt.equals(CYM_Utility.OPT_BY_QRCODE)) {
                             if (eachBranch.getString("id").equals(branchID)) {
                                 options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
                                 ll = new LatLng(Double.parseDouble(eachBranch.getString("lat")), Double.parseDouble(eachBranch.getString("lng")));
@@ -174,13 +255,15 @@ public class MapprPlotter extends AppCompatActivity implements OnMapReadyCallbac
 
                         mMap.addMarker(options);
                     }
-                    CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, 10);
-                    mMap.moveCamera(update);
+                    //for debugging
+//                    CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, 10);
+//                    mMap.moveCamera(update);
                 } catch(JSONException e) {
                    e.printStackTrace();
                 }
             }
         }
+
 
         public void setMapperOpt(String mapperOpt) {
             this.mapperOpt = mapperOpt;
