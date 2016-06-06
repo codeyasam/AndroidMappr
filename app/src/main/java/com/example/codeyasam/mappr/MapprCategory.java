@@ -30,8 +30,7 @@ import java.util.Map;
 
 public class MapprCategory extends AppCompatActivity {
 
-    private static final String CATEGORY_URL = CYM_UtilityClass.MAPPR_ROOT_URL + "tests/featuredCategoryTests.php";
-//    private static final String DISPLAY_PICTURES = CYM_UtilityClass.MAPPR_ROOT_URL + "Public/";
+    private static final String CATEGORY_URL = CYM_Utility.MAPPR_ROOT_URL + "tests/featuredCategoryTests.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +68,7 @@ public class MapprCategory extends AppCompatActivity {
                     JSONObject eachCategory = featuredCategories.getJSONObject(i);
                     String categId = eachCategory.getString("id");
                     String categDp = eachCategory.getString("display_picture");
-                    Bitmap bm = loadImageFromServer(CYM_UtilityClass.DISPLAY_PICTURES + categDp);
+                    Bitmap bm = loadImageFromServer(CYM_Utility.MAPPR_PUBLIC_URL + categDp);
                     hmCategIcons.put(categId, bm);
                 }
                 return featuredCategories.toString();
@@ -103,7 +102,7 @@ public class MapprCategory extends AppCompatActivity {
                             JSONObject eachCategory = categoryArray.getJSONObject(j);
                             TextView tvCategoryName = new TextView(MapprCategory.this);
                             ImageView iconContainer = new ImageView(MapprCategory.this);
-                            //Bitmap bmp = CYM_UtilityClass.getRoundedCornerBitmap(hmCategIcons.get(eachCategory.get("id")));
+                            //Bitmap bmp = CYM_Utility.getRoundedCornerBitmap(hmCategIcons.get(eachCategory.get("id")));
                             iconContainer.setImageBitmap(hmCategIcons.get(eachCategory.getString("id")));
                             tvCategoryName.setText(eachCategory.getString("name"));
                             tvCategoryName.setLayoutParams(lParams);
@@ -123,7 +122,7 @@ public class MapprCategory extends AppCompatActivity {
                                 public void onClick(View v) {
                                     Log.i("poop", "category click id: " + categoryId);
                                     Intent intent = new Intent(MapprCategory.this, MapprPlotter.class);
-                                    intent.putExtra(CYM_UtilityClass.MAPPR_OPT, CYM_UtilityClass.OPT_BY_CATEGORY);
+                                    intent.putExtra(CYM_Utility.MAPPR_OPT, CYM_Utility.OPT_BY_CATEGORY);
                                     intent.putExtra("categoryID", categoryId);
                                     startActivity(intent);
                                 }
