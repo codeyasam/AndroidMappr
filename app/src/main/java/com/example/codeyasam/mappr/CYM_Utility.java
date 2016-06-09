@@ -11,6 +11,7 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,7 +24,7 @@ import java.net.URL;
  */
 public class CYM_Utility {
 
-    public static final String MAPPR_ROOT_URL = "http://192.168.42.127/thesis/";
+    public static final String MAPPR_ROOT_URL = "http://192.168.42.226/thesis/";
     public static final String MAPPR_PUBLIC_URL = MAPPR_ROOT_URL + "Public/";
     public static final String MAPPR_OPT = "MAPPR_OPT";
     public static final String OPT_BY_QRCODE = "111";
@@ -83,4 +84,22 @@ public class CYM_Utility {
         ImageView iv = (ImageView) activity.findViewById(id);
         iv.setImageBitmap(bmp);
     }
+
+    public static String getText(Activity activity, int id) {
+        EditText et = (EditText) activity.findViewById(id);
+        return et.getText().toString();
+    }
+
+    public static void setText(Activity activity, int id, String text) {
+        EditText et = (EditText) activity.findViewById(id);
+        et.setText(text);
+    }
+
+    public static void setImageOnView(Activity activity, int id, byte[] resource) {
+        Bitmap bmp = BitmapFactory.decodeByteArray(resource, 0, resource.length);
+        ImageView image = (ImageView) activity.findViewById(id);
+        image.setImageBitmap(getRoundedCornerBitmap(bmp));
+    }
+
+
 }
