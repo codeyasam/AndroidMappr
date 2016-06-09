@@ -5,4 +5,5 @@
     <string name="title_activity_found_qr_place">FoundQrPlace</string>
     <string name="title_activity_featured_category">FeaturedCategory</string>
     <string name="full_detail"><a href="#">View Gallery and Full Details</a></string>
+    <string name="facebook_app_id">206748579705827</string>
 </resources>
