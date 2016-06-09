@@ -78,5 +78,31 @@
         android:id="@+id/branchAddress" />
 
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/ratingContainer"
+        android:layout_gravity="center_horizontal">
+
+        <RatingBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ratingBar"
+            android:layout_gravity="center_horizontal"
+            android:visibility="invisible"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LOGIN"
+            android:id="@+id/loginBtn"
+            android:layout_gravity="center_horizontal"
+            android:visibility="invisible"
+            android:onClick="loginClick"/>
+
+    </LinearLayout>
+
+
 
 </LinearLayout>

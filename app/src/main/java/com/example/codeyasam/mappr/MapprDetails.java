@@ -9,8 +9,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -34,6 +36,28 @@ public class MapprDetails extends AppCompatActivity {
         DetailLauncher task = new DetailLauncher();
         task.setBranchId(getIntent().getStringExtra("branch_id"));
         task.execute();
+
+        Button loginBtn = (Button) findViewById(R.id.loginBtn);
+        RatingBar ratingBar = (RatingBar) findViewById(R.id.ratingBar);
+        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                Log.i("poop", "value: " + rating + " user: " + fromUser);
+            }
+        });
+
+
+        if (!MapprSession.isLoggedIn) {
+            loginBtn.setVisibility(View.VISIBLE);
+        } else {
+            ratingBar.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void loginClick(View v) {
+        Intent intent = new Intent(MapprDetails.this, MapprLogin.class);
+        startActivity(intent);
     }
 
     public void gotoGmaps(View v) {
@@ -66,13 +90,13 @@ public class MapprDetails extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-
+            //testing purposes
+            this.branchId = "1";
         }
 
         @Override
         protected String doInBackground(String... args) {
             try {
-
                 List<NameValuePair> params = new ArrayList<NameValuePair>();
                 params.add(new BasicNameValuePair("branch_id", branchId));
                 JSONObject json = JSONParser.makeHttpRequest(DETAILS_URL, "GET", params);
