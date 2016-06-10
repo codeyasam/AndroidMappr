@@ -19,10 +19,20 @@ public class MapprLogin extends AppCompatActivity {
     private static final String LOGIN_URL = CYM_Utility.MAPPR_ROOT_URL + "tests/androidlogin.php";
     public static final String ACTIVITY_STRING = "LoginForm";
 
+    private String branchId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mappr_login);
+
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+        if (extras != null) {
+            if (extras.containsKey("branch_id")) {
+                branchId = extras.getString("branch_id");
+            }
+        }
     }
 
     public void loginClick(View v) {
@@ -34,6 +44,9 @@ public class MapprLogin extends AppCompatActivity {
         intent.putExtra(CYM_Utility.MAPPR_OPT, ACTIVITY_STRING);
         intent.putExtra("username", CYM_Utility.getText(MapprLogin.this, R.id.usernameTxt));
         intent.putExtra("password", CYM_Utility.getText(MapprLogin.this, R.id.passwordTxt));
+        if (branchId != null) {
+            intent.putExtra("branch_id", branchId);
+        }
         startActivity(intent);
     }
 
@@ -66,6 +79,9 @@ public class MapprLogin extends AppCompatActivity {
                     if (json.getString("result").equals("true")) {
                         MapprSession.isLoggedIn = true;
                         Intent intent = new Intent(MapprLogin.this, MapprDetails.class);
+                        if (branchId != null) {
+                            intent.putExtra("branch_id", branchId);
+                        }
                         startActivity(intent);
                     }
                 } catch (JSONException e) {
