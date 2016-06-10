@@ -236,7 +236,14 @@ public class MapprPlotter extends AppCompatActivity implements OnMapReadyCallbac
                     Log.i("poop", branchesString);
                     JSONArray branches = new JSONArray(branchesString);
                     JSONObject firstBranch = branches.getJSONObject(0);
-                    CYM_Utility.displayText(MapprPlotter.this, R.id.resultNos, branches.length() + " RESULTS");
+                    Log.i("poop", "length: " + branches.length());
+                    //kind of a hack
+                    if (branchesString.equals("[{}]")) {
+                        CYM_Utility.displayText(MapprPlotter.this, R.id.resultNos,"NO RESULTS");
+                    } else{
+                        CYM_Utility.displayText(MapprPlotter.this, R.id.resultNos, branches.length() + " RESULTS");
+                    }
+
                     LatLng ll = new LatLng(Double.parseDouble(firstBranch.getString("lat")), Double.parseDouble(firstBranch.getString("lng")));
                     for (int i = 0; i < branches.length(); i++) {
                         JSONObject eachBranch = branches.getJSONObject(i);
@@ -259,7 +266,9 @@ public class MapprPlotter extends AppCompatActivity implements OnMapReadyCallbac
 //                    CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, 10);
 //                    mMap.moveCamera(update);
                 } catch(JSONException e) {
-                   e.printStackTrace();
+                    e.printStackTrace();
+                } catch(Exception e) {
+                    e.printStackTrace();
                 }
             }
         }
