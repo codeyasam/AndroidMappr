@@ -57,6 +57,7 @@ public class MapprDetails extends AppCompatActivity {
 
     public void loginClick(View v) {
         Intent intent = new Intent(MapprDetails.this, MapprLogin.class);
+        intent.putExtra("branch_id", getIntent().getStringExtra("branch_id"));
         startActivity(intent);
     }
 
@@ -91,7 +92,7 @@ public class MapprDetails extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             //testing purposes
-            this.branchId = "1";
+            //this.branchId = "1";
         }
 
         @Override
