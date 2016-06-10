@@ -2,13 +2,19 @@ package com.example.codeyasam.mappr;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.CursorLoader;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
+import android.media.ExifInterface;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.widget.EditText;
@@ -24,7 +30,7 @@ import java.net.URL;
  */
 public class CYM_Utility {
 
-    public static final String MAPPR_ROOT_URL = "http://192.168.42.226/thesis/";
+    public static final String MAPPR_ROOT_URL = "http://192.168.42.166/thesis/";
     public static final String MAPPR_PUBLIC_URL = MAPPR_ROOT_URL + "Public/";
     public static final String MAPPR_OPT = "MAPPR_OPT";
     public static final String OPT_BY_QRCODE = "111";
@@ -101,5 +107,37 @@ public class CYM_Utility {
         image.setImageBitmap(getRoundedCornerBitmap(bmp));
     }
 
+    public static String getPath(Uri imageURI, Activity activity) {
+        String[] projection = { MediaStore.MediaColumns.DATA };
+        CursorLoader cursorLoader = new CursorLoader(activity, imageURI, projection, null, null,
+                null);
+        Cursor cursor =cursorLoader.loadInBackground();
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+        cursor.moveToFirst();
+        String selectedImagePath = cursor.getString(column_index);
+        return selectedImagePath;
+    }
 
+    public static Matrix getMatrixAngle(String imagePath) {
+        try {
+            ExifInterface exif = new ExifInterface(imagePath);
+            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
+            //Log.d("EXIF", "Exif: " + orientation);
+            Matrix matrix = new Matrix();
+            if (orientation == 6) {
+                matrix.postRotate(90);
+            }
+            else if (orientation == 3) {
+                matrix.postRotate(180);
+            }
+            else if (orientation == 8) {
+                matrix.postRotate(270);
+            }
+
+            return matrix;
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+        return null;
+    }
 }
