@@ -16,7 +16,8 @@
     <ImageView
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:id="@+id/displayPicture" />
+        android:id="@+id/displayPicture"
+        android:onClick="choosePicture"/>
 
     <EditText
         android:layout_width="match_parent"
@@ -36,6 +37,15 @@
         android:hint="Last Name"
         android:ems="10"
         android:id="@+id/lastNameTxt" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:ems="10"
+        android:id="@+id/emailTxt"
+        android:hint="email address"
+        android:layout_gravity="center_horizontal" />
 
     <Button
         android:layout_width="wrap_content"
@@ -67,7 +77,8 @@
         android:layout_height="wrap_content"
         android:text="REGISTER"
         android:id="@+id/registerBtn"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:onClick="registerUser"/>
 
 
 
