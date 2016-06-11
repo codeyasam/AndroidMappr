@@ -161,6 +161,7 @@ public class MapprRegister extends AppCompatActivity implements View.OnClickList
                     handleRequestCamera();
                     break;
                 case SELECT_FILE:
+                    handleSelectFile(data);
                     break;
                 default:
 
@@ -173,23 +174,30 @@ public class MapprRegister extends AppCompatActivity implements View.OnClickList
         String imagePath = CYM_Utility.getPath(imageUri, MapprRegister.this);
         Bitmap bmp = BitmapFactory.decodeFile(imagePath);
         bmp = Bitmap.createScaledBitmap(bmp, dimenDP, dimenDP, false);
-        try {
-            Matrix matrix = CYM_Utility.getMatrixAngle(imagePath);
-            bmp = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);
-            endUser.setDisplay_picture(bmp);
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
-            CYM_Utility.setImageOnView(MapprRegister.this, R.id.displayPicture, bmp);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        processImage(bmp, imagePath);
     }
 
     private void handleSelectFile(Intent data) {
         int dimenDP = (int) CYM_Utility.dipToPixels(MapprRegister.this, 250);
         Uri imageUri = data.getData();
         String imagePath = CYM_Utility.getPath(imageUri, MapprRegister.this);
+        Bitmap bmp = BitmapFactory.decodeFile(imagePath);
+        bmp = Bitmap.createScaledBitmap(bmp, dimenDP, dimenDP, false);
+        processImage(bmp, imagePath);
+    }
 
+    private void processImage(Bitmap bmp, String imagePath) {
+        try {
+            Matrix matrix = CYM_Utility.getMatrixAngle(imagePath);
+            bmp = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);
+            endUser.setDisplay_picture(bmp);
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            bmp = CYM_Utility.getRoundedCornerBitmap(bmp);
+            CYM_Utility.setImageOnView(MapprRegister.this, R.id.displayPicture, bmp);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void customFacebookLogin() {
