@@ -2,9 +2,11 @@ package com.example.codeyasam.mappr;
 
 import android.app.ActionBar;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,6 +31,8 @@ public class MapprDetails extends AppCompatActivity {
     private static final String DETAILS_URL = CYM_Utility.MAPPR_ROOT_URL + "tests/getFullDetails.php";
     private MapprTour mapprTour = new MapprTour();
 
+    private SharedPreferences settings;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +48,7 @@ public class MapprDetails extends AppCompatActivity {
 
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                Log.i("poop", "value: " + rating + " user: " + fromUser);
+                Log.i("poop", "value: " + rating + " user: " + fromUser + " branch_id: " + branchId);
                 Intent intent = new Intent(MapprDetails.this, MapprReview.class);
                 intent.putExtra("branch_id", branchId);
                 intent.putExtra("branch_rate", String.valueOf(rating));
@@ -52,8 +56,9 @@ public class MapprDetails extends AppCompatActivity {
             }
         });
 
-
-        if (!MapprSession.isLoggedIn) {
+        settings = PreferenceManager.getDefaultSharedPreferences(this);
+        //if (!MapprSession.isLoggedIn) {  //for debugging
+        if (settings.getString(MapprSession.LOGGED_USER_ID, "").isEmpty()) {
             loginBtn.setVisibility(View.VISIBLE);
         } else {
             ratingBar.setVisibility(View.VISIBLE);
