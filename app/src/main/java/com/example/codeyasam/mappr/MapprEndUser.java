@@ -184,6 +184,7 @@ public class MapprEndUser {
                 params.add(new BasicNameValuePair("last_name", lastName));
                 params.add(new BasicNameValuePair("username", username));
                 params.add(new BasicNameValuePair("password", password));
+                params.add(new BasicNameValuePair("email", email));
                 params.add(new BasicNameValuePair("submit", "true"));
 
                 JSONObject json = JSONParser.makeHttpRequest(MAPPR_TESTS, "POST", params);
@@ -206,6 +207,7 @@ public class MapprEndUser {
                         if (branchId != null) {
                             intent.putExtra("branch_id", branchId);
                         }
+                        MapprSession.logUser(activity, json.getString("id"));
                         activity.startActivity(intent);
                     }
                 } catch (JSONException e) {
