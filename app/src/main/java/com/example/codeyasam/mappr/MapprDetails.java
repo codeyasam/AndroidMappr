@@ -34,7 +34,8 @@ public class MapprDetails extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mappr_details);
         DetailLauncher task = new DetailLauncher();
-        task.setBranchId(getIntent().getStringExtra("branch_id"));
+        final String branchId = getIntent().getStringExtra("branch_id");
+        task.setBranchId(branchId);
         task.execute();
 
         Button loginBtn = (Button) findViewById(R.id.loginBtn);
@@ -44,6 +45,10 @@ public class MapprDetails extends AppCompatActivity {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
                 Log.i("poop", "value: " + rating + " user: " + fromUser);
+                Intent intent = new Intent(MapprDetails.this, MapprReview.class);
+                intent.putExtra("branch_id", branchId);
+                intent.putExtra("branch_rate", String.valueOf(rating));
+                startActivity(intent);
             }
         });
 
@@ -92,7 +97,7 @@ public class MapprDetails extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             //testing purposes
-            //this.branchId = "1";
+            this.branchId = "1";
         }
 
         @Override
