@@ -109,6 +109,9 @@ public class MapprRegister extends AppCompatActivity implements View.OnClickList
     public void registerUser(View v) {
         endUser.setUsername(CYM_Utility.getText(MapprRegister.this, R.id.usernameTxt));
         endUser.setPassword(CYM_Utility.getText(MapprRegister.this, R.id.passwordTxt));
+        endUser.setFirstName(CYM_Utility.getText(MapprRegister.this, R.id.firstNameTxt));
+        endUser.setLastName(CYM_Utility.getText(MapprRegister.this, R.id.lastNameTxt));
+        endUser.setEmail(CYM_Utility.getText(MapprRegister.this, R.id.emailTxt));
         endUser.registerUser(branchId);
     }
 
@@ -219,7 +222,7 @@ public class MapprRegister extends AppCompatActivity implements View.OnClickList
                                             endUser.setFirstName(object.getString("first_name"));
                                             endUser.setLastName(object.getString("last_name"));
                                             final String profilePicUrl = object.getJSONObject("picture").getJSONObject("data").getString("url");
-                                            endUser.setDisplay_picture_path("//graph.facebook.com/" + object.getString("id") + "/picture?type=large");
+                                            endUser.setDisplay_picture_path("https://graph.facebook.com/" + object.getString("id") + "/picture?type=large");
                                             endUser.setDisplay_picture(null);
                                             endUser.setEmail(object.getString("email"));
                                             RegisterLoader task = new RegisterLoader();
