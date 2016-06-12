@@ -82,6 +82,7 @@ public class MapprLogin extends AppCompatActivity {
                         if (branchId != null) {
                             intent.putExtra("branch_id", branchId);
                         }
+                        MapprSession.logUser(MapprLogin.this, json.getString("user_id"));
                         startActivity(intent);
                     }
                 } catch (JSONException e) {
