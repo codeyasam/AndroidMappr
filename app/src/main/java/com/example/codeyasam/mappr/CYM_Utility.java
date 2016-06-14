@@ -1,8 +1,10 @@
 package com.example.codeyasam.mappr;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,6 +19,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,7 +33,7 @@ import java.net.URL;
  */
 public class CYM_Utility {
 
-    public static final String MAPPR_ROOT_URL = "http://192.168.42.207/thesis/";
+    public static final String MAPPR_ROOT_URL = "http://192.168.42.233/thesis/";
     public static final String MAPPR_PUBLIC_URL = MAPPR_ROOT_URL + "Public/";
     public static final String MAPPR_OPT = "MAPPR_OPT";
     public static final String OPT_BY_QRCODE = "111";
@@ -140,4 +143,14 @@ public class CYM_Utility {
         }
         return null;
     }
+
+    public static void callYesNoMessage(String message, Context context, DialogInterface.OnClickListener clickListener) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage(message);
+        builder.setNegativeButton("NO", null);
+        builder.setPositiveButton("YES", clickListener);
+        builder.show();
+    }
+
+
 }
