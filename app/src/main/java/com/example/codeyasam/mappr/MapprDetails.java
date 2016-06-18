@@ -64,8 +64,8 @@ public class MapprDetails extends AppCompatActivity {
         });
 
 
-        //if (!MapprSession.isLoggedIn) {  //for debugging
-        if (settings.getString(MapprSession.LOGGED_USER_ID, "").isEmpty()) {
+        if (!MapprSession.isLoggedIn) {  //for debugging
+        //if (settings.getString(MapprSession.LOGGED_USER_ID, "").isEmpty()) {
             loginBtn.setVisibility(View.VISIBLE);
         } else {
             ratingBar.setVisibility(View.VISIBLE);
@@ -112,7 +112,7 @@ public class MapprDetails extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             //testing purposes
-            this.branchId = "1";
+            //this.branchId = "1";
         }
 
         @Override

@@ -63,16 +63,16 @@
         <activity
             android:name=".MapprCategory"
             android:label="@string/title_activity_featured_category"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".MapprDetails">
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".MapprDetails"></activity>
         <activity android:name=".MapprLogin" />
-        <activity android:name=".MapprRegister"></activity>
+        <activity android:name=".MapprRegister" />
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
@@ -80,7 +80,8 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name=".MapprReview"
-            android:theme="@android:style/Theme.NoTitleBar"></activity>
+            android:theme="@android:style/Theme.NoTitleBar" />
+        <activity android:name=".MapprFavorites"></activity>
     </application>
 
 </manifest>
