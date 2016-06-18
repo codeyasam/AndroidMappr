@@ -23,4 +23,36 @@
         android:id="@+id/button"
         android:layout_gravity="center_horizontal"
         android:onClick="scanQrCode"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/searchContainer">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/searchTxt"
+            android:layout_weight="3"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SEARCH"
+            android:id="@+id/searchBtn"
+            android:onClick="searchClick"/>
+
+
+    </LinearLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="BOOKMARK ACTIVITY"
+        android:id="@+id/bookmarkBtn"
+        android:layout_gravity="center_horizontal"
+        android:onClick="bookmarkClick" />
+
+
 </LinearLayout>
