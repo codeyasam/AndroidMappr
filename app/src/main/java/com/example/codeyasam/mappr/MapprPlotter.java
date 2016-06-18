@@ -71,6 +71,9 @@ public class MapprPlotter extends AppCompatActivity implements OnMapReadyCallbac
         } else if (mappr_opt.equals(CYM_Utility.OPT_BY_CATEGORY)) {
             String categoryID = getIntent().getStringExtra("categoryID");
             task.setCategoryID(categoryID);
+        } else if (mappr_opt.equals(CYM_Utility.OPT_BY_STRING)) {
+            String searchString = getIntent().getStringExtra("searchString");
+            task.setSearchString(searchString);
         }
         task.execute();
     }
@@ -187,6 +190,7 @@ public class MapprPlotter extends AppCompatActivity implements OnMapReadyCallbac
         private String mapperOpt;
         private String branchID;
         private String categoryID;
+        private String searchString;
 
         @Override
         protected void onPreExecute() {
@@ -201,14 +205,12 @@ public class MapprPlotter extends AppCompatActivity implements OnMapReadyCallbac
                     Log.i("POOP", "branchID: " + branchID);
                     params.add(new BasicNameValuePair(CYM_Utility.MAPPR_OPT, CYM_Utility.OPT_BY_QRCODE));
                     params.add(new BasicNameValuePair("branch_id", branchID));
-//                    JSONObject json = JSONParser.makeHttpRequest(PLOTTER_URL, "GET", params);
-
                 } else if (mapperOpt.equals(CYM_Utility.OPT_BY_CATEGORY)) {
                     params.add(new BasicNameValuePair(CYM_Utility.MAPPR_OPT, CYM_Utility.OPT_BY_CATEGORY));
                     params.add(new BasicNameValuePair("category_id", categoryID));
-                    //JSONObject json = JSONParser.makeHttpRequest(PLOTTER_URL, "GET", params);
-//                    JSONArray mapprEstabs = json.getJSONArray("Branches");
-//                    return mapprEstabs.toString();
+                } else if (mapperOpt.equals(CYM_Utility.OPT_BY_STRING)) {
+                    params.add(new BasicNameValuePair(CYM_Utility.MAPPR_OPT, CYM_Utility.OPT_BY_STRING));
+                    params.add(new BasicNameValuePair("search_string", searchString));
                 }
                 JSONObject json = JSONParser.makeHttpRequest(PLOTTER_URL, "GET", params);
                 JSONArray estabs = json.getJSONArray("Establishments");
@@ -288,6 +290,14 @@ public class MapprPlotter extends AppCompatActivity implements OnMapReadyCallbac
 
         public void setCategoryID(String categoryID) {
             this.categoryID = categoryID;
+        }
+
+        public String getSearchString() {
+            return searchString;
+        }
+
+        public void setSearchString(String searchString) {
+            this.searchString = searchString;
         }
     }
 
