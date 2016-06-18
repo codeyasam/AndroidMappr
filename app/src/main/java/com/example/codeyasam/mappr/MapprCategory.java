@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,6 +32,7 @@ import java.util.Map;
 public class MapprCategory extends AppCompatActivity {
 
     private static final String CATEGORY_URL = CYM_Utility.MAPPR_ROOT_URL + "tests/featuredCategoryTests.php";
+    private static final String QUERY_URL = CYM_Utility.MAPPR_ROOT_URL + "tests/searchByQuery.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,19 @@ public class MapprCategory extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         new CategorySearcher().execute();
+    }
+
+    public void bookmarkClick(View v) {
+        Intent intent = new Intent(MapprCategory.this, MapprFavorites.class);
+        startActivity(intent);
+    }
+
+
+    public void searchClick(View v) {
+        Intent intent = new Intent(MapprCategory.this, MapprPlotter.class);
+        intent.putExtra(CYM_Utility.MAPPR_OPT, CYM_Utility.OPT_BY_STRING);
+        intent.putExtra("searchString", CYM_Utility.getText(MapprCategory.this, R.id.searchTxt));
+        startActivity(intent);
     }
 
     public void scanQrCode(View v) {
@@ -68,7 +83,7 @@ public class MapprCategory extends AppCompatActivity {
                     JSONObject eachCategory = featuredCategories.getJSONObject(i);
                     String categId = eachCategory.getString("id");
                     String categDp = eachCategory.getString("display_picture");
-                    Bitmap bm = loadImageFromServer(CYM_Utility.MAPPR_PUBLIC_URL + categDp);
+                    Bitmap bm = CYM_Utility.loadImageFromServer(CYM_Utility.MAPPR_PUBLIC_URL + categDp);
                     hmCategIcons.put(categId, bm);
                 }
                 return featuredCategories.toString();
@@ -145,20 +160,39 @@ public class MapprCategory extends AppCompatActivity {
             }
         }
 
-        private Bitmap loadImageFromServer(String url) {
+    }
+
+    class QuerySearcher extends AsyncTask<String, String, String> {
+
+        private String searchString;
+
+        public QuerySearcher(String searchString) {
+            this.searchString = searchString;
+        }
+
+        @Override
+        protected String doInBackground(String... args) {
             try {
-                URL urlConnection = new URL(url);
-                HttpURLConnection connection = (HttpURLConnection) urlConnection
-                        .openConnection();
-                connection.setDoInput(true);
-                connection.connect();
-                InputStream input = connection.getInputStream();
-                Bitmap myBitmap = BitmapFactory.decodeStream(input);
-                return myBitmap;
+                List<NameValuePair> params = new ArrayList<>();
+                params.add(new BasicNameValuePair("searchString", searchString));
+                JSONObject json = JSONParser.makeHttpRequest(QUERY_URL, "GET", params);
+                return json.toString();
             } catch (Exception e) {
                 e.printStackTrace();
             }
             return null;
         }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (result != null) {
+                try {
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
+
 }
