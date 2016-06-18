@@ -20,6 +20,7 @@ import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -33,11 +34,12 @@ import java.net.URL;
  */
 public class CYM_Utility {
 
-    public static final String MAPPR_ROOT_URL = "http://192.168.42.233/thesis/";
+    public static final String MAPPR_ROOT_URL = "http://192.168.42.87/thesis/";
     public static final String MAPPR_PUBLIC_URL = MAPPR_ROOT_URL + "Public/";
     public static final String MAPPR_OPT = "MAPPR_OPT";
     public static final String OPT_BY_QRCODE = "111";
     public static final String OPT_BY_CATEGORY = "777";
+    public static final String OPT_BY_STRING = "888";
 
     public static Bitmap getRoundedCornerBitmap(Bitmap bitmap) {
         Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
@@ -89,8 +91,18 @@ public class CYM_Utility {
         tv.setText(text);
     }
 
+    public static void displayText(View view, int id, String text) {
+        TextView tv = (TextView) view.findViewById(id);
+        tv.setText(text);
+    }
+
     public static void setImageOnView(Activity activity, int id, Bitmap bmp) {
         ImageView iv = (ImageView) activity.findViewById(id);
+        iv.setImageBitmap(bmp);
+    }
+
+    public static void setImageOnView(View view, int id, Bitmap bmp) {
+        ImageView iv = (ImageView) view.findViewById(id);
         iv.setImageBitmap(bmp);
     }
 
