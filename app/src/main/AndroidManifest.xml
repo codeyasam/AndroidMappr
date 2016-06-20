@@ -81,7 +81,10 @@
         <activity
             android:name=".MapprReview"
             android:theme="@android:style/Theme.NoTitleBar" />
-        <activity android:name=".MapprFavorites"></activity>
+        <activity android:name=".MapprFavorites"
+            android:label="@string/title_activity_favorites">
+
+        </activity>
     </application>
 
 </manifest>
