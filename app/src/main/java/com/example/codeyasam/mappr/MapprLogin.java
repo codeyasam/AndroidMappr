@@ -20,6 +20,7 @@ public class MapprLogin extends AppCompatActivity {
     public static final String ACTIVITY_STRING = "LoginForm";
 
     private String branchId;
+    private String last_activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,11 +33,19 @@ public class MapprLogin extends AppCompatActivity {
             if (extras.containsKey("branch_id")) {
                 branchId = extras.getString("branch_id");
             }
+
+            if (extras.containsKey(CYM_Utility.MAPPR_FORM)) {
+                last_activity = extras.getString(CYM_Utility.MAPPR_FORM);
+            }
         }
     }
 
     public void loginClick(View v) {
-        new LoginConnector().execute();
+        if (last_activity.equals(CYM_Utility.FROM_DETAILS)) {
+            new LoginConnector(MapprDetails.class).execute();
+        } else if (last_activity.equals(CYM_Utility.FROM_FAVORITES)) {
+            new LoginConnector(MapprFavorites.class).execute();
+        }
     }
 
     public void registerClick(View v) {
@@ -51,6 +60,13 @@ public class MapprLogin extends AppCompatActivity {
     }
 
     class LoginConnector extends AsyncTask<String, String, String> {
+
+        Class destinationClass;
+
+        public LoginConnector(Class destinationClass) {
+            this.destinationClass = destinationClass;
+        }
+
 
         @Override
         protected void onPreExecute() {
@@ -78,12 +94,14 @@ public class MapprLogin extends AppCompatActivity {
                     JSONObject json = new JSONObject(result);
                     if (json.getString("result").equals("true")) {
                         MapprSession.isLoggedIn = true;
-                        Intent intent = new Intent(MapprLogin.this, MapprDetails.class);
+                        //Intent intent = new Intent(MapprLogin.this, MapprDetails.class);
+                        Intent intent = new Intent(MapprLogin.this, destinationClass);
                         if (branchId != null) {
                             intent.putExtra("branch_id", branchId);
                         }
                         MapprSession.logUser(MapprLogin.this, json.getString("user_id"));
                         startActivity(intent);
+                        //finish();
                     }
                 } catch (JSONException e) {
 
