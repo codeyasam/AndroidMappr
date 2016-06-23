@@ -24,6 +24,12 @@
             android:text="Medium Text"
             android:id="@+id/estabName" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:id="@+id/branchAddress" />
 
     </LinearLayout>
 </LinearLayout>
