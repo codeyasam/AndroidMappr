@@ -127,6 +127,7 @@ public class MapprPlotter extends AppCompatActivity implements OnMapReadyCallbac
     public void onInfoWindowClick(Marker marker) {
         Intent intent = new Intent(MapprPlotter.this, MapprDetails.class);
         intent.putExtra("branch_id", marker.getTitle());
+        intent.putExtra(CYM_Utility.MAPPR_FORM, CYM_Utility.FROM_PLOTTER);
         Log.i("poop", marker.getTitle());
         startActivity(intent);
     }
