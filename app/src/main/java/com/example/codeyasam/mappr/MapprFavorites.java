@@ -3,6 +3,7 @@ package com.example.codeyasam.mappr;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
@@ -10,8 +11,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -29,7 +33,7 @@ public class MapprFavorites extends AppCompatActivity {
     private static final String FAVORITES_URL = CYM_Utility.MAPPR_ROOT_URL + "tests/getBookmarks.php";
 
     private Map<String, MapprEstablishment> estabHm = new HashMap<>();
-    private List<MapprBranch> branchesList = new ArrayList<>();
+    private List<MapprBranch> branchesList;
     private SharedPreferences settings;
 
     private ListView listView;
@@ -38,19 +42,34 @@ public class MapprFavorites extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mappr_favorites);
-        listView = (ListView)findViewById(R.id.listView);
+        listView = (ListView)findViewById(R.id.favBranchList);
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        branchesList = new ArrayList<>();
         settings = PreferenceManager.getDefaultSharedPreferences(MapprFavorites.this);
         String userId = settings.getString(MapprSession.LOGGED_USER_ID, "");
         if (userId.isEmpty()) {
+            TextView tv = (TextView) findViewById(R.id.emptyBookmarkTxt);
+            tv.setText("You aren't logged in.");
+            tv.setVisibility(View.VISIBLE);
 
+            Button loginBtn = (Button) findViewById(R.id.loginBtn);
+            loginBtn.setVisibility(View.VISIBLE);
+
+            Log.i("poop", "no user id");
             return;
         }
         new FavoritesLoader(userId).execute();
+    }
+
+    public void loginClick(View v) {
+        Intent intent = new Intent(MapprFavorites.this, MapprLogin.class);
+        intent.putExtra(CYM_Utility.MAPPR_FORM, CYM_Utility.FROM_FAVORITES);
+        startActivity(intent);
     }
 
     private boolean setEstabHm(JSONArray estabs) {
@@ -116,14 +135,20 @@ public class MapprFavorites extends AppCompatActivity {
             if (result != null) {
                 try {
                     Log.i("poop", result);
-                    ArrayAdapter<MapprBranch> adapter = new FavoriteAdapter(MapprFavorites.this, branchesList);
-                    listView.setAdapter(adapter);
+                    if (!branchesList.isEmpty()) {
+                        findViewById(R.id.favBranchList).setVisibility(View.VISIBLE);
+                        ArrayAdapter<MapprBranch> adapter = new FavoriteAdapter(MapprFavorites.this, branchesList);
+                        listView.setAdapter(adapter);
+                    } else {
+                        findViewById(R.id.emptyBookmarkTxt).setVisibility(View.VISIBLE);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
