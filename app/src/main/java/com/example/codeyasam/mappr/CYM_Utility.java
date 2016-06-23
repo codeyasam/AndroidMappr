@@ -17,12 +17,14 @@ import android.graphics.Rect;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.test.ActivityTestCase;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import java.io.InputStream;
@@ -34,12 +36,17 @@ import java.net.URL;
  */
 public class CYM_Utility {
 
-    public static final String MAPPR_ROOT_URL = "http://192.168.42.87/thesis/";
+    public static final String MAPPR_ROOT_URL = "http://192.168.42.115/thesis/";
     public static final String MAPPR_PUBLIC_URL = MAPPR_ROOT_URL + "Public/";
     public static final String MAPPR_OPT = "MAPPR_OPT";
     public static final String OPT_BY_QRCODE = "111";
     public static final String OPT_BY_CATEGORY = "777";
     public static final String OPT_BY_STRING = "888";
+
+    public static final String MAPPR_FORM = "MAPPR_FROM";
+    public static final String FROM_PLOTTER = "mapprPlotter";
+    public static final String FROM_FAVORITES = "mapprFavorites";
+    public static final String FROM_DETAILS = "mapprDetails";
 
     public static Bitmap getRoundedCornerBitmap(Bitmap bitmap) {
         Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
@@ -159,10 +166,18 @@ public class CYM_Utility {
     public static void callYesNoMessage(String message, Context context, DialogInterface.OnClickListener clickListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage(message);
-        builder.setNegativeButton("NO", null);
-        builder.setPositiveButton("YES", clickListener);
+        builder.setNegativeButton("CANCEL", null);
+        builder.setPositiveButton("OK", clickListener);
         builder.show();
     }
 
+    public static void setRatingBarRate(Activity activity, int id, float rating) {
+        RatingBar ratingBar = (RatingBar) activity.findViewById(id);
+        ratingBar.setRating(rating);
+    }
 
+    public static void setRatingBarRate(View view, int id, float rating) {
+        RatingBar ratingBar = (RatingBar) view.findViewById(id);
+        ratingBar.setRating(rating);
+    }
 }
