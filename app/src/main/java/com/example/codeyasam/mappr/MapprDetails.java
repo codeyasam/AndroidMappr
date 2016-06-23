@@ -13,10 +13,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RatingBar;
 
 import org.apache.http.NameValuePair;
@@ -37,10 +40,13 @@ public class MapprDetails extends AppCompatActivity {
     private SharedPreferences settings;
     private MenuItem bookmarkMenu;
 
+    private ListView listview;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mappr_details);
+        listview = (ListView)findViewById(R.id.listView);
         settings = PreferenceManager.getDefaultSharedPreferences(this);
         DetailLauncher task = new DetailLauncher();
         final String branchId = getIntent().getStringExtra("branch_id");
@@ -75,6 +81,7 @@ public class MapprDetails extends AppCompatActivity {
     public void loginClick(View v) {
         Intent intent = new Intent(MapprDetails.this, MapprLogin.class);
         intent.putExtra("branch_id", getIntent().getStringExtra("branch_id"));
+        intent.putExtra(CYM_Utility.MAPPR_FORM, CYM_Utility.FROM_DETAILS);
         startActivity(intent);
     }
 
@@ -98,6 +105,11 @@ public class MapprDetails extends AppCompatActivity {
         private String userId;
         private List<Bitmap> listBranchGallery = new ArrayList<>();
         private MapprEstablishment establishment;
+        private List<ReviewHolder> reviewHolderList;
+
+        public DetailLauncher() {
+            reviewHolderList = new ArrayList<>();
+        }
 
         public void setBranchId(String branchId) {
             this.branchId = branchId;
@@ -113,6 +125,21 @@ public class MapprDetails extends AppCompatActivity {
         protected void onPreExecute() {
             //testing purposes
             //this.branchId = "1";
+        }
+
+        private void setReviewHolder(JSONObject json) {
+            try {
+                JSONArray userObjArr = json.getJSONArray("Users");
+                JSONArray reviewObjArr = json.getJSONArray("Reviews");
+                Log.i("poop", reviewObjArr.toString());
+                if (reviewObjArr.toString().equals("[{}]")) return;
+                for (int i = 0; i < reviewObjArr.length(); i++) {
+                    reviewHolderList.add(ReviewHolder.instantiateJSONReview(userObjArr.getJSONObject(i), reviewObjArr.getJSONObject(i)));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         }
 
         @Override
@@ -131,11 +158,14 @@ public class MapprDetails extends AppCompatActivity {
                 establishment = MapprEstablishment.instantiateJSONEstablishment(estab);
                 Log.i("poop", "branch_id: " + branchId);
                 Log.i("poop", "gallery length: " + gallery.length());
+
                 for (int i = 0; i < gallery.length(); i++) {
                     JSONObject eachGal = gallery.getJSONObject(i);
                     String url = CYM_Utility.MAPPR_PUBLIC_URL + eachGal.getString("gallery_pic");
                     listBranchGallery.add(CYM_Utility.loadImageFromServer(url));
                 }
+
+                setReviewHolder(json);
 
                 return json.toString();
             } catch (Exception e) {
@@ -149,6 +179,7 @@ public class MapprDetails extends AppCompatActivity {
         protected void onPostExecute(String result) {
             if (result != null) {
                 try {
+                    Log.i("poop", result);
                     JSONObject json = new JSONObject(result);
                     JSONObject branch = json.getJSONObject("branch");
                     mapprTour.setLat(branch.getString("lat"));
@@ -157,6 +188,7 @@ public class MapprDetails extends AppCompatActivity {
                     CYM_Utility.setImageOnView(MapprDetails.this, R.id.estabLogo, establishment.getDisplay_picture());
                     CYM_Utility.displayText(MapprDetails.this, R.id.estabName, establishment.getName());
                     CYM_Utility.displayText(MapprDetails.this, R.id.branchAddress, branch.getString("address"));
+                    CYM_Utility.setRatingBarRate(MapprDetails.this, R.id.branchRating, Float.parseFloat(json.getString("average_rating")));
                     LinearLayout galleryContainer = (LinearLayout) findViewById(R.id.galleryContainer);
                     for (Bitmap bmp : listBranchGallery) {
                         ImageView iv = new ImageView(MapprDetails.this);
@@ -170,7 +202,17 @@ public class MapprDetails extends AppCompatActivity {
 
                     String bookmarkState = json.getString("isBookmarked").equals("true") ? "BOOKMARKED" : "BOOKMARK";
                     bookmarkMenu.setTitle(bookmarkState);
-
+                    ArrayAdapter<ReviewHolder> reviewHolderArrayAdapter = new ReviewAdapter(MapprDetails.this, reviewHolderList);
+                    listview.setAdapter(reviewHolderArrayAdapter);
+                    listview.setOnTouchListener(new View.OnTouchListener() {
+                        // Setting on Touch Listener for handling the touch inside ScrollView
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            // Disallow the touch request for parent scroll on touch of child view
+                            v.getParent().requestDisallowInterceptTouchEvent(true);
+                            return false;
+                        }
+                    });
                 } catch (JSONException e) {
                     e.printStackTrace();
                 } catch (Exception e) {
@@ -209,7 +251,7 @@ public class MapprDetails extends AppCompatActivity {
         } else {
             Log.i("poop", "bookmard click2");
             String user_id = settings.getString(MapprSession.LOGGED_USER_ID, "");
-            String branch_id = "1"; //getIntent().getStringExtra("branch_id");
+            String branch_id = getIntent().getStringExtra("branch_id");
             MapprBookmark bookmark = new MapprBookmark(user_id, branch_id, bookmarkMenu);
             bookmark.manageBookmark();
         }
@@ -220,8 +262,9 @@ public class MapprDetails extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent(MapprDetails.this, MapprLogin.class);
-                String branch_id = "1"; //getIntent().getStringExtra("branch_id");
+                String branch_id = getIntent().getStringExtra("branch_id");
                 intent.putExtra("branch_id", branch_id);
+                intent.putExtra(CYM_Utility.MAPPR_FORM, CYM_Utility.FROM_DETAILS);
                 startActivity(intent);
             }
         };
