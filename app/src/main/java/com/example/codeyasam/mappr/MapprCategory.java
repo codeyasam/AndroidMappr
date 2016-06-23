@@ -106,6 +106,7 @@ public class MapprCategory extends AppCompatActivity {
                             LinearLayout.LayoutParams.WRAP_CONTENT,
                             LinearLayout.LayoutParams.WRAP_CONTENT
                     );
+
                     for (int i = 0; i < categoryArray.length();) {
                         LinearLayout innerRow = new LinearLayout(MapprCategory.this);
                         innerRow.setOrientation(LinearLayout.HORIZONTAL);
@@ -117,11 +118,16 @@ public class MapprCategory extends AppCompatActivity {
                             JSONObject eachCategory = categoryArray.getJSONObject(j);
                             TextView tvCategoryName = new TextView(MapprCategory.this);
                             ImageView iconContainer = new ImageView(MapprCategory.this);
+                            LinearLayout.LayoutParams imgParams = new LinearLayout.LayoutParams(
+                                (int)CYM_Utility.dipToPixels(MapprCategory.this, 80),
+                                (int)CYM_Utility.dipToPixels(MapprCategory.this, 80),1
+                            );
+
                             //Bitmap bmp = CYM_Utility.getRoundedCornerBitmap(hmCategIcons.get(eachCategory.get("id")));
                             iconContainer.setImageBitmap(hmCategIcons.get(eachCategory.getString("id")));
                             tvCategoryName.setText(eachCategory.getString("name"));
                             tvCategoryName.setLayoutParams(lParams);
-                            iconContainer.setLayoutParams(lParams);
+                            iconContainer.setLayoutParams(imgParams);
                             //tvCategoryName.setBackgroundColor(Color.GREEN);
 
                             LinearLayout wrapper = new LinearLayout(MapprCategory.this);
