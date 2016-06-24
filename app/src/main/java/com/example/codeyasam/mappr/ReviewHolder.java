@@ -2,6 +2,13 @@ package com.example.codeyasam.mappr;
 
 import android.graphics.Bitmap;
 
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.Months;
+import org.joda.time.Weeks;
+import org.joda.time.Years;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONObject;
 
 /**
@@ -63,4 +70,38 @@ public class ReviewHolder {
         this.submitDate = submitDate;
     }
 
+    private String manageLetterS(int qty, String name) {
+        String prompt = qty + " " + name;
+        if (qty > 1) {
+            prompt += "s";
+        }
+        return prompt + " ago";
+    }
+
+    public String getPassedTime() {
+        try {
+            DateTimeFormatter df = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+            DateTime date = df.parseDateTime(submitDate);
+            String passedTime = "";
+            System.out.println(date);
+            int days = Days.daysBetween(date, new DateTime()).getDays();
+            System.out.println(days);
+            if (Years.yearsBetween(date, new DateTime()).getYears() > 0) {
+                passedTime = manageLetterS(Weeks.weeksBetween(date, new DateTime()).getWeeks(), "year");
+            } else if (Months.monthsBetween(date, new DateTime()).getMonths() > 0) {
+                passedTime = manageLetterS(Months.monthsBetween(date, new DateTime()).getMonths(), "month");
+            } else if (Weeks.weeksBetween(date, new DateTime()).getWeeks() > 0) {
+                passedTime = manageLetterS(Weeks.weeksBetween(date, new DateTime()).getWeeks(),  "week");
+            } else if (Days.daysBetween(date, new DateTime()).getDays() > 0) {
+                passedTime = manageLetterS(Days.daysBetween(date, new DateTime()).getDays(), "day");
+                System.out.println("poop");
+            }
+            //System.out.println("poop");
+            return passedTime;
+        } catch (Exception e) {
+            e.getMessage();
+        }
+
+        return null;
+    }
 }
