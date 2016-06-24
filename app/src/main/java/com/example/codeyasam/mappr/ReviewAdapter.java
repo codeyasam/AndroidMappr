@@ -32,7 +32,7 @@ public class ReviewAdapter extends ArrayAdapter<ReviewHolder> {
             MapprEndUser userObj = rhObj.getEndUser();
             CYM_Utility.setImageOnView(view, R.id.userDisplayPic, userObj.getDisplay_picture());
             CYM_Utility.displayText(view, R.id.fullName, userObj.getFullName());
-            CYM_Utility.displayText(view, R.id.submitDate, rhObj.getSubmitDate());
+            CYM_Utility.displayText(view, R.id.submitDate, rhObj.getPassedTime());
             CYM_Utility.setRatingBarRate(view, R.id.branchRating, rhObj.getRating());
             CYM_Utility.displayText(view, R.id.userComment, rhObj.getComment());
         } catch (Exception e) {
