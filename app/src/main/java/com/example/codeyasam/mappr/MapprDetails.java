@@ -129,12 +129,14 @@ public class MapprDetails extends AppCompatActivity {
 
         private void setReviewHolder(JSONObject json) {
             try {
-                JSONArray userObjArr = json.getJSONArray("Users");
-                JSONArray reviewObjArr = json.getJSONArray("Reviews");
-                Log.i("poop", reviewObjArr.toString());
-                if (reviewObjArr.toString().equals("[{}]")) return;
-                for (int i = 0; i < reviewObjArr.length(); i++) {
-                    reviewHolderList.add(ReviewHolder.instantiateJSONReview(userObjArr.getJSONObject(i), reviewObjArr.getJSONObject(i)));
+                if (json.getString("hasReview").equals("true")) {
+                    JSONArray userObjArr = json.getJSONArray("Users");
+                    JSONArray reviewObjArr = json.getJSONArray("Reviews");
+                    Log.i("poop", reviewObjArr.toString());
+                    if (reviewObjArr.toString().equals("[{}]")) return;
+                    for (int i = 0; i < reviewObjArr.length(); i++) {
+                        reviewHolderList.add(ReviewHolder.instantiateJSONReview(userObjArr.getJSONObject(i), reviewObjArr.getJSONObject(i)));
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
