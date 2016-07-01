@@ -4,7 +4,10 @@ import android.graphics.Bitmap;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
+import org.joda.time.Hours;
+import org.joda.time.Minutes;
 import org.joda.time.Months;
+import org.joda.time.Seconds;
 import org.joda.time.Weeks;
 import org.joda.time.Years;
 import org.joda.time.format.DateTimeFormat;
@@ -95,6 +98,12 @@ public class ReviewHolder {
             } else if (Days.daysBetween(date, new DateTime()).getDays() > 0) {
                 passedTime = manageLetterS(Days.daysBetween(date, new DateTime()).getDays(), "day");
                 System.out.println("poop");
+            } else if (Hours.hoursBetween(date, new DateTime()).getHours() > 0) {
+                passedTime = manageLetterS(Hours.hoursBetween(date, new DateTime()).getHours(), "hour");
+            } else if (Minutes.minutesBetween(date, new DateTime()).getMinutes() > 0) {
+                passedTime = manageLetterS(Minutes.minutesBetween(date, new DateTime()).getMinutes(), "minute");
+            } else if (Seconds.secondsBetween(date, new DateTime()).getSeconds() > 0) {
+                passedTime = manageLetterS(Seconds.secondsBetween(date, new DateTime()).getSeconds(), "second");
             }
             //System.out.println("poop");
             return passedTime;
