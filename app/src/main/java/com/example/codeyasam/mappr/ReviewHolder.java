@@ -83,8 +83,7 @@ public class ReviewHolder {
 
     public String getPassedTime() {
         try {
-            DateTimeFormatter df = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
-            DateTime date = df.parseDateTime(submitDate);
+            DateTime date = new DateTime(Integer.parseInt(submitDate) * 1000L);
             String passedTime = "";
             System.out.println(date);
             int days = Days.daysBetween(date, new DateTime()).getDays();

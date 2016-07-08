@@ -128,6 +128,7 @@ public class MapprPlotter extends AppCompatActivity implements OnMapReadyCallbac
         Intent intent = new Intent(MapprPlotter.this, MapprDetails.class);
         intent.putExtra("branch_id", marker.getTitle());
         intent.putExtra(CYM_Utility.MAPPR_FORM, CYM_Utility.FROM_PLOTTER);
+
         Log.i("poop", marker.getTitle());
         startActivity(intent);
     }
@@ -302,4 +303,10 @@ public class MapprPlotter extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(MapprPlotter.this, MapprCategory.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        startActivity(intent);
+    }
 }

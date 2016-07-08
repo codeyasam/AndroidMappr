@@ -62,8 +62,9 @@ public class MapprReview extends Activity {
         String branchRate = String.valueOf(branchRating.getRating());
         String userId = settings.getString(MapprSession.LOGGED_USER_ID, "");
         String comment = CYM_Utility.getText(MapprReview.this, R.id.reviewTxt);
+        String mappr_from = getIntent().getStringExtra(CYM_Utility.MAPPR_FORM);
         Log.i("poop", "branchID: " + branchId);
-        new ReviewPublisher(branchId, branchRate, userId, comment).execute();
+        new ReviewPublisher(branchId, branchRate, userId, comment, mappr_from).execute();
     }
 
     class ReviewPublisher extends AsyncTask<String, String, String> {
@@ -74,12 +75,14 @@ public class MapprReview extends Activity {
         private String userId;
         private String branchRate;
         private String comment;
+        private String mappr_from;
 
-        public ReviewPublisher(String branchId, String branchRate, String userId, String comment) {
+        public ReviewPublisher(String branchId, String branchRate, String userId, String comment, String mappr_from) {
             this.branchId = branchId;
             this.userId = userId;
             this.branchRate = branchRate;
             this.comment = comment;
+            this.mappr_from = mappr_from;
         }
 
         @Override
@@ -113,7 +116,9 @@ public class MapprReview extends Activity {
                     JSONObject json = new JSONObject(result);
                     if (json.getString("success").equals("true")) {
                         Intent intent = new Intent(MapprReview.this, MapprDetails.class);
-                        intent.putExtra("branch_id", branchId);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                        //intent.putExtra("branch_id", branchId);
+                        //intent.putExtra(CYM_Utility.MAPPR_FORM, mappr_from);
                         startActivity(intent);
                     }
                 } catch (Exception e) {

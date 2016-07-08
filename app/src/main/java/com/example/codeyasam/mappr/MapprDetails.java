@@ -42,6 +42,9 @@ public class MapprDetails extends AppCompatActivity {
 
     private ListView listview;
 
+    private String branchLat;
+    private String branchLng;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +68,7 @@ public class MapprDetails extends AppCompatActivity {
                 Intent intent = new Intent(MapprDetails.this, MapprReview.class);
                 intent.putExtra("branch_id", branchId);
                 intent.putExtra("branch_rate", String.valueOf(rating));
+                intent.putExtra(CYM_Utility.MAPPR_FORM, getIntent().getStringExtra(CYM_Utility.MAPPR_FORM));
                 startActivity(intent);
             }
         });
@@ -85,17 +89,24 @@ public class MapprDetails extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void gotoGmaps(View v) {
-        StringBuilder uri = new StringBuilder("geo:");
-        uri.append("?q=");
-        uri.append(mapprTour.getLat());
-        uri.append(",");
-        uri.append(mapprTour.getLng());
-        uri.append("&z=10");
-        //uri.append("?z=10");
-        //uri.append("&q=" + URLEncoder.encode(mapprTour.getMarkerText()));
+//    public void gotoGmaps(View v) {
+//        StringBuilder uri = new StringBuilder("geo:");
+//        uri.append("?q=");
+//        uri.append(mapprTour.getLat());
+//        uri.append(",");
+//        uri.append(mapprTour.getLng());
+//        uri.append("&z=10");
+//        //uri.append("?z=10");
+//        //uri.append("&q=" + URLEncoder.encode(mapprTour.getMarkerText()));
+//
+//        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri.toString()));
+//        startActivity(intent);
+//    }
 
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri.toString()));
+    public void gotoGmaps(View v) {
+        Intent intent = new Intent(MapprDetails.this, MapprDirections.class);
+        intent.putExtra("destLat", branchLat);
+        intent.putExtra("destLng", branchLng);
         startActivity(intent);
     }
 
@@ -157,6 +168,9 @@ public class MapprDetails extends AppCompatActivity {
                 JSONObject json = JSONParser.makeHttpRequest(DETAILS_URL, "GET", params);
                 JSONArray gallery = json.getJSONArray("Gallery");
                 JSONObject estab = json.getJSONObject("estab");
+                JSONObject branch = json.getJSONObject("branch");
+                branchLat = branch.getString("lat");
+                branchLng = branch.getString("lng");
                 establishment = MapprEstablishment.instantiateJSONEstablishment(estab);
                 Log.i("poop", "branch_id: " + branchId);
                 Log.i("poop", "gallery length: " + gallery.length());
@@ -276,5 +290,19 @@ public class MapprDetails extends AppCompatActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         bookmarkMenu = menu.findItem(R.id.action_bookmark);
         return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Class destinationAct = null;
+        if (getIntent().getStringExtra(CYM_Utility.MAPPR_FORM).equals(CYM_Utility.FROM_FAVORITES)) {
+            destinationAct = MapprFavorites.class;
+        } else {
+            destinationAct = MapprPlotter.class;
+        }
+
+        Intent intent = new Intent(MapprDetails.this, destinationAct);
+        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        startActivity(intent);
     }
 }

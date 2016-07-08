@@ -96,8 +96,9 @@ public class MapprLogin extends AppCompatActivity {
                         MapprSession.isLoggedIn = true;
                         //Intent intent = new Intent(MapprLogin.this, MapprDetails.class);
                         Intent intent = new Intent(MapprLogin.this, destinationClass);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                         if (branchId != null) {
-                            intent.putExtra("branch_id", branchId);
+                            //intent.putExtra("branch_id", branchId);
                         }
                         MapprSession.logUser(MapprLogin.this, json.getString("user_id"));
                         startActivity(intent);

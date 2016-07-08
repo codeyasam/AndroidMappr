@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.codeyasam.mappr">
+    package="com.example.codeyasam.mappr" >
 
     <permission
         android:name="com.example.codeyasam.mappr.permission.MAPS_RECEIVE"
@@ -30,7 +30,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme" >
         <activity
             android:name=".MapprQrCode"
             android:label="@string/app_name"
@@ -63,14 +63,15 @@
         <activity
             android:name=".MapprCategory"
             android:label="@string/title_activity_featured_category"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar" >
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MapprDetails"></activity>
+        <activity android:name=".MapprDetails" />
         <activity android:name=".MapprLogin" />
         <activity android:name=".MapprRegister" />
         <activity
@@ -81,8 +82,14 @@
         <activity
             android:name=".MapprReview"
             android:theme="@android:style/Theme.NoTitleBar" />
-        <activity android:name=".MapprFavorites"
-            android:label="@string/title_activity_favorites">
+        <activity
+            android:name=".MapprFavorites"
+            android:label="@string/title_activity_favorites" >
+        </activity>
+        <activity
+            android:name=".MapprDirections"
+            android:label="@string/title_activity_mappr_directions" >
+
 
         </activity>
     </application>

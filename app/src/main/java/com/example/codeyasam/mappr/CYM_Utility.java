@@ -36,7 +36,7 @@ import java.net.URL;
  */
 public class CYM_Utility {
 
-    public static final String MAPPR_ROOT_URL = "http://192.168.42.206/thesis_with_gui/";
+    public static final String MAPPR_ROOT_URL = "http://192.168.42.44/thesis_with_gui/";
     public static final String MAPPR_PUBLIC_URL = MAPPR_ROOT_URL + "Public/";
     public static final String MAPPR_OPT = "MAPPR_OPT";
     public static final String OPT_BY_QRCODE = "111";
