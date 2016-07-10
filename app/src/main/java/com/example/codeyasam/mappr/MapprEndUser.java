@@ -227,8 +227,9 @@ public class MapprEndUser {
                     if (json.getString("success").equals("true")) {
                         MapprSession.isLoggedIn = true;
                         Intent intent = new Intent(activity, MapprDetails.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                         if (branchId != null) {
-                            intent.putExtra("branch_id", branchId);
+                            //intent.putExtra("branch_id", branchId);
                         }
                         MapprSession.logUser(activity, json.getString("id"));
                         activity.startActivity(intent);
