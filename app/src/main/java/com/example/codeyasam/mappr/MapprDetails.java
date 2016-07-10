@@ -39,6 +39,8 @@ public class MapprDetails extends AppCompatActivity {
 
     private SharedPreferences settings;
     private MenuItem bookmarkMenu;
+    private Button loginBtn;
+    private RatingBar ratingBar;
 
     private ListView listview;
 
@@ -51,15 +53,11 @@ public class MapprDetails extends AppCompatActivity {
         setContentView(R.layout.activity_mappr_details);
         listview = (ListView)findViewById(R.id.listView);
         settings = PreferenceManager.getDefaultSharedPreferences(this);
-        DetailLauncher task = new DetailLauncher();
-        final String branchId = getIntent().getStringExtra("branch_id");
-        final String userId = settings.getString(MapprSession.LOGGED_USER_ID, "");
-        task.setBranchId(branchId);
-        task.setUserId(userId);
-        task.execute();
 
-        Button loginBtn = (Button) findViewById(R.id.loginBtn);
-        RatingBar ratingBar = (RatingBar) findViewById(R.id.ratingBar);
+        final String branchId = getIntent().getStringExtra("branch_id");
+
+        loginBtn = (Button) findViewById(R.id.loginBtn);
+        ratingBar = (RatingBar) findViewById(R.id.ratingBar);
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
 
             @Override
@@ -74,10 +72,26 @@ public class MapprDetails extends AppCompatActivity {
         });
 
 
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        DetailLauncher task = new DetailLauncher();
+        final String branchId = getIntent().getStringExtra("branch_id");
+        final String userId = settings.getString(MapprSession.LOGGED_USER_ID, "");
+        task.setBranchId(branchId);
+        task.setUserId(userId);
+        task.execute();
+
         if (!MapprSession.isLoggedIn) {  //for debugging
-        //if (settings.getString(MapprSession.LOGGED_USER_ID, "").isEmpty()) {
+            //if (settings.getString(MapprSession.LOGGED_USER_ID, "").isEmpty()) {
             loginBtn.setVisibility(View.VISIBLE);
+            ratingBar.setVisibility(View.GONE);
         } else {
+            loginBtn.setVisibility(View.GONE);
             ratingBar.setVisibility(View.VISIBLE);
         }
     }
