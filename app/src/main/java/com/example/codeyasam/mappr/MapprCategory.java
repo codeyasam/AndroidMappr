@@ -1,5 +1,6 @@
 package com.example.codeyasam.mappr;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -200,5 +201,23 @@ public class MapprCategory extends AppCompatActivity {
             }
         }
     }
+
+    private DialogInterface.OnClickListener exitMapprApp() {
+        return new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+                homeIntent.addCategory( Intent.CATEGORY_HOME );
+                homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(homeIntent);
+            }
+        };
+    }
+
+    @Override
+    public void onBackPressed() {
+        CYM_Utility.callYesNoMessage("Exit app?", MapprCategory.this, exitMapprApp());
+    }
+
 
 }
