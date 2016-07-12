@@ -1,4 +1,4 @@
-package com.example.codeyasam.mappr;
+package org.mappr.org.mappr.model;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -17,10 +17,8 @@ import android.graphics.Rect;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.test.ActivityTestCase;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -36,7 +34,7 @@ import java.net.URL;
  */
 public class CYM_Utility {
 
-    public static final String MAPPR_ROOT_URL = "http://192.168.42.144/thesis/";
+    public static final String MAPPR_ROOT_URL = "http://192.168.42.20/thesis/";
     public static final String MAPPR_PUBLIC_URL = MAPPR_ROOT_URL + "Public/";
     public static final String MAPPR_OPT = "MAPPR_OPT";
     public static final String OPT_BY_QRCODE = "111";

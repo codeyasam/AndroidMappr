@@ -83,6 +83,7 @@ public class MapprReview extends Activity {
             this.branchRate = branchRate;
             this.comment = comment;
             this.mappr_from = mappr_from;
+            Log.i("poop", this.toString());
         }
 
         @Override
@@ -125,6 +126,10 @@ public class MapprReview extends Activity {
                     e.printStackTrace();
                 }
             }
+        }
+
+        public String toString() {
+            return "branchID: " + branchId + ", userID: " + userId + ", branchRate: " + branchRate + ", comment: " + comment;
         }
     }
 

@@ -8,4 +8,8 @@
     <string name="full_detail"><a href="#">View Gallery and Full Details</a></string>
     <string name="facebook_app_id">206748579705827</string>
     <string name="title_activity_mappr_directions">Map</string>
+
+    <string name="title_activity_fullscreen">FullscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>
