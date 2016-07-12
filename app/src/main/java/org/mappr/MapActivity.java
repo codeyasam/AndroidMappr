@@ -12,8 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.codeyasam.mappr.JSONParser;
-import com.example.codeyasam.mappr.MapprEstablishment;
 import com.example.codeyasam.mappr.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -34,6 +32,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.mappr.org.mappr.model.CYM_Utility;
+import org.mappr.org.mappr.model.JSONParser;
+import org.mappr.org.mappr.model.MapprEstablishment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -180,15 +180,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         protected String doInBackground(String... args) {
             try {
                 List<NameValuePair> params = new ArrayList<NameValuePair>();
-                if (mapperOpt.equals(com.example.codeyasam.mappr.CYM_Utility.OPT_BY_QRCODE)) {
+                if (mapperOpt.equals(CYM_Utility.OPT_BY_QRCODE)) {
                     Log.i("POOP", "branchID: " + branchID);
-                    params.add(new BasicNameValuePair(com.example.codeyasam.mappr.CYM_Utility.MAPPR_OPT, com.example.codeyasam.mappr.CYM_Utility.OPT_BY_QRCODE));
+                    params.add(new BasicNameValuePair(CYM_Utility.MAPPR_OPT, CYM_Utility.OPT_BY_QRCODE));
                     params.add(new BasicNameValuePair("branch_id", branchID));
-                } else if (mapperOpt.equals(com.example.codeyasam.mappr.CYM_Utility.OPT_BY_CATEGORY)) {
-                    params.add(new BasicNameValuePair(com.example.codeyasam.mappr.CYM_Utility.MAPPR_OPT, com.example.codeyasam.mappr.CYM_Utility.OPT_BY_CATEGORY));
+                } else if (mapperOpt.equals(CYM_Utility.OPT_BY_CATEGORY)) {
+                    params.add(new BasicNameValuePair(CYM_Utility.MAPPR_OPT, CYM_Utility.OPT_BY_CATEGORY));
                     params.add(new BasicNameValuePair("category_id", categoryID));
-                } else if (mapperOpt.equals(com.example.codeyasam.mappr.CYM_Utility.OPT_BY_STRING)) {
-                    params.add(new BasicNameValuePair(com.example.codeyasam.mappr.CYM_Utility.MAPPR_OPT, com.example.codeyasam.mappr.CYM_Utility.OPT_BY_STRING));
+                } else if (mapperOpt.equals(CYM_Utility.OPT_BY_STRING)) {
+                    params.add(new BasicNameValuePair(CYM_Utility.MAPPR_OPT, CYM_Utility.OPT_BY_STRING));
                     params.add(new BasicNameValuePair("search_string", searchString));
                 }
                 JSONObject json = JSONParser.makeHttpRequest(PLOTTER_URL, "GET", params);
@@ -235,7 +235,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                                 .position(latlng)
                                 .snippet(eachBranch.getString("estab_id"));
 
-                        if (mapperOpt.equals(com.example.codeyasam.mappr.CYM_Utility.OPT_BY_QRCODE)) {
+                        if (mapperOpt.equals(CYM_Utility.OPT_BY_QRCODE)) {
                             if (eachBranch.getString("id").equals(branchID)) {
                                 options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
                                 ll = new LatLng(Double.parseDouble(eachBranch.getString("lat")), Double.parseDouble(eachBranch.getString("lng")));

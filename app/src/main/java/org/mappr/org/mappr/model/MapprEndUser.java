@@ -126,7 +126,7 @@ public class MapprEndUser {
         Bitmap bm = BitmapFactory.decodeResource(activity.getResources(), drawable);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bm.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        ivImage.setImageBitmap(com.example.codeyasam.mappr.CYM_Utility.getRoundedCornerBitmap(bm));
+        ivImage.setImageBitmap(CYM_Utility.getRoundedCornerBitmap(bm));
     }
 
     public void registerUser() {
@@ -145,7 +145,7 @@ public class MapprEndUser {
             userObj.setFirstName(jsonUser.getString("first_name"));
             userObj.setLastName(jsonUser.getString("last_name"));
             userObj.setDisplay_picture_path(jsonUser.getString("display_picture"));
-            userObj.setDisplay_picture(com.example.codeyasam.mappr.CYM_Utility.loadImageFromServer(userObj.getDisplay_picture_path()));
+            userObj.setDisplay_picture(CYM_Utility.loadImageFromServer(userObj.getDisplay_picture_path()));
             return userObj;
         } catch(Exception e) {
 
