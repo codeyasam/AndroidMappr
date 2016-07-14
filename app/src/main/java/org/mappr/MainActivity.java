@@ -5,8 +5,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
-import com.example.codeyasam.mappr.CYM_Utility;
 import com.example.codeyasam.mappr.R;
+
+import org.mappr.org.mappr.model.CYM_Utility;
 
 public class MainActivity extends AppCompatActivity {
 

@@ -1,5 +1,6 @@
 package org.mappr;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.AsyncTask;
@@ -47,6 +48,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
+    private Location mLastLocation;
 
     private Map<String, MapprEstablishment> hmEstablishment = new HashMap<>();
 
@@ -100,7 +102,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-
+        Intent intent = new Intent(MapActivity.this, EstablishmentDetails.class);
+        intent.putExtra("branch_id", marker.getTitle());
+        intent.putExtra(CYM_Utility.MAPPR_FORM, CYM_Utility.FROM_PLOTTER);
+        intent.putExtra("sourceLat", String.valueOf(mLastLocation.getLatitude()));
+        intent.putExtra("sourceLng", String.valueOf(mLastLocation.getLongitude()));
+        intent.putExtra("destLat", String.valueOf(marker.getPosition().latitude));
+        intent.putExtra("destLng", String.valueOf(marker.getPosition().longitude));
+        //Log.i("poop", marker.getTitle());
+        startActivity(intent);
     }
 
 
@@ -143,7 +153,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                 mGoogleApiClient);
 
         if (mLastLocation != null) {
@@ -279,5 +289,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         public void setSearchString(String searchString) {
             this.searchString = searchString;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(MapActivity.this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        startActivity(intent);
     }
 }

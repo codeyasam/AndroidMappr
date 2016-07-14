@@ -133,6 +133,8 @@ public class MapprDetails extends AppCompatActivity {
         private List<ReviewHolder> reviewHolderList;
 
         public DetailLauncher() {
+            LinearLayout galleryContainer = (LinearLayout) findViewById(R.id.galleryContainer);
+            galleryContainer.removeAllViews();
             reviewHolderList = new ArrayList<>();
         }
 

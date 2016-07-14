@@ -34,7 +34,7 @@ import java.net.URL;
  */
 public class CYM_Utility {
 
-    public static final String MAPPR_ROOT_URL = "http://192.168.42.147/thesis/";
+    public static final String MAPPR_ROOT_URL = "http://192.168.42.18/thesis/";
     public static final String MAPPR_PUBLIC_URL = MAPPR_ROOT_URL + "Public/";
     public static final String MAPPR_OPT = "MAPPR_OPT";
     public static final String OPT_BY_QRCODE = "111";
@@ -45,6 +45,10 @@ public class CYM_Utility {
     public static final String FROM_PLOTTER = "mapprPlotter";
     public static final String FROM_FAVORITES = "mapprFavorites";
     public static final String FROM_DETAILS = "mapprDetails";
+
+    public static final String MAPPR_TO_PROCESS = "MAPPR_TO_PROCESS";
+    public static final String TO_REVIEW = "to_review";
+    public static final String TO_BOOKMARK = "to_bookmark";
 
     public static Bitmap getRoundedCornerBitmap(Bitmap bitmap) {
         Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
