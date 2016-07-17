@@ -68,6 +68,7 @@ public class EstablishmentDetails extends AppCompatActivity {
 
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                if (rating == 0) return;
                 if (!MapprSession.isLoggedIn) {  //for debugging
                     // if (settings.getString(MapprSession.LOGGED_USER_ID, "").isEmpty()) {
                     Log.i("poop", "is not logged in");
@@ -83,12 +84,13 @@ public class EstablishmentDetails extends AppCompatActivity {
             }
         });
 
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
+        ratingBar.setRating(0);
         DetailLauncher task = new DetailLauncher();
         final String branchId = getIntent().getStringExtra("branch_id");
         final String userId = settings.getString(MapprSession.LOGGED_USER_ID, "");
