@@ -1,19 +1,18 @@
 package org.mappr;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.design.widget.TabLayout;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
-import com.example.codeyasam.mappr.JSONParser;
-import com.example.codeyasam.mappr.MapprPlotter;
+import org.mappr.org.mappr.model.JSONParser;
 import com.example.codeyasam.mappr.R;
 
 import org.apache.http.NameValuePair;
@@ -26,53 +25,33 @@ import org.mappr.org.mappr.model.MapprCategory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+/**
+ * Created by codeyasam on 7/18/16.
+ */
+public class CategoryFragment extends Fragment {
 
     private static final String CATEGORY_URL = CYM_Utility.MAPPR_ROOT_URL + "tests/featuredCategoryTests.php";
 
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
-    private ViewPageAdapter viewPageAdapter;
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        //new CategorySearcher().execute();
-
-        tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
-        viewPageAdapter = new ViewPageAdapter(getSupportFragmentManager());
-
-        viewPager.setAdapter(viewPageAdapter);
-        final TabLayout.Tab category = tabLayout.newTab();
-        final TabLayout.Tab bookmark = tabLayout.newTab();
-
-        category.setText("CATEGORIES");
-        bookmark.setText("BOOKMARKS");
-
-        tabLayout.addTab(category, 0);
-        tabLayout.addTab(bookmark, 1);
-
-        tabLayout.setTabTextColors(ContextCompat.getColorStateList(this, R.color.black_overlay));
-        tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(this, R.color.colorAccent));
-
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        //new CategorySearcher().execute();
-    }
-
-    //search by string
-    public void searchClick(View v) {
-        Intent intent = new Intent(this, MapActivity.class);
-        intent.putExtra(CYM_Utility.MAPPR_OPT, CYM_Utility.OPT_BY_STRING);
-        intent.putExtra("searchString", CYM_Utility.getText(this, R.id.searchTxt));
-        startActivity(intent);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.activity_main_category, container, false);
+        GridView categoryGrid = (GridView) view.findViewById(R.id.categoryGrid);
+        new CategorySearcher(getActivity(), categoryGrid).execute();
+        return view;
     }
 
     class CategorySearcher extends AsyncTask<String, String, List<MapprCategory>> {
 
         private CategoryAdapter categoryAdapter;
         private List<MapprCategory> categoryList;
+
+        private GridView categoryGrid;
+        private Activity mContext;
+
+        public CategorySearcher(Activity mContext, GridView categoryGrid) {
+            this.categoryGrid= categoryGrid;
+            this.mContext = mContext;
+        }
 
         @Override
         protected List<MapprCategory> doInBackground(String... args) {
@@ -81,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
                 JSONObject json = JSONParser.makeHttpRequest(CATEGORY_URL, "GET", params);
                 JSONArray featuredCategories = json.getJSONArray("Categories");
                 categoryList = getCategoryList(featuredCategories);
-                categoryAdapter = new CategoryAdapter(MainActivity.this, categoryList);
+                categoryAdapter = new CategoryAdapter(mContext, categoryList);
                 return categoryList;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -94,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(List<MapprCategory> categories) {
             if (!categories.isEmpty()) {
                 try {
-                    GridView categoryGrid = (GridView) findViewById(R.id.categoryGrid);
+                    //GridView categoryGrid = (GridView) findViewById(R.id.categoryGrid);
                     categoryGrid.setAdapter(categoryAdapter);
                     categoryGrid.setOnItemClickListener(customOnClickMethod());
                 } catch (Exception e) {
@@ -124,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     MapprCategory category = categoryList.get(position);
                     Log.i("poop", "category click id: " + category.getId());
-                    Intent intent = new Intent(MainActivity.this, MapActivity.class);
+                    Intent intent = new Intent(mContext, MapActivity.class);
                     intent.putExtra(CYM_Utility.MAPPR_OPT, CYM_Utility.OPT_BY_CATEGORY);
                     intent.putExtra("categoryID", category.getId());
                     startActivity(intent);

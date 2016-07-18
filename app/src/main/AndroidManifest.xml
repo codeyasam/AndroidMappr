@@ -63,9 +63,7 @@
         <activity
             android:name=".MapprCategory"
             android:label="@string/title_activity_featured_category"
-            android:theme="@style/AppTheme.NoActionBar" >
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".MapprDetails" />
         <activity android:name=".MapprLogin" />
         <activity android:name=".MapprRegister" />
@@ -99,16 +97,20 @@
         <activity
             android:name="org.mappr.EstablishmentDetails"
             android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity android:name="org.mappr.ReviewActivty"
+        <activity
+            android:name="org.mappr.ReviewActivty"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name="org.mappr.LoginActivity"
+        <activity
+            android:name="org.mappr.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name="org.mappr.DirectionActivity"
+        <activity
+            android:name="org.mappr.DirectionActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name="org.mappr.FavoritesActivity"
+        <activity
+            android:name="org.mappr.FavoritesActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name="org.mappr.RegisterActivity"
+        <activity
+            android:name="org.mappr.RegisterActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <!-- end of org.mappr -->
     </application>
