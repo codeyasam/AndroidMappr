@@ -1,0 +1,77 @@
+package org.mappr;
+
+import android.content.Intent;
+import android.graphics.PointF;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.widget.TextView;
+
+import com.dlazaro66.qrcodereaderview.QRCodeReaderView;
+import com.example.codeyasam.mappr.R;
+
+import org.mappr.org.mappr.model.CYM_Utility;
+
+public class QrCodeScanner extends AppCompatActivity implements QRCodeReaderView.OnQRCodeReadListener {
+
+    private QRCodeReaderView mydecoderview;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_qr_code_scanner);
+        mydecoderview = (QRCodeReaderView) findViewById(R.id.qrdecoderview);
+        mydecoderview.setOnQRCodeReadListener(this);
+    }
+
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.menu_main, menu);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle action bar item clicks here. The action bar will
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//        int id = item.getItemId();
+//
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mydecoderview.getCameraManager().startPreview();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mydecoderview.getCameraManager().stopPreview();
+    }
+
+    @Override
+    public void onQRCodeRead(String text, PointF[] points) {
+        Intent intent = new Intent(this, MapActivity.class);
+        intent.putExtra(CYM_Utility.MAPPR_OPT, CYM_Utility.OPT_BY_QRCODE);
+        intent.putExtra("branchID", text);
+        startActivity(intent);
+    }
+
+    @Override
+    public void cameraNotFound() {
+
+    }
+
+    @Override
+    public void QRCodeNotFoundOnCamImage() {
+
+    }
+}

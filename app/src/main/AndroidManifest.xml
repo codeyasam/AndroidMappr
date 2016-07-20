@@ -83,20 +83,14 @@
             android:label="@string/title_activity_mappr_directions" />
         <!-- org.mappr - this part of project is created to apply the gui that are now being implemented -->
         <activity
-            android:name="org.mappr.MainActivity"
-            android:label="">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:name="org.mappr.MainActivityBAK"
+            android:label=""></activity>
         <activity
             android:name="org.mappr.MapActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="org.mappr.EstablishmentDetails"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="" />
         <activity
             android:name="org.mappr.ReviewActivty"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -113,6 +107,21 @@
             android:name="org.mappr.RegisterActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <!-- end of org.mappr -->
+        <activity
+            android:name="org.mappr.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable"
+                android:value="search seasrch" />
+        </activity>
+        <activity android:name="org.mappr.QrCodeScanner"></activity>
     </application>
 
 </manifest>

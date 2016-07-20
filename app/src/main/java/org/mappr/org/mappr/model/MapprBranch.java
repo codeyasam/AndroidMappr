@@ -1,7 +1,5 @@
 package org.mappr.org.mappr.model;
 
-import com.example.codeyasam.mappr.MapprEstablishment;
-
 import org.json.JSONObject;
 
 import java.util.HashMap;

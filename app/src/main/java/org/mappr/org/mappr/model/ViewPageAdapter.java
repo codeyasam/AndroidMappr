@@ -1,8 +1,10 @@
-package org.mappr;
+package org.mappr.org.mappr.model;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+
+import org.mappr.org.mappr.model.CategoryFragment;
 
 /**
  * Created by codeyasam on 7/19/16.
@@ -15,7 +17,11 @@ public class ViewPageAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return new CategoryFragment();
+        switch (position) {
+            case 0: return new CategoryFragment();
+            case 1: return new FavoritesFragment();
+        }
+        return null;
     }
 
     @Override

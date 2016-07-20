@@ -1,18 +1,18 @@
-package org.mappr;
+package org.mappr.org.mappr.model;
 
-import android.content.Intent;
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.Menu;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.example.codeyasam.mappr.R;
 
@@ -21,21 +21,21 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.mappr.org.mappr.model.CYM_Utility;
-import org.mappr.org.mappr.model.FavoriteAdapter;
-import org.mappr.org.mappr.model.JSONParser;
-import org.mappr.org.mappr.model.MapprBranch;
-import org.mappr.org.mappr.model.MapprEstablishment;
-import org.mappr.org.mappr.model.MapprSession;
+import org.mappr.FavoritesActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FavoritesActivity extends AppCompatActivity {
+/**
+ * Created by codeyasam on 7/20/16.
+ */
+public class FavoritesFragment extends Fragment {
 
     private static final String FAVORITES_URL = CYM_Utility.MAPPR_ROOT_URL + "tests/getBookmarks.php";
+
+    private View view;
 
     private Map<String, MapprEstablishment> estabHm = new HashMap<>();
     private List<MapprBranch> branchesList;
@@ -43,38 +43,20 @@ public class FavoritesActivity extends AppCompatActivity {
 
     private ListView listView;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mappr_favorites);
-        listView = (ListView)findViewById(R.id.favBranchList);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.activity_favorites, container, false);
+        listView = (ListView) view.findViewById(R.id.favBranchList);
 
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         branchesList = new ArrayList<>();
-        settings = PreferenceManager.getDefaultSharedPreferences(FavoritesActivity.this);
+        settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String userId = settings.getString(MapprSession.LOGGED_USER_ID, "");
         if (userId.isEmpty()) {
-            TextView tv = (TextView) findViewById(R.id.emptyBookmarkTxt);
-            tv.setText("You aren't logged in.");
-            tv.setVisibility(View.VISIBLE);
-
-            Button loginBtn = (Button) findViewById(R.id.loginBtn);
-            loginBtn.setVisibility(View.VISIBLE);
-
-            Log.i("poop", "no user id");
-            return;
+            return view;
         }
-        new FavoritesLoader(userId).execute();
-    }
-
-    public void loginClick(View v) {
-        Intent intent = new Intent(FavoritesActivity.this, LoginActivity.class);
-        intent.putExtra(CYM_Utility.MAPPR_FORM, CYM_Utility.FROM_FAVORITES);
-        startActivity(intent);
+        new FavoritesLoader(userId, getActivity(), view).execute();
+        return view;
     }
 
     private boolean setEstabHm(JSONArray estabs) {
@@ -109,13 +91,17 @@ public class FavoritesActivity extends AppCompatActivity {
         return false;
     }
 
-
     class FavoritesLoader extends AsyncTask<String, String, String> {
 
         private String userId;
 
-        public FavoritesLoader(String userId) {
+        private Activity mContext;
+        private View view;
+
+        public FavoritesLoader(String userId, Activity mContext, View view) {
             this.userId = userId;
+            this.mContext = mContext;
+            this.view = view;
         }
 
         @Override
@@ -141,29 +127,16 @@ public class FavoritesActivity extends AppCompatActivity {
                 try {
                     Log.i("poop", result);
                     if (!branchesList.isEmpty()) {
-                        findViewById(R.id.favBranchList).setVisibility(View.VISIBLE);
-                        ArrayAdapter<MapprBranch> adapter = new FavoriteAdapter(FavoritesActivity.this, branchesList);
+                        view.findViewById(R.id.favBranchList).setVisibility(View.VISIBLE);
+                        ArrayAdapter<MapprBranch> adapter = new FavoriteAdapter(mContext, branchesList);
                         listView.setAdapter(adapter);
                     } else {
-                        findViewById(R.id.emptyBookmarkTxt).setVisibility(View.VISIBLE);
+                        view.findViewById(R.id.emptyBookmarkTxt).setVisibility(View.VISIBLE);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public void onBackPressed() {
-        Intent intent = new Intent(FavoritesActivity.this, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        startActivity(intent);
     }
 }

@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:orientation="vertical"
-    tools:context="org.mappr.MainActivity">
+    tools:context="org.mappr.MainActivityBAK">
 
     <android.support.design.widget.TabLayout
         android:id="@+id/tab_layout"
