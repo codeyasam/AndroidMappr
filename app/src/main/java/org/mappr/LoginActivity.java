@@ -46,8 +46,20 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!MapprSession.isLoggedIn) {  //for debugging
+            // if (settings.getString(MapprSession.LOGGED_USER_ID, "").isEmpty()) {
+            Log.i("poop", "hindi ka pa nakalogin");
+        } else {
+            finish();
+        }
+    }
+
     public void loginClick(View v) {
         Log.i("poop", "login clicked");
+        //finish();
         if (last_activity.equals(CYM_Utility.FROM_DETAILS)) {
             new LoginConnector(EstablishmentDetails.class).execute();
         } else if (last_activity.equals(CYM_Utility.FROM_FAVORITES)) {
@@ -102,14 +114,14 @@ public class LoginActivity extends AppCompatActivity {
                     if (json.getString("result").equals("true")) {
                         MapprSession.isLoggedIn = true;
                         //Intent intent = new Intent(MapprLogin.this, MapprDetails.class);
-                        Intent intent = new Intent(LoginActivity.this, destinationClass);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                        if (branchId != null) {
-                            //intent.putExtra("branch_id", branchId);
-                        }
-                        MapprSession.logUser(LoginActivity.this, json.getString("user_id"));
-                        startActivity(intent);
-                        //finish();
+//                        Intent intent = new Intent(LoginActivity.this, destinationClass);
+//                        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+//                        if (branchId != null) {
+//                            //intent.putExtra("branch_id", branchId);
+//                        }
+//                        MapprSession.logUser(LoginActivity.this, json.getString("user_id"));
+//                        startActivity(intent);
+                        finish();
                     }
                 } catch (JSONException e) {
 

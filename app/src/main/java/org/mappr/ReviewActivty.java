@@ -118,11 +118,12 @@ public class ReviewActivty extends AppCompatActivity {
                 try {
                     JSONObject json = new JSONObject(result);
                     if (json.getString("success").equals("true")) {
-                        Intent intent = new Intent(ReviewActivty.this, EstablishmentDetails.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                        //intent.putExtra("branch_id", branchId);
-                        //intent.putExtra(CYM_Utility.MAPPR_FORM, mappr_from);
-                        startActivity(intent);
+//                        Intent intent = new Intent(ReviewActivty.this, EstablishmentDetails.class);
+//                        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+//                        //intent.putExtra("branch_id", branchId);
+//                        //intent.putExtra(CYM_Utility.MAPPR_FORM, mappr_from);
+//                        startActivity(intent);
+                        finish();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -150,7 +151,7 @@ public class ReviewActivty extends AppCompatActivity {
                 List<NameValuePair> params = new ArrayList<>();
                 params.add(new BasicNameValuePair("user_id", user_id));
                 JSONObject json = JSONParser.makeHttpRequest(GET_CURRENT_USER_URL, "GET", params);
-                displayPicture = CYM_Utility.loadImageFromServer(json.getString("display_picture"));
+                displayPicture = CYM_Utility.loadImageFromServer(json.getString("display_picture"), 50, 50);
                 return json.toString();
             } catch (Exception e) {
                 e.printStackTrace();

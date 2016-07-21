@@ -30,6 +30,8 @@ import org.mappr.org.mappr.model.CYM_Utility;
 import org.mappr.org.mappr.model.CategoryFragment;
 import org.mappr.org.mappr.model.FavoritesFragment;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     /**
@@ -71,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
     //search by string
     private void searchClick(String searchString) {
-        Intent intent = new Intent(this, MapActivity.class);
+        Intent intent = new Intent(this.getApplicationContext(), MapActivity.class);
         intent.putExtra(CYM_Utility.MAPPR_OPT, CYM_Utility.OPT_BY_STRING);
         intent.putExtra("searchString", searchString);
         startActivity(intent);
@@ -79,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void scanQrCode() {
         Log.i("poop", "poop");
-        Intent intent = new Intent(MainActivity.this, QrCodeScanner.class);
+        Intent intent = new Intent(this.getApplicationContext(), QrCodeScanner.class);
         startActivity(intent);
     }
 
@@ -215,4 +217,5 @@ public class MainActivity extends AppCompatActivity {
             return null;
         }
     }
+
 }

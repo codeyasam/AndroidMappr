@@ -1,6 +1,7 @@
 package org.mappr.org.mappr.model;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -27,12 +28,16 @@ import java.util.List;
 public class CategoryFragment extends Fragment {
 
     private static final String CATEGORY_URL = CYM_Utility.MAPPR_ROOT_URL + "tests/featuredCategoryTests.php";
+    private CategorySearcher categorySearcher;
+    private View view;
+    private GridView categoryGrid;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_main_category, container, false);
-        GridView categoryGrid = (GridView) view.findViewById(R.id.categoryGrid);
-        new CategorySearcher(getActivity(), categoryGrid).execute();
+        view = inflater.inflate(R.layout.activity_main_category, container, false);
+        categoryGrid = (GridView) view.findViewById(R.id.categoryGrid);
+        categorySearcher = new CategorySearcher();
+        categorySearcher.execute();
         return view;
     }
 
@@ -42,12 +47,7 @@ public class CategoryFragment extends Fragment {
         private CategoryAdapter categoryAdapter;
         private List<MapprCategory> categoryList;
 
-        private GridView categoryGrid;
-        private Activity mContext;
-
-        public CategorySearcher(Activity mContext, GridView categoryGrid) {
-            this.categoryGrid= categoryGrid;
-            this.mContext = mContext;
+        public CategorySearcher() {
         }
 
         @Override
@@ -57,7 +57,7 @@ public class CategoryFragment extends Fragment {
                 JSONObject json = JSONParser.makeHttpRequest(CATEGORY_URL, "GET", params);
                 JSONArray featuredCategories = json.getJSONArray("Categories");
                 categoryList = getCategoryList(featuredCategories);
-                categoryAdapter = new CategoryAdapter(mContext, categoryList);
+                categoryAdapter = new CategoryAdapter(getActivity().getApplicationContext(), categoryList);
                 return categoryList;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -70,13 +70,13 @@ public class CategoryFragment extends Fragment {
         protected void onPostExecute(List<MapprCategory> categories) {
             if (!categories.isEmpty()) {
                 try {
-                    //GridView categoryGrid = (GridView) findViewById(R.id.categoryGrid);
                     categoryGrid.setAdapter(categoryAdapter);
                     categoryGrid.setOnItemClickListener(customOnClickMethod());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
+
         }
 
         private List<MapprCategory> getCategoryList(JSONArray jsonArray) {
@@ -100,12 +100,20 @@ public class CategoryFragment extends Fragment {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     MapprCategory category = categoryList.get(position);
                     Log.i("poop", "category click id: " + category.getId());
-                    Intent intent = new Intent(mContext, MapActivity.class);
+                    Intent intent = new Intent(getActivity().getApplicationContext(), MapActivity.class);
                     intent.putExtra(CYM_Utility.MAPPR_OPT, CYM_Utility.OPT_BY_CATEGORY);
                     intent.putExtra("categoryID", category.getId());
                     startActivity(intent);
                 }
             };
         }
+
+    }
+
+    @Override
+    public void onDestroyView() {
+        view = null;
+        categoryGrid = null;
+        super.onDestroyView();
     }
 }

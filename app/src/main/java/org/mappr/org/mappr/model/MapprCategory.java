@@ -58,7 +58,7 @@ public class MapprCategory {
             category.setId(jsonCategory.getString("id"));
             category.setName(jsonCategory.getString("name"));
             category.setDescription(jsonCategory.getString("description"));
-            category.setDisplay_picture(CYM_Utility.loadImageFromServer(CYM_Utility.MAPPR_PUBLIC_URL + jsonCategory.getString("display_picture")));
+            category.setDisplay_picture(CYM_Utility.loadImageFromServer(CYM_Utility.MAPPR_PUBLIC_URL + jsonCategory.getString("display_picture"), 50, 50));
             category.setFeatured_category(jsonCategory.getString("featured_category"));
             return category;
         } catch (Exception e) {

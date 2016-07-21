@@ -53,7 +53,7 @@ public class FavoriteAdapter extends ArrayAdapter<MapprBranch> {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, EstablishmentDetails.class);
+                Intent intent = new Intent(context.getApplicationContext(), EstablishmentDetails.class);
                 intent.putExtra("branch_id", branch_id);
                 intent.putExtra(CYM_Utility.MAPPR_FORM, CYM_Utility.FROM_FAVORITES);
                 context.startActivity(intent);

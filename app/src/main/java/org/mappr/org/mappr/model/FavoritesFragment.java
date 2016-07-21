@@ -42,6 +42,7 @@ public class FavoritesFragment extends Fragment {
     private SharedPreferences settings;
 
     private ListView listView;
+    private FavoritesLoader favoritesLoader;
 
     @Nullable
     @Override
@@ -55,7 +56,8 @@ public class FavoritesFragment extends Fragment {
         if (userId.isEmpty()) {
             return view;
         }
-        new FavoritesLoader(userId, getActivity(), view).execute();
+        favoritesLoader = new FavoritesLoader(userId);
+        favoritesLoader.execute();
         return view;
     }
 
@@ -95,13 +97,8 @@ public class FavoritesFragment extends Fragment {
 
         private String userId;
 
-        private Activity mContext;
-        private View view;
-
-        public FavoritesLoader(String userId, Activity mContext, View view) {
+        public FavoritesLoader(String userId) {
             this.userId = userId;
-            this.mContext = mContext;
-            this.view = view;
         }
 
         @Override
@@ -128,7 +125,7 @@ public class FavoritesFragment extends Fragment {
                     Log.i("poop", result);
                     if (!branchesList.isEmpty()) {
                         view.findViewById(R.id.favBranchList).setVisibility(View.VISIBLE);
-                        ArrayAdapter<MapprBranch> adapter = new FavoriteAdapter(mContext, branchesList);
+                        ArrayAdapter<MapprBranch> adapter = new FavoriteAdapter(getActivity(), branchesList);
                         listView.setAdapter(adapter);
                     } else {
                         view.findViewById(R.id.emptyBookmarkTxt).setVisibility(View.VISIBLE);
@@ -137,6 +134,15 @@ public class FavoritesFragment extends Fragment {
                     e.printStackTrace();
                 }
             }
+
         }
+
+    }
+
+    @Override
+    public void onDestroyView() {
+        view = null;
+        listView = null;
+        super.onDestroyView();
     }
 }

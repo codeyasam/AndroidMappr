@@ -49,17 +49,23 @@ public class EstablishmentDetails extends AppCompatActivity {
     private Button loginBtn;
     private RatingBar ratingBar;
 
-    private ListView listview;
+
 
     private String branchLat;
     private String branchLng;
+
+    //release references
+    private ListView listview;
+    private List<Bitmap> listBranchGallery = new ArrayList<>();
+    private MapprEstablishment establishment;
+    private List<ReviewHolder> reviewHolderList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_establishment_details);
         listview = (ListView)findViewById(R.id.listView);
-        settings = PreferenceManager.getDefaultSharedPreferences(this);
+        settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         final String branchId = getIntent().getStringExtra("branch_id");
         //loginBtn = (Button) findViewById(R.id.loginBtn);
@@ -75,7 +81,7 @@ public class EstablishmentDetails extends AppCompatActivity {
                     CYM_Utility.callYesNoMessage("You must be logged in", EstablishmentDetails.this, customOnClickListener());
                 } else {
                     Log.i("poop", "value: " + rating + " user: " + fromUser + " branch_id: " + branchId);
-                    Intent intent = new Intent(EstablishmentDetails.this, ReviewActivty.class);
+                    Intent intent = new Intent(getApplicationContext(), ReviewActivty.class);
                     intent.putExtra("branch_id", branchId);
                     intent.putExtra("branch_rate", String.valueOf(rating));
                     intent.putExtra(CYM_Utility.MAPPR_FORM, getIntent().getStringExtra(CYM_Utility.MAPPR_FORM));
@@ -107,29 +113,14 @@ public class EstablishmentDetails extends AppCompatActivity {
     }
 
     public void loginClick(View v) {
-        Intent intent = new Intent(EstablishmentDetails.this, LoginActivity.class);
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
         intent.putExtra("branch_id", getIntent().getStringExtra("branch_id"));
         intent.putExtra(CYM_Utility.MAPPR_FORM, CYM_Utility.FROM_DETAILS);
         startActivity(intent);
     }
 
-    //call gmaps as seperate application
-//    public void gotoGmaps(View v) {
-//        StringBuilder uri = new StringBuilder("geo:");
-//        uri.append("?q=");
-//        uri.append(mapprTour.getLat());
-//        uri.append(",");
-//        uri.append(mapprTour.getLng());
-//        uri.append("&z=10");
-//        //uri.append("?z=10");
-//        //uri.append("&q=" + URLEncoder.encode(mapprTour.getMarkerText()));
-//
-//        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri.toString()));
-//        startActivity(intent);
-//    }
-
     public void gotoGmaps(View v) {
-        Intent intent = new Intent(EstablishmentDetails.this, DirectionActivity.class);
+        Intent intent = new Intent(getApplicationContext(), DirectionActivity.class);
         intent.putExtra("destLat", branchLat);
         intent.putExtra("destLng", branchLng);
         startActivity(intent);
@@ -139,9 +130,6 @@ public class EstablishmentDetails extends AppCompatActivity {
 
         private String branchId;
         private String userId;
-        private List<Bitmap> listBranchGallery = new ArrayList<>();
-        private MapprEstablishment establishment;
-        private List<ReviewHolder> reviewHolderList;
 
         public DetailLauncher() {
             LinearLayout galleryContainer = (LinearLayout) findViewById(R.id.galleryContainer);
@@ -206,7 +194,7 @@ public class EstablishmentDetails extends AppCompatActivity {
                 for (int i = 0; i < gallery.length(); i++) {
                     JSONObject eachGal = gallery.getJSONObject(i);
                     String url = CYM_Utility.MAPPR_PUBLIC_URL + eachGal.getString("gallery_pic");
-                    listBranchGallery.add(CYM_Utility.loadImageFromServer(url));
+                    listBranchGallery.add(CYM_Utility.loadImageFromServer(url, 100, 100));
                 }
 
                 setReviewHolder(json);
@@ -235,11 +223,11 @@ public class EstablishmentDetails extends AppCompatActivity {
                     CYM_Utility.setRatingBarRate(EstablishmentDetails.this, R.id.branchRating, Float.parseFloat(json.getString("average_rating")));
                     LinearLayout galleryContainer = (LinearLayout) findViewById(R.id.galleryContainer);
                     for (Bitmap bmp : listBranchGallery) {
-                        ImageView iv = new ImageView(EstablishmentDetails.this);
+                        ImageView iv = new ImageView(getApplicationContext());
                         iv.setImageBitmap(bmp);
                         galleryContainer.addView(iv);
-                        float height = CYM_Utility.dipToPixels(EstablishmentDetails.this, 100);
-                        float width = CYM_Utility.dipToPixels(EstablishmentDetails.this, 100);
+                        float height = CYM_Utility.dipToPixels(getApplicationContext(), 100);
+                        float width = CYM_Utility.dipToPixels(getApplicationContext(), 100);
                         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams((int)height, (int)width);
                         iv.setLayoutParams(lp);
                     }
@@ -247,7 +235,7 @@ public class EstablishmentDetails extends AppCompatActivity {
                     String bookmarkState = json.getString("isBookmarked").equals("true") ? "BOOKMARKED" : "BOOKMARK";
                     //bookmarkMenu.setTitle(bookmarkState);
                     if (reviewHolderList.isEmpty()) listview.setVisibility(View.GONE);
-                    ArrayAdapter<ReviewHolder> reviewHolderArrayAdapter = new ReviewAdapter(EstablishmentDetails.this, reviewHolderList);
+                    ArrayAdapter<ReviewHolder> reviewHolderArrayAdapter = new ReviewAdapter(getApplicationContext(), reviewHolderList);
                     listview.setAdapter(reviewHolderArrayAdapter);
                     listview.setOnTouchListener(new View.OnTouchListener() {
                         // Setting on Touch Listener for handling the touch inside ScrollView
@@ -293,7 +281,7 @@ public class EstablishmentDetails extends AppCompatActivity {
         Log.i("poop", "bookmard click");
         //if (!MapprSession.isLoggedIn) {  //for debugging
         if (settings.getString(MapprSession.LOGGED_USER_ID, "").isEmpty()) {
-            CYM_Utility.callYesNoMessage("You must be logged in", EstablishmentDetails.this, customOnClickListener());
+            CYM_Utility.callYesNoMessage("You must be logged in", getApplicationContext(), customOnClickListener());
         } else {
             Log.i("poop", "bookmard click2");
             String user_id = settings.getString(MapprSession.LOGGED_USER_ID, "");
@@ -307,7 +295,8 @@ public class EstablishmentDetails extends AppCompatActivity {
         return new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent(EstablishmentDetails.this, LoginActivity.class);
+                Log.i("poop", "gustong mag login");
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 String branch_id = getIntent().getStringExtra("branch_id");
                 intent.putExtra("branch_id", branch_id);
                 intent.putExtra(CYM_Utility.MAPPR_FORM, CYM_Utility.FROM_DETAILS);
@@ -323,6 +312,20 @@ public class EstablishmentDetails extends AppCompatActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        reviewHolderList = null;
+        listview = null;
+        establishment = null;
+        listBranchGallery = null;
+        super.onDestroy();
+    }
+
+    @Override
     public void onBackPressed() {
         Class destinationAct = null;
         if (getIntent().getStringExtra(CYM_Utility.MAPPR_FORM).equals(CYM_Utility.FROM_FAVORITES)) {
@@ -331,8 +334,10 @@ public class EstablishmentDetails extends AppCompatActivity {
             destinationAct = MapActivity.class;
         }
 
-        Intent intent = new Intent(EstablishmentDetails.this, destinationAct);
-        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        startActivity(intent);
+//        Intent intent = new Intent(EstablishmentDetails.this, destinationAct);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+//        startActivity(intent);
+        finish();
     }
+
 }

@@ -83,7 +83,7 @@ public class MapprEstablishment {
             estab.setCategory_id(eachEstab.getString("category_id"));
             estab.setDescription(eachEstab.getString("description"));
             estab.setOwner_id(eachEstab.getString("owner_id"));
-            Bitmap bmp = CYM_Utility.loadImageFromServer(CYM_Utility.MAPPR_PUBLIC_URL + eachEstab.getString("display_picture"));
+            Bitmap bmp = CYM_Utility.loadImageFromServer(CYM_Utility.MAPPR_PUBLIC_URL + eachEstab.getString("display_picture"), 100, 100);
             estab.setDisplay_picture(bmp);
             return estab;
         } catch (JSONException e) {

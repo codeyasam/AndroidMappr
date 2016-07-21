@@ -145,7 +145,7 @@ public class MapprEndUser {
             userObj.setFirstName(jsonUser.getString("first_name"));
             userObj.setLastName(jsonUser.getString("last_name"));
             userObj.setDisplay_picture_path(jsonUser.getString("display_picture"));
-            userObj.setDisplay_picture(CYM_Utility.loadImageFromServer(userObj.getDisplay_picture_path()));
+            userObj.setDisplay_picture(CYM_Utility.loadImageFromServer(userObj.getDisplay_picture_path(), 50, 50));
             return userObj;
         } catch(Exception e) {
 
@@ -221,13 +221,14 @@ public class MapprEndUser {
                     Log.i("poop", json.getString("success"));
                     if (json.getString("success").equals("true")) {
                         MapprSession.isLoggedIn = true;
-                        Intent intent = new Intent(activity, EstablishmentDetails.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                        if (branchId != null) {
-                            //intent.putExtra("branch_id", branchId);
-                        }
+//                        Intent intent = new Intent(activity, EstablishmentDetails.class);
+//                        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+//                        if (branchId != null) {
+//                            //intent.putExtra("branch_id", branchId);
+//                        }
                         MapprSession.logUser(activity, json.getString("id"));
-                        activity.startActivity(intent);
+                        //activity.startActivity(intent);
+                        activity.finish();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

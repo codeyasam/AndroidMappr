@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -34,7 +35,7 @@ import java.net.URL;
  */
 public class CYM_Utility {
 
-    public static final String MAPPR_ROOT_URL = "http://192.168.42.194/thesis/";
+    public static final String MAPPR_ROOT_URL = "http://192.168.42.68/thesis/";
     public static final String MAPPR_PUBLIC_URL = MAPPR_ROOT_URL + "Public/";
     public static final String MAPPR_OPT = "MAPPR_OPT";
     public static final String OPT_BY_QRCODE = "111";
@@ -79,7 +80,7 @@ public class CYM_Utility {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue, metrics);
     }
 
-    public static Bitmap loadImageFromServer(String url) {
+    public static Bitmap loadImageFromServer(String url, int reqWidth, int reqHeight) {
         try {
             URL urlConnection = new URL(url);
             HttpURLConnection connection = (HttpURLConnection) urlConnection
@@ -87,7 +88,19 @@ public class CYM_Utility {
             connection.setDoInput(true);
             connection.connect();
             InputStream input = connection.getInputStream();
-            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            final BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            //Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            BitmapFactory.decodeStream(input, null, options);
+            options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+            input.close();
+            connection = (HttpURLConnection) urlConnection.openConnection();
+            connection.connect();
+            input = connection.getInputStream();
+            options.inJustDecodeBounds = false;
+            Bitmap myBitmap = BitmapFactory.decodeStream(input, null, options);
+            input.close();
+            input = null;
             return myBitmap;
         } catch (Exception e) {
             e.printStackTrace();
@@ -182,4 +195,28 @@ public class CYM_Utility {
         RatingBar ratingBar = (RatingBar) view.findViewById(id);
         ratingBar.setRating(rating);
     }
+
+    public static int calculateInSampleSize(
+            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) >= reqHeight
+                    && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+
+        return inSampleSize;
+    }
+
 }
