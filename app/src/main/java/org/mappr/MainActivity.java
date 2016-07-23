@@ -56,6 +56,11 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        setupmFragments();
+    }
+
+    private void setupmFragments() {
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -91,37 +96,31 @@ public class MainActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main2, menu);
 
-//        // Get the SearchView and set the searchable configuration
-          SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-          SearchView searchView = (SearchView) menu.findItem(R.id.action_settings).getActionView();
-//        // Assumes current activity is the searchable activity
-          MenuItem mSearchMenuItem = menu.findItem(R.id.action_settings);
-          SearchView mSearchView = (SearchView) MenuItemCompat.getActionView(mSearchMenuItem);
-            mSearchView.setSearchableInfo(searchManager.getSearchableInfo(
-                new ComponentName(getApplicationContext(), MapActivity.class)));
-            mSearchView.setIconifiedByDefault(false);
+        // Get the SearchView and set the searchable configuration
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        MenuItem mSearchMenuItem = menu.findItem(R.id.action_settings);
+        SearchView mSearchView = (SearchView) MenuItemCompat.getActionView(mSearchMenuItem);
+        mSearchView.setSearchableInfo(searchManager.getSearchableInfo(new ComponentName(getApplicationContext(), MapActivity.class)));
+        mSearchView.setIconifiedByDefault(false);
 
-            mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
-                @Override
-                public boolean onQueryTextSubmit(String query) {
-                    searchClick(query);
-                    return false;
-                }
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchClick(query);
+                return false;
+            }
 
-                @Override
-                public boolean onQueryTextChange(String newText) {
-                    return false;
-                }
-            });
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
 
 
         return true;
     }
 
-    private void setupSearchView() {
-
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
