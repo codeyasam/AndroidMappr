@@ -1,6 +1,8 @@
 package org.mappr.org.mappr.model;
 
 import android.app.Activity;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.codeyasam.mappr.R;
 
@@ -22,6 +25,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.mappr.FavoritesActivity;
+import org.mappr.LoginActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,7 +35,7 @@ import java.util.Map;
 /**
  * Created by codeyasam on 7/20/16.
  */
-public class FavoritesFragment extends Fragment {
+public class FavoritesFragment extends Fragment implements View.OnClickListener {
 
     private static final String FAVORITES_URL = CYM_Utility.MAPPR_ROOT_URL + "tests/getBookmarks.php";
 
@@ -52,14 +56,39 @@ public class FavoritesFragment extends Fragment {
 
         branchesList = new ArrayList<>();
         settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String userId = settings.getString(MapprSession.LOGGED_USER_ID, "");
-        if (userId.isEmpty()) {
-            return view;
-        }
-        favoritesLoader = new FavoritesLoader(userId);
-        favoritesLoader.execute();
         return view;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i("poop", "favoriteFragment mainAcvitity onResume");
+        setupmView(view);
+    }
+
+    private void setupmView(View view) {
+        String userId = settings.getString(MapprSession.LOGGED_USER_ID, "");
+        TextView tv = (TextView) view.findViewById(R.id.loginTxt);
+        if (userId.isEmpty()) {
+            tv.setVisibility(View.VISIBLE);
+            tv.setOnClickListener(this);
+        } else {
+            tv.setVisibility(View.GONE);
+            favoritesLoader = new FavoritesLoader(userId);
+            favoritesLoader.execute();
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.loginTxt:
+                Intent intent = new Intent(getActivity().getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
+                break;
+        }
+    }
+
 
     private boolean setEstabHm(JSONArray estabs) {
         if (!estabs.toString().equals("[{}]")) {
@@ -99,6 +128,7 @@ public class FavoritesFragment extends Fragment {
 
         public FavoritesLoader(String userId) {
             this.userId = userId;
+            listView.removeAllViews();
         }
 
         @Override
