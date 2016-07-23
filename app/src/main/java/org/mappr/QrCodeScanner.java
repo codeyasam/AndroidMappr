@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.PointF;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.dlazaro66.qrcodereaderview.QRCodeReaderView;
@@ -12,6 +13,8 @@ import com.example.codeyasam.mappr.R;
 import org.mappr.org.mappr.model.CYM_Utility;
 
 public class QrCodeScanner extends AppCompatActivity implements QRCodeReaderView.OnQRCodeReadListener {
+
+    public static final int QR_SEARCH = 777;
 
     private QRCodeReaderView mydecoderview;
 
@@ -62,7 +65,7 @@ public class QrCodeScanner extends AppCompatActivity implements QRCodeReaderView
         Intent intent = new Intent(this, MapActivity.class);
         intent.putExtra(CYM_Utility.MAPPR_OPT, CYM_Utility.OPT_BY_QRCODE);
         intent.putExtra("branchID", text);
-        startActivity(intent);
+        startActivityForResult(intent, QR_SEARCH);
     }
 
     @Override
@@ -73,5 +76,13 @@ public class QrCodeScanner extends AppCompatActivity implements QRCodeReaderView
     @Override
     public void QRCodeNotFoundOnCamImage() {
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == QR_SEARCH  && resultCode == RESULT_OK) {
+            finish();
+        }
     }
 }
