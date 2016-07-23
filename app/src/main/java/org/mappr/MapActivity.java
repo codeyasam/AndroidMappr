@@ -298,6 +298,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public void onBackPressed() {
 //        Intent intent = new Intent(MapActivity.this, MainActivity.class);
 //        startActivity(intent);
+        String mappr_opt = getIntent().getStringExtra(CYM_Utility.MAPPR_OPT);
+        if (mappr_opt.equals(CYM_Utility.OPT_BY_QRCODE)) {
+            setResult(RESULT_OK);
+            finish();
+        }
         finish();
     }
 }
