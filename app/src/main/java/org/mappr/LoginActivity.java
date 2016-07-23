@@ -59,12 +59,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void loginClick(View v) {
         Log.i("poop", "login clicked");
-        //finish();
-        if (last_activity.equals(CYM_Utility.FROM_DETAILS)) {
-            new LoginConnector(EstablishmentDetails.class).execute();
-        } else if (last_activity.equals(CYM_Utility.FROM_FAVORITES)) {
-            new LoginConnector(FavoritesActivity.class).execute();
-        }
+        new LoginConnector().execute();
     }
 
     public void registerClick(View v) {
@@ -79,13 +74,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     class LoginConnector extends AsyncTask<String, String, String> {
-
-        Class destinationClass;
-
-        public LoginConnector(Class destinationClass) {
-            this.destinationClass = destinationClass;
-        }
-
 
         @Override
         protected void onPreExecute() {
@@ -113,18 +101,11 @@ public class LoginActivity extends AppCompatActivity {
                     JSONObject json = new JSONObject(result);
                     if (json.getString("result").equals("true")) {
                         MapprSession.isLoggedIn = true;
-                        //Intent intent = new Intent(MapprLogin.this, MapprDetails.class);
-//                        Intent intent = new Intent(LoginActivity.this, destinationClass);
-//                        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-//                        if (branchId != null) {
-//                            //intent.putExtra("branch_id", branchId);
-//                        }
-//                        MapprSession.logUser(LoginActivity.this, json.getString("user_id"));
-//                        startActivity(intent);
+                        MapprSession.logUser(LoginActivity.this, json.getString("user_id"));
                         finish();
                     }
                 } catch (JSONException e) {
-
+                    e.printStackTrace();
                 }
             }
         }
