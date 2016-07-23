@@ -68,7 +68,7 @@ public class CategoryFragment extends Fragment {
 
         @Override
         protected void onPostExecute(List<MapprCategory> categories) {
-            if (!categories.isEmpty()) {
+            if (categories != null && !categories.isEmpty()) {
                 try {
                     categoryGrid.setAdapter(categoryAdapter);
                     categoryGrid.setOnItemClickListener(customOnClickMethod());
