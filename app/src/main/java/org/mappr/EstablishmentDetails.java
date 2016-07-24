@@ -233,7 +233,7 @@ public class EstablishmentDetails extends AppCompatActivity {
                     }
 
                     String bookmarkState = json.getString("isBookmarked").equals("true") ? "BOOKMARKED" : "BOOKMARK";
-                    //bookmarkMenu.setTitle(bookmarkState);
+                    bookmarkMenu.setTitle(bookmarkState);
                     if (reviewHolderList.isEmpty()) listview.setVisibility(View.GONE);
                     ArrayAdapter<ReviewHolder> reviewHolderArrayAdapter = new ReviewAdapter(getApplicationContext(), reviewHolderList);
                     listview.setAdapter(reviewHolderArrayAdapter);

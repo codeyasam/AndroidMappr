@@ -128,7 +128,7 @@ public class FavoritesFragment extends Fragment implements View.OnClickListener 
 
         public FavoritesLoader(String userId) {
             this.userId = userId;
-            listView.removeAllViews();
+            branchesList = new ArrayList<>();
         }
 
         @Override
