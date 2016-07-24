@@ -41,7 +41,8 @@ public class ReviewActivty extends AppCompatActivity {
 
         settings = PreferenceManager.getDefaultSharedPreferences(this);
         String user_id = settings.getString(MapprSession.LOGGED_USER_ID, "");
-        CurrentUserLoader task = new CurrentUserLoader(user_id);
+        String branchId = getIntent().getStringExtra("branch_id");
+        CurrentUserLoader task = new CurrentUserLoader(user_id, branchId);
         task.execute();
     }
 
@@ -139,10 +140,12 @@ public class ReviewActivty extends AppCompatActivity {
     class CurrentUserLoader extends AsyncTask<String, String, String> {
 
         private String user_id;
+        private String branch_id;
         private Bitmap displayPicture;
 
-        public CurrentUserLoader(String user_id) {
+        public CurrentUserLoader(String user_id, String branch_id) {
             this.user_id = user_id;
+            this.branch_id = branch_id;
         }
 
         @Override
@@ -150,6 +153,7 @@ public class ReviewActivty extends AppCompatActivity {
             try {
                 List<NameValuePair> params = new ArrayList<>();
                 params.add(new BasicNameValuePair("user_id", user_id));
+                params.add(new BasicNameValuePair("branch_id", branch_id));
                 JSONObject json = JSONParser.makeHttpRequest(GET_CURRENT_USER_URL, "GET", params);
                 displayPicture = CYM_Utility.loadImageFromServer(json.getString("display_picture"), 50, 50);
                 return json.toString();
