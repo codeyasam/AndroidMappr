@@ -65,8 +65,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="Distance:  100km"
-                    android:id="@+id/textView3"
+                    android:text="Calculating Distance..."
+                    android:id="@+id/distanceTxt"
                     android:layout_gravity="center" />
 
                 <Button

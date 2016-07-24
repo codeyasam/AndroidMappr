@@ -10,6 +10,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.example.codeyasam.mappr.R;
 import com.google.android.gms.common.ConnectionResult;
@@ -31,6 +35,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.mappr.org.mappr.model.JSONParser;
+import org.mappr.org.mappr.model.MapprRoute;
+import org.mappr.org.mappr.model.RouteAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,10 +47,14 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
 
+    private ListView listViewDirection;
+    private Polyline line;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mappr_directions);
+        setContentView(R.layout.activity_direction);
+        listViewDirection = (ListView) findViewById(R.id.listViewDirections);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -93,7 +103,7 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
 
     public static String makeURL (double sourcelat, double sourcelng, double destlat, double destlng ){
         StringBuilder urlString = new StringBuilder();
-        urlString.append("http://maps.googleapis.com/maps/api/directions/json");
+        urlString.append("https://maps.googleapis.com/maps/api/directions/json");
         urlString.append("?origin=");// from
         urlString.append(Double.toString(sourcelat));
         urlString.append(",");
@@ -140,6 +150,8 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
 
     }
 
+    private List<MapprRoute> mapprRoutes;
+
     class DirectionRouter extends AsyncTask<String, String, String> {
 
         private static final String DIRECTIONS_API_URL = "https://maps.googleapis.com/maps/api/directions/json";
@@ -154,6 +166,7 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
             this.sourceLng = sourceLng;
             this.destLat = destLat;
             this.destLng = destLng;
+            mapprRoutes = new ArrayList<>();
         }
 
         @Override
@@ -176,11 +189,24 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
                 params.add(new BasicNameValuePair("alternatives", "true"));
                 params.add(new BasicNameValuePair("key", "AIzaSyDDpPDWu9z820FMYyOVsAphuy0ryz4kt2o"));
                 JSONObject json = JSONParser.makeHttpRequest(DIRECTIONS_API_URL, "GET", params);
+                setupRouteList(json);
                 return json.toString();
             } catch (Exception e) {
 
             }
             return null;
+        }
+
+        private void setupRouteList(JSONObject json) {
+            try {
+                JSONArray routeArray = json.getJSONArray("routes");
+                for (int i = 0; i < routeArray.length(); i++) {
+                    JSONObject route = routeArray.getJSONObject(i);
+                    mapprRoutes.add(MapprRoute.instantiateJSON(route));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
@@ -196,12 +222,14 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
                     JSONObject overviewPolylines = routes.getJSONObject("overview_polyline");
                     String encodedString = overviewPolylines.getString("points");
                     List<LatLng> list = decodePoly(encodedString);
-                    Polyline line = mMap.addPolyline(new PolylineOptions()
+                    line = mMap.addPolyline(new PolylineOptions()
                                     .addAll(list)
                                     .width(12)
                                     .color(Color.parseColor("#05b1fb"))//Google maps blue color
                                     .geodesic(true)
                     );
+
+
            /*
            for(int z = 0; z<list.size()-1;z++){
                 LatLng src= list.get(z);
@@ -212,45 +240,52 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
                 .color(Color.BLUE).geodesic(true));
             }
            */
+
+                    ArrayAdapter<MapprRoute> adapter = new RouteAdapter(getApplicationContext(), mapprRoutes, mMap, line);
+                    listViewDirection.setAdapter(adapter);
+
                 } catch (JSONException e) {
 
                 }
             }
         }
 
-        private List<LatLng> decodePoly(String encoded) {
+    }
 
-            List<LatLng> poly = new ArrayList<LatLng>();
-            int index = 0, len = encoded.length();
-            int lat = 0, lng = 0;
 
-            while (index < len) {
-                int b, shift = 0, result = 0;
-                do {
-                    b = encoded.charAt(index++) - 63;
-                    result |= (b & 0x1f) << shift;
-                    shift += 5;
-                } while (b >= 0x20);
-                int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
-                lat += dlat;
 
-                shift = 0;
-                result = 0;
-                do {
-                    b = encoded.charAt(index++) - 63;
-                    result |= (b & 0x1f) << shift;
-                    shift += 5;
-                } while (b >= 0x20);
-                int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
-                lng += dlng;
+    public static List<LatLng> decodePoly(String encoded) {
 
-                LatLng p = new LatLng( (((double) lat / 1E5)),
-                        (((double) lng / 1E5) ));
-                poly.add(p);
-            }
+        List<LatLng> poly = new ArrayList<LatLng>();
+        int index = 0, len = encoded.length();
+        int lat = 0, lng = 0;
 
-            return poly;
+        while (index < len) {
+            int b, shift = 0, result = 0;
+            do {
+                b = encoded.charAt(index++) - 63;
+                result |= (b & 0x1f) << shift;
+                shift += 5;
+            } while (b >= 0x20);
+            int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+            lat += dlat;
+
+            shift = 0;
+            result = 0;
+            do {
+                b = encoded.charAt(index++) - 63;
+                result |= (b & 0x1f) << shift;
+                shift += 5;
+            } while (b >= 0x20);
+            int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+            lng += dlng;
+
+            LatLng p = new LatLng( (((double) lat / 1E5)),
+                    (((double) lng / 1E5) ));
+            poly.add(p);
         }
+
+        return poly;
     }
 
     @Override
