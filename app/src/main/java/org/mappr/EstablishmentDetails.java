@@ -3,9 +3,13 @@ package org.mappr;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.Location;
+import android.location.LocationListener;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,6 +26,9 @@ import android.widget.RatingBar;
 
 
 import com.example.codeyasam.mappr.R;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -40,7 +47,7 @@ import org.mappr.org.mappr.model.ReviewHolder;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EstablishmentDetails extends AppCompatActivity {
+public class EstablishmentDetails extends AppCompatActivity implements LocationListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private static final String DETAILS_URL = CYM_Utility.MAPPR_ROOT_URL + "tests/getFullDetails.php";
     private MapprTour mapprTour = new MapprTour();
 
@@ -49,7 +56,9 @@ public class EstablishmentDetails extends AppCompatActivity {
     private Button loginBtn;
     private RatingBar ratingBar;
 
-
+    private GoogleApiClient mGoogleApiClient;
+    private double sourceLat;
+    private double sourceLng;
 
     private String branchLat;
     private String branchLng;
@@ -59,12 +68,14 @@ public class EstablishmentDetails extends AppCompatActivity {
     private List<Bitmap> listBranchGallery = new ArrayList<>();
     private MapprEstablishment establishment;
     private List<ReviewHolder> reviewHolderList;
+    private LinearLayout galleryContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_establishment_details);
         listview = (ListView)findViewById(R.id.listView);
+        galleryContainer = (LinearLayout) findViewById(R.id.galleryContainer);
         settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         final String branchId = getIntent().getStringExtra("branch_id");
@@ -104,12 +115,22 @@ public class EstablishmentDetails extends AppCompatActivity {
         task.setUserId(userId);
         task.execute();
 
+        buildGoogleApiClient();
 //        if (!MapprSession.isLoggedIn) {  //for debugging
 //            //if (settings.getString(MapprSession.LOGGED_USER_ID, "").isEmpty()) {
 //            ratingBar.setVisibility(View.GONE);
 //        } else {
 //            ratingBar.setVisibility(View.VISIBLE);
 //        }
+    }
+
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        mGoogleApiClient.connect();
     }
 
     public void loginClick(View v) {
@@ -126,15 +147,70 @@ public class EstablishmentDetails extends AppCompatActivity {
         startActivity(intent);
     }
 
+    @Override
+    public void onLocationChanged(Location location) {
+
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        Log.i("poop", "estabDetails mLocation");
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                mGoogleApiClient);
+
+        if (mLastLocation != null) {
+            sourceLat = mLastLocation.getLatitude();
+            sourceLng = mLastLocation.getLongitude();
+            Log.i("poop", "lat: " + sourceLat);
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+    }
+
     class DetailLauncher extends AsyncTask<String, String, String> {
 
         private String branchId;
         private String userId;
 
         public DetailLauncher() {
-            LinearLayout galleryContainer = (LinearLayout) findViewById(R.id.galleryContainer);
-            galleryContainer.removeAllViews();
             reviewHolderList = new ArrayList<>();
+            listBranchGallery = new ArrayList<>();
+            galleryContainer.removeAllViews();
+            galleryContainer.invalidate();
+            Log.i("poop", "tinawag ung onResume");
         }
 
         public void setBranchId(String branchId) {
@@ -158,7 +234,7 @@ public class EstablishmentDetails extends AppCompatActivity {
                 if (json.getString("hasReview").equals("true")) {
                     JSONArray userObjArr = json.getJSONArray("Users");
                     JSONArray reviewObjArr = json.getJSONArray("Reviews");
-                    Log.i("poop", reviewObjArr.toString());
+                    Log.i("poop", "nagset ng review" + reviewObjArr.toString());
                     if (reviewObjArr.toString().equals("[{}]")) return;
                     for (int i = 0; i < reviewObjArr.length(); i++) {
                         reviewHolderList.add(ReviewHolder.instantiateJSONReview(userObjArr.getJSONObject(i), reviewObjArr.getJSONObject(i)));
@@ -221,9 +297,8 @@ public class EstablishmentDetails extends AppCompatActivity {
                     CYM_Utility.displayText(EstablishmentDetails.this, R.id.estabName, establishment.getName());
                     CYM_Utility.displayText(EstablishmentDetails.this, R.id.branchAddress, branch.getString("address"));
                     CYM_Utility.setRatingBarRate(EstablishmentDetails.this, R.id.branchRating, Float.parseFloat(json.getString("average_rating")));
-                    LinearLayout galleryContainer = (LinearLayout) findViewById(R.id.galleryContainer);
                     for (Bitmap bmp : listBranchGallery) {
-                        ImageView iv = new ImageView(getApplicationContext());
+                        ImageView iv = new ImageView(EstablishmentDetails.this);
                         iv.setImageBitmap(bmp);
                         galleryContainer.addView(iv);
                         float height = CYM_Utility.dipToPixels(getApplicationContext(), 100);
@@ -234,7 +309,11 @@ public class EstablishmentDetails extends AppCompatActivity {
 
                     String bookmarkState = json.getString("isBookmarked").equals("true") ? "BOOKMARKED" : "BOOKMARK";
                     bookmarkMenu.setTitle(bookmarkState);
-                    if (reviewHolderList.isEmpty()) listview.setVisibility(View.GONE);
+                    if (reviewHolderList.isEmpty()) {
+                        listview.setVisibility(View.GONE);
+                    } else {
+                        listview.setVisibility(View.VISIBLE);
+                    }
                     ArrayAdapter<ReviewHolder> reviewHolderArrayAdapter = new ReviewAdapter(getApplicationContext(), reviewHolderList);
                     listview.setAdapter(reviewHolderArrayAdapter);
                     listview.setOnTouchListener(new View.OnTouchListener() {
@@ -246,8 +325,50 @@ public class EstablishmentDetails extends AppCompatActivity {
                             return false;
                         }
                     });
+
+                    String leastDistanceUrl = DirectionActivity.makeURL(sourceLat, sourceLng, Double.parseDouble(branchLat), Double.parseDouble(branchLng));
+                    new LeastDistanceCalculator(leastDistanceUrl).execute();
                 } catch (JSONException e) {
                     e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    class LeastDistanceCalculator extends AsyncTask<String, String, String> {
+
+        private String url;
+
+        public LeastDistanceCalculator(String url) {
+            this.url = url;
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                JSONObject json = JSONParser.getJSONfromURL(url);
+                return json.toString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (result != null) {
+                try {
+                    final JSONObject json = new JSONObject(result);
+                    JSONArray routeArray = json.getJSONArray("routes");
+                    JSONObject routes = routeArray.getJSONObject(0);
+                    JSONArray legs = routes.getJSONArray("legs");
+                    JSONObject steps = legs.getJSONObject(0);
+                    JSONObject distance = steps.getJSONObject("distance");
+                    Log.i("poop", "distance: " + distance.getString("text"));
+                    CYM_Utility.displayText(EstablishmentDetails.this, R.id.distanceTxt, "Distance: " + distance.getString("text"));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -311,32 +432,9 @@ public class EstablishmentDetails extends AppCompatActivity {
         return super.onPrepareOptionsMenu(menu);
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onDestroy() {
-        reviewHolderList = null;
-        listview = null;
-        establishment = null;
-        listBranchGallery = null;
-        super.onDestroy();
-    }
 
     @Override
     public void onBackPressed() {
-        Class destinationAct = null;
-        if (getIntent().getStringExtra(CYM_Utility.MAPPR_FORM).equals(CYM_Utility.FROM_FAVORITES)) {
-            destinationAct = MainActivity.class;
-        } else {
-            destinationAct = MapActivity.class;
-        }
-
-//        Intent intent = new Intent(EstablishmentDetails.this, destinationAct);
-//        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-//        startActivity(intent);
         finish();
     }
 

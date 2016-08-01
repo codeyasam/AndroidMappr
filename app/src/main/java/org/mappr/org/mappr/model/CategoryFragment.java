@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +42,13 @@ public class CategoryFragment extends Fragment {
         return view;
     }
 
+    public static void searchByCategory(FragmentActivity activity, MapprCategory mapprCategory) {
+        implementSearchHistory(activity, mapprCategory);
+        Intent intent = new Intent(activity.getApplicationContext(), MapActivity.class);
+        intent.putExtra(CYM_Utility.MAPPR_OPT, CYM_Utility.OPT_BY_CATEGORY);
+        intent.putExtra("categoryID", mapprCategory.getId());
+        activity.startActivity(intent);
+    }
 
     class CategorySearcher extends AsyncTask<String, String, List<MapprCategory>> {
 
@@ -100,14 +108,21 @@ public class CategoryFragment extends Fragment {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     MapprCategory category = categoryList.get(position);
                     Log.i("poop", "category click id: " + category.getId());
-                    Intent intent = new Intent(getActivity().getApplicationContext(), MapActivity.class);
-                    intent.putExtra(CYM_Utility.MAPPR_OPT, CYM_Utility.OPT_BY_CATEGORY);
-                    intent.putExtra("categoryID", category.getId());
-                    startActivity(intent);
+//                    Intent intent = new Intent(getActivity().getApplicationContext(), MapActivity.class);
+//                    intent.putExtra(CYM_Utility.MAPPR_OPT, CYM_Utility.OPT_BY_CATEGORY);
+//                    intent.putExtra("categoryID", category.getId());
+//                    startActivity(intent);
+                    searchByCategory(getActivity(), category);
                 }
             };
         }
 
+    }
+
+    public static void implementSearchHistory(FragmentActivity activity, MapprCategory mapprCategory) {
+        MapprJSONSearch mapprJSONSearch = new MapprJSONSearch(CYM_Utility.OPT_BY_CATEGORY, mapprCategory.getId());
+        mapprJSONSearch.setDisplayValue(mapprCategory.getName());
+        mapprJSONSearch.saveSearchRequest(activity.getApplicationContext());
     }
 
     @Override

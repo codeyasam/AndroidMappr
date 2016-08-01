@@ -24,6 +24,7 @@ public class QrCodeScanner extends AppCompatActivity implements QRCodeReaderView
         setContentView(R.layout.activity_qr_code_scanner);
         mydecoderview = (QRCodeReaderView) findViewById(R.id.qrdecoderview);
         mydecoderview.setOnQRCodeReadListener(this);
+        mydecoderview.getCameraManager().startPreview();
     }
 
 //    @Override
@@ -51,7 +52,6 @@ public class QrCodeScanner extends AppCompatActivity implements QRCodeReaderView
     @Override
     protected void onResume() {
         super.onResume();
-        mydecoderview.getCameraManager().startPreview();
     }
 
     @Override

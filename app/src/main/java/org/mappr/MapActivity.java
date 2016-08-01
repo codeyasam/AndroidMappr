@@ -35,7 +35,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.mappr.org.mappr.model.CYM_Utility;
 import org.mappr.org.mappr.model.JSONParser;
+import org.mappr.org.mappr.model.MapprBranch;
 import org.mappr.org.mappr.model.MapprEstablishment;
+import org.mappr.org.mappr.model.MapprJSONSearch;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -249,6 +251,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                                 .snippet(eachBranch.getString("estab_id"));
 
                         if (mapperOpt.equals(CYM_Utility.OPT_BY_QRCODE)) {
+                            implementSearchHistory(eachBranch, branchID);
                             if (eachBranch.getString("id").equals(branchID)) {
                                 options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
                                 ll = new LatLng(Double.parseDouble(eachBranch.getString("lat")), Double.parseDouble(eachBranch.getString("lng")));
@@ -294,6 +297,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
+    public void implementSearchHistory(JSONObject eachBranch, String branchID) {
+        MapprBranch mapprBranch = MapprBranch.instantiateBranch(eachBranch, (HashMap) hmEstablishment);
+        MapprJSONSearch mapprJSONSearch = new MapprJSONSearch(CYM_Utility.OPT_BY_QRCODE, branchID);
+        mapprJSONSearch.setMapprBranch(mapprBranch);
+        mapprJSONSearch.setDisplayValue(mapprBranch.getMapprEstablishment().getName());
+        mapprJSONSearch.saveSearchRequest(getApplicationContext());
+    }
+
     @Override
     public void onBackPressed() {
 //        Intent intent = new Intent(MapActivity.this, MainActivity.class);
@@ -301,7 +312,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         String mappr_opt = getIntent().getStringExtra(CYM_Utility.MAPPR_OPT);
         if (mappr_opt.equals(CYM_Utility.OPT_BY_QRCODE)) {
             setResult(RESULT_OK);
-            finish();
         }
         finish();
     }

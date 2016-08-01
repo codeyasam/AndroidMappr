@@ -154,6 +154,7 @@ public class FavoritesFragment extends Fragment implements View.OnClickListener 
                 try {
                     Log.i("poop", result);
                     if (!branchesList.isEmpty()) {
+                        view.findViewById(R.id.emptyBookmarkTxt).setVisibility(View.INVISIBLE);
                         view.findViewById(R.id.favBranchList).setVisibility(View.VISIBLE);
                         ArrayAdapter<MapprBranch> adapter = new FavoriteAdapter(getActivity(), branchesList);
                         listView.setAdapter(adapter);

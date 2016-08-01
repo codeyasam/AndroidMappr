@@ -29,6 +29,10 @@ import com.example.codeyasam.mappr.R;
 import org.mappr.org.mappr.model.CYM_Utility;
 import org.mappr.org.mappr.model.CategoryFragment;
 import org.mappr.org.mappr.model.FavoritesFragment;
+import org.mappr.org.mappr.model.MapprBranch;
+import org.mappr.org.mappr.model.MapprJSONSearch;
+import org.mappr.org.mappr.model.SearchesFragment;
+import org.mappr.org.mappr.model.ViewPageAdapter;
 
 import java.util.List;
 
@@ -192,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
             switch (position) {
                 case 0: return new CategoryFragment();
                 case 1: return new FavoritesFragment();
-                case 2: return new CategoryFragment();
+                case 2: return new SearchesFragment();
             }
             return null;
         }
