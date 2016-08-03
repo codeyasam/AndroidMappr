@@ -289,23 +289,6 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
                 try {
                     Log.i("poop", result);
                     JSONObject json = new JSONObject(result);
-                    JSONObject branch = json.getJSONObject("branch");
-                    mapprTour.setLat(branch.getString("lat"));
-                    mapprTour.setLng(branch.getString("lng"));
-                    mapprTour.setMarkerText(establishment.getName());
-                    CYM_Utility.setImageOnView(EstablishmentDetails.this, R.id.estabLogo, establishment.getDisplay_picture());
-                    CYM_Utility.displayText(EstablishmentDetails.this, R.id.estabName, establishment.getName());
-                    CYM_Utility.displayText(EstablishmentDetails.this, R.id.branchAddress, branch.getString("address"));
-                    CYM_Utility.setRatingBarRate(EstablishmentDetails.this, R.id.branchRating, Float.parseFloat(json.getString("average_rating")));
-                    for (Bitmap bmp : listBranchGallery) {
-                        ImageView iv = new ImageView(EstablishmentDetails.this);
-                        iv.setImageBitmap(bmp);
-                        galleryContainer.addView(iv);
-                        float height = CYM_Utility.dipToPixels(getApplicationContext(), 100);
-                        float width = CYM_Utility.dipToPixels(getApplicationContext(), 100);
-                        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams((int)height, (int)width);
-                        iv.setLayoutParams(lp);
-                    }
 
                     String bookmarkState = json.getString("isBookmarked").equals("true") ? "BOOKMARKED" : "BOOKMARK";
                     bookmarkMenu.setTitle(bookmarkState);
@@ -314,6 +297,7 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
                     } else {
                         listview.setVisibility(View.VISIBLE);
                     }
+
                     ArrayAdapter<ReviewHolder> reviewHolderArrayAdapter = new ReviewAdapter(getApplicationContext(), reviewHolderList);
                     listview.setAdapter(reviewHolderArrayAdapter);
                     listview.setOnTouchListener(new View.OnTouchListener() {
@@ -326,8 +310,33 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
                         }
                     });
 
+                    JSONObject branch = json.getJSONObject("branch");
+                    mapprTour.setLat(branch.getString("lat"));
+                    mapprTour.setLng(branch.getString("lng"));
+                    mapprTour.setMarkerText(establishment.getName());
+                    CYM_Utility.setImageOnView(EstablishmentDetails.this, R.id.estabLogo, establishment.getDisplay_picture());
+                    CYM_Utility.displayText(EstablishmentDetails.this, R.id.estabName, establishment.getName());
+                    CYM_Utility.displayText(EstablishmentDetails.this, R.id.branchAddress, branch.getString("address"));
+                    CYM_Utility.setRatingBarRate(EstablishmentDetails.this, R.id.branchRating, Float.parseFloat(json.getString("average_rating")));
+
                     String leastDistanceUrl = DirectionActivity.makeURL(sourceLat, sourceLng, Double.parseDouble(branchLat), Double.parseDouble(branchLng));
                     new LeastDistanceCalculator(leastDistanceUrl).execute();
+
+                    //loading of gallery. looks messy? wrap it in function... but nah...
+
+                    for (Bitmap bmp : listBranchGallery) {
+                        ImageView iv = new ImageView(EstablishmentDetails.this);
+                        iv.setImageBitmap(bmp);
+                        galleryContainer.addView(iv);
+                        float height = CYM_Utility.dipToPixels(getApplicationContext(), 100);
+                        float width = CYM_Utility.dipToPixels(getApplicationContext(), 100);
+                        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams((int)height, (int)width);
+                        iv.setLayoutParams(lp);
+                    }
+
+
+
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 } catch (Exception e) {
@@ -335,6 +344,7 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
                 }
             }
         }
+
     }
 
     class LeastDistanceCalculator extends AsyncTask<String, String, String> {
