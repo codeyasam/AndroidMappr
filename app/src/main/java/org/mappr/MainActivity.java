@@ -111,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextSubmit(String query) {
+                implementSearchHistory(query);
                 searchClick(query);
                 return false;
             }
@@ -125,6 +126,12 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+
+    private void implementSearchHistory(String searchValue) {
+        MapprJSONSearch mapprJSONSearch = new MapprJSONSearch(CYM_Utility.OPT_BY_STRING, searchValue);
+        mapprJSONSearch.setDisplayValue(searchValue);
+        mapprJSONSearch.saveSearchRequest(getApplicationContext());
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
