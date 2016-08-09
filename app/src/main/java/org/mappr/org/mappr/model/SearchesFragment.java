@@ -13,6 +13,7 @@ import android.widget.ListView;
 
 import com.example.codeyasam.mappr.R;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -35,6 +36,7 @@ public class SearchesFragment extends Fragment {
     public void onResume() {
         super.onResume();
         List<MapprJSONSearch> mapprJSONSearchList = MapprJSONSearch.getSearchesList(getActivity().getApplicationContext());
+        Collections.reverse(mapprJSONSearchList);
         ArrayAdapter<MapprJSONSearch> adapter = new SearchesAdapter(getActivity(), mapprJSONSearchList);
         listViewSearches.setAdapter(adapter);
 
