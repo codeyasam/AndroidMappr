@@ -1,5 +1,6 @@
 package org.mappr;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -66,6 +67,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         buildGoogleApiClient();
 
         searchRequestHandler();
+        Log.i("poop", "map activity restarted");
 
     }
 
@@ -170,7 +172,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public void onConnectionSuspended(int i) {
-
+        Log.i("poop", "connection suspended");
     }
 
     @Override
@@ -311,8 +313,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 //        startActivity(intent);
         String mappr_opt = getIntent().getStringExtra(CYM_Utility.MAPPR_OPT);
         if (mappr_opt.equals(CYM_Utility.OPT_BY_QRCODE)) {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
             setResult(RESULT_OK);
+            Log.i("poop", "finishes activity from qrcode scanner");
         }
+
         finish();
     }
 }
