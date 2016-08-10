@@ -53,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
      */
     private ViewPager mViewPager;
 
+    private MenuItem scanMenuItem;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main2, menu);
+        scanMenuItem = menu.findItem(R.id.scan_qrcode);
 
         // Get the SearchView and set the searchable configuration
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -142,13 +145,29 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            //return true;
+            MenuItemCompat.setOnActionExpandListener(item, new MenuItemCompat.OnActionExpandListener() {
+                @Override
+                public boolean onMenuItemActionExpand(MenuItem item) {
+                    Log.i("poop", "searchview expanded");
+                    scanMenuItem.setVisible(false);
+                    return true;
+                }
+
+                @Override
+                public boolean onMenuItemActionCollapse(MenuItem item) {
+                    Log.i("poop", "searchview collapsed");
+                    scanMenuItem.setVisible(true);
+                    return true;
+                }
+            });
         } else if (id == R.id.scan_qrcode) {
             scanQrCode();
         }
 
         return super.onOptionsItemSelected(item);
     }
+    
 
     /**
      * A placeholder fragment containing a simple view.
