@@ -35,7 +35,7 @@ import java.net.URL;
  */
 public class CYM_Utility {
 
-    public static final String MAPPR_ROOT_URL = "http://192.168.42.141/thesis/";
+    public static final String MAPPR_ROOT_URL = "http://192.168.42.169/thesis/";
     public static final String MAPPR_PUBLIC_URL = MAPPR_ROOT_URL + "Public/";
     public static final String MAPPR_OPT = "MAPPR_OPT";
     public static final String OPT_BY_QRCODE = "111";
@@ -217,6 +217,23 @@ public class CYM_Utility {
         }
 
         return inSampleSize;
+    }
+
+    public static Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight) {
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+        // CREATE A MATRIX FOR THE MANIPULATION
+        Matrix matrix = new Matrix();
+        // RESIZE THE BIT MAP
+        matrix.postScale(scaleWidth, scaleHeight);
+
+        // "RECREATE" THE NEW BITMAP
+        Bitmap resizedBitmap = Bitmap.createBitmap(
+                bm, 0, 0, width, height, matrix, false);
+        bm.recycle();
+        return resizedBitmap;
     }
 
 }
