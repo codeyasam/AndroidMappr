@@ -270,7 +270,7 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
                 for (int i = 0; i < gallery.length(); i++) {
                     JSONObject eachGal = gallery.getJSONObject(i);
                     String url = CYM_Utility.MAPPR_PUBLIC_URL + eachGal.getString("gallery_pic");
-                    listBranchGallery.add(CYM_Utility.loadImageFromServer(url, 100, 100));
+                    listBranchGallery.add(CYM_Utility.loadImageFromServer(url, 75, 75));
                 }
 
                 setReviewHolder(json);
@@ -326,10 +326,11 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
 
                     for (Bitmap bmp : listBranchGallery) {
                         ImageView iv = new ImageView(EstablishmentDetails.this);
-                        iv.setImageBitmap(bmp);
+                        iv.setImageBitmap(CYM_Utility.getResizedBitmap(bmp, 75, 75));
+                        iv.setPadding(5, 5, 5, 5);
                         galleryContainer.addView(iv);
-                        float height = CYM_Utility.dipToPixels(getApplicationContext(), 100);
-                        float width = CYM_Utility.dipToPixels(getApplicationContext(), 100);
+                        float height = CYM_Utility.dipToPixels(getApplicationContext(), 75);
+                        float width = CYM_Utility.dipToPixels(getApplicationContext(), 75);
                         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams((int)height, (int)width);
                         iv.setLayoutParams(lp);
                     }
