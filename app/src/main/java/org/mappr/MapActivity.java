@@ -49,6 +49,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private static final String PLOTTER_URL = CYM_Utility.MAPPR_ROOT_URL + "tests/getMarkerOptions.php";
+    public static boolean implementedQrSearch = false;
 
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
@@ -253,8 +254,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                                 .snippet(eachBranch.getString("estab_id"));
 
                         if (mapperOpt.equals(CYM_Utility.OPT_BY_QRCODE)) {
-                            implementSearchHistory(eachBranch, branchID);
                             if (eachBranch.getString("id").equals(branchID)) {
+                                implementSearchHistory(eachBranch, branchID);
                                 options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
                                 ll = new LatLng(Double.parseDouble(eachBranch.getString("lat")), Double.parseDouble(eachBranch.getString("lng")));
                             }
@@ -300,11 +301,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     public void implementSearchHistory(JSONObject eachBranch, String branchID) {
-        MapprBranch mapprBranch = MapprBranch.instantiateBranch(eachBranch, (HashMap) hmEstablishment);
-        MapprJSONSearch mapprJSONSearch = new MapprJSONSearch(CYM_Utility.OPT_BY_QRCODE, branchID);
-        mapprJSONSearch.setMapprBranch(mapprBranch);
-        mapprJSONSearch.setDisplayValue(mapprBranch.getMapprEstablishment().getName());
-        mapprJSONSearch.saveSearchRequest(getApplicationContext());
+        if (!implementedQrSearch) {
+            MapprBranch mapprBranch = MapprBranch.instantiateBranch(eachBranch, (HashMap) hmEstablishment);
+            MapprJSONSearch mapprJSONSearch = new MapprJSONSearch(CYM_Utility.OPT_BY_QRCODE, branchID);
+            mapprJSONSearch.setMapprBranch(mapprBranch);
+            mapprJSONSearch.setDisplayValue(mapprBranch.getMapprEstablishment().getName());
+            mapprJSONSearch.saveSearchRequest(getApplicationContext());
+            implementedQrSearch = true;
+        }
+
     }
 
     @Override

@@ -52,6 +52,7 @@ public class QrCodeScanner extends AppCompatActivity implements QRCodeReaderView
     @Override
     protected void onResume() {
         super.onResume();
+        Log.i("poop", "qrcode scanner onResume");
     }
 
     @Override
@@ -62,6 +63,7 @@ public class QrCodeScanner extends AppCompatActivity implements QRCodeReaderView
 
     @Override
     public void onQRCodeRead(String text, PointF[] points) {
+        MapActivity.implementedQrSearch = false;
         Intent intent = new Intent(this, MapActivity.class);
         intent.putExtra(CYM_Utility.MAPPR_OPT, CYM_Utility.OPT_BY_QRCODE);
         intent.putExtra("branchID", text);
@@ -82,7 +84,9 @@ public class QrCodeScanner extends AppCompatActivity implements QRCodeReaderView
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == QR_SEARCH  && resultCode == RESULT_OK) {
+            Log.i("poop", "finishes the qrcode scanner activity");
             finish();
         }
+        Log.i("poop", "dumaan sa onActivityResult");
     }
 }
