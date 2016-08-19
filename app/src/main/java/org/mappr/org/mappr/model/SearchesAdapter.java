@@ -81,6 +81,7 @@ public class SearchesAdapter extends ArrayAdapter<MapprJSONSearch> {
                 } else if (mappr_opt.equals(CYM_Utility.OPT_BY_STRING)) {
                     intent.putExtra("searchString", mapprJSONSearch.getSearch_value());
                 } else if (mappr_opt.equals(CYM_Utility.OPT_BY_QRCODE)) {
+                    MapActivity.implementedQrSearch = true; //to prevent from implementing search history
                     intent.putExtra("branchID", mapprJSONSearch.getSearch_value());
                 } else {
                     Intent estabDetailsIntent = new Intent(context.getApplicationContext(), EstablishmentDetails.class);

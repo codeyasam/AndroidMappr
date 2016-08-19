@@ -413,7 +413,7 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
         Log.i("poop", "bookmard click");
         //if (!MapprSession.isLoggedIn) {  //for debugging
         if (settings.getString(MapprSession.LOGGED_USER_ID, "").isEmpty()) {
-            CYM_Utility.callYesNoMessage("You must be logged in", getApplicationContext(), customOnClickListener());
+            CYM_Utility.callYesNoMessage("You must be logged in", EstablishmentDetails.this, customOnClickListener());
         } else {
             Log.i("poop", "bookmard click2");
             String user_id = settings.getString(MapprSession.LOGGED_USER_ID, "");
