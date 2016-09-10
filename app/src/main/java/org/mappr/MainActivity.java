@@ -26,6 +26,7 @@ import android.widget.TextView;
 
 import com.example.codeyasam.mappr.R;
 
+import org.joda.time.DateTime;
 import org.mappr.org.mappr.model.CYM_Utility;
 import org.mappr.org.mappr.model.CategoryFragment;
 import org.mappr.org.mappr.model.FavoritesFragment;
@@ -64,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         setupmFragments();
+        DateTime dateTime = new DateTime();
+        Log.i("poop", String.valueOf(dateTime.getDayOfWeek()));
     }
 
     private void setupmFragments() {

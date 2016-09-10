@@ -1,5 +1,6 @@
 package org.mappr;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,15 +14,19 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 
 
@@ -32,6 +37,7 @@ import com.google.android.gms.location.LocationServices;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,8 +49,11 @@ import org.mappr.org.mappr.model.MapprSession;
 import org.mappr.org.mappr.model.MapprTour;
 import org.mappr.org.mappr.model.ReviewAdapter;
 import org.mappr.org.mappr.model.ReviewHolder;
+import org.mappr.org.mappr.model.ScheduleAdapter;
+import org.mappr.org.mappr.model.ScheduleHolder;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class EstablishmentDetails extends AppCompatActivity implements LocationListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
@@ -69,6 +78,9 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
     private MapprEstablishment establishment;
     private List<ReviewHolder> reviewHolderList;
     private LinearLayout galleryContainer;
+    private ExpandableListView scheduleView;
+    private List<ScheduleHolder> scheduleHolderList;
+    private List<ScheduleHolder> mHeader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +113,27 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
             }
         });
 
+        scheduleView = (ExpandableListView) findViewById(R.id.expandableSchedule);
+        scheduleView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+            @Override
+            public void onGroupExpand(int groupPosition) {
+                int height = 0;
+                for (int i = 0; i < scheduleView.getChildCount(); i++) {
+                    height += scheduleView.getChildAt(i).getMeasuredHeight();
+                    height += scheduleView.getDividerHeight();
+                }
+                scheduleView.getLayoutParams().height = (height+6)*10;
+            }
+        });
 
+        // Listview Group collapsed listener
+        scheduleView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
+
+            @Override
+            public void onGroupCollapse(int groupPosition) {
+                scheduleView.getLayoutParams().height = 61;
+            }
+        });
     }
 
     @Override
@@ -206,11 +238,16 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
         private String userId;
 
         public DetailLauncher() {
+            establishment = MapActivity.preservedEstablishment;
             reviewHolderList = new ArrayList<>();
-            listBranchGallery = new ArrayList<>();
-            galleryContainer.removeAllViews();
-            galleryContainer.invalidate();
+//            listBranchGallery = new ArrayList<>();
+//            galleryContainer.removeAllViews();
+//            galleryContainer.invalidate();
             Log.i("poop", "tinawag ung onResume");
+            scheduleHolderList = new ArrayList<>();
+            mHeader = new ArrayList<>();
+            CYM_Utility.setImageOnView(EstablishmentDetails.this, R.id.estabLogo, establishment.getDisplay_picture());
+            CYM_Utility.displayText(EstablishmentDetails.this, R.id.estabName, establishment.getName());
         }
 
         public void setBranchId(String branchId) {
@@ -246,6 +283,25 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
 
         }
 
+        private void setCurrentDayOpenHours(JSONObject json) {
+            try {
+                DateTime dateTime = new DateTime();
+                JSONArray scheduleObjArr = json.getJSONArray("BranchHours");
+                Log.i("poop", scheduleObjArr.toString());
+                if (scheduleObjArr.length() < 1) return;
+                for (int i = 0; i < scheduleObjArr.length(); i++) {
+                    ScheduleHolder scheduleHolder = ScheduleHolder.instantiateJSONSchedule(scheduleObjArr.getJSONObject(i));
+                    if (dateTime.getDayOfWeek() - 1 == Integer.parseInt(scheduleHolder.getDay_no())) {
+                        mHeader.add(scheduleHolder);
+                    } else {
+                        scheduleHolderList.add(scheduleHolder);
+                    }
+                }
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
+
 
         @Override
         protected String doInBackground(String... args) {
@@ -258,22 +314,20 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
 
                 params.add(new BasicNameValuePair("branch_id", branchId));
                 JSONObject json = JSONParser.makeHttpRequest(DETAILS_URL, "GET", params);
-                JSONArray gallery = json.getJSONArray("Gallery");
-                JSONObject estab = json.getJSONObject("estab");
+                setCurrentDayOpenHours(json);
                 JSONObject branch = json.getJSONObject("branch");
                 branchLat = branch.getString("lat");
                 branchLng = branch.getString("lng");
-                establishment = MapprEstablishment.instantiateJSONEstablishment(estab);
-                Log.i("poop", "branch_id: " + branchId);
-                Log.i("poop", "gallery length: " + gallery.length());
+//                JSONArray gallery = json.getJSONArray("Gallery");
+//                for (int i = 0; i < gallery.length(); i++) {
+//                    JSONObject eachGal = gallery.getJSONObject(i);
+//                    String url = CYM_Utility.MAPPR_PUBLIC_URL + eachGal.getString("gallery_pic");
+//                    listBranchGallery.add(CYM_Utility.loadImageFromServer(url, 75, 75));
+//                }
 
-                for (int i = 0; i < gallery.length(); i++) {
-                    JSONObject eachGal = gallery.getJSONObject(i);
-                    String url = CYM_Utility.MAPPR_PUBLIC_URL + eachGal.getString("gallery_pic");
-                    listBranchGallery.add(CYM_Utility.loadImageFromServer(url, 75, 75));
-                }
 
-                setReviewHolder(json);
+//                setReviewHolder(json);
+
 
                 return json.toString();
             } catch (Exception e) {
@@ -292,49 +346,57 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
 
                     String bookmarkState = json.getString("isBookmarked").equals("true") ? "BOOKMARKED" : "BOOKMARK";
                     bookmarkMenu.setTitle(bookmarkState);
-                    if (reviewHolderList.isEmpty()) {
-                        listview.setVisibility(View.GONE);
-                    } else {
-                        listview.setVisibility(View.VISIBLE);
-                    }
-
-                    ArrayAdapter<ReviewHolder> reviewHolderArrayAdapter = new ReviewAdapter(getApplicationContext(), reviewHolderList);
-                    listview.setAdapter(reviewHolderArrayAdapter);
-                    listview.setOnTouchListener(new View.OnTouchListener() {
-                        // Setting on Touch Listener for handling the touch inside ScrollView
-                        @Override
-                        public boolean onTouch(View v, MotionEvent event) {
-                            // Disallow the touch request for parent scroll on touch of child view
-                            v.getParent().requestDisallowInterceptTouchEvent(true);
-                            return false;
-                        }
-                    });
 
                     JSONObject branch = json.getJSONObject("branch");
-                    mapprTour.setLat(branch.getString("lat"));
-                    mapprTour.setLng(branch.getString("lng"));
-                    mapprTour.setMarkerText(establishment.getName());
-                    CYM_Utility.setImageOnView(EstablishmentDetails.this, R.id.estabLogo, establishment.getDisplay_picture());
-                    CYM_Utility.displayText(EstablishmentDetails.this, R.id.estabName, establishment.getName());
                     CYM_Utility.displayText(EstablishmentDetails.this, R.id.branchAddress, branch.getString("address"));
+                    CYM_Utility.displayText(EstablishmentDetails.this, R.id.descriptionTv, branch.getString("description"));
                     CYM_Utility.setRatingBarRate(EstablishmentDetails.this, R.id.branchRating, Float.parseFloat(json.getString("average_rating")));
+
+                    if (scheduleHolderList.isEmpty()) {
+                        scheduleView.setVisibility(View.GONE);
+                    } else {
+                        scheduleView.setVisibility(View.VISIBLE);
+                    }
+
+                    HashMap<ScheduleHolder, List<ScheduleHolder>> listChildData = new HashMap<>();
+                    listChildData.put(mHeader.get(0), scheduleHolderList);
+                    ScheduleAdapter scheduleHolderArrayAdapter = new ScheduleAdapter(getApplicationContext(), mHeader, listChildData);
+                    scheduleView.setAdapter(scheduleHolderArrayAdapter);
+
+//                    if (reviewHolderList.isEmpty()) {
+//                        listview.setVisibility(View.GONE);
+//                    } else {
+//                        listview.setVisibility(View.VISIBLE);
+//                    }
+//
+//                    ArrayAdapter<ReviewHolder> reviewHolderArrayAdapter = new ReviewAdapter(getApplicationContext(), reviewHolderList);
+//                    listview.setAdapter(reviewHolderArrayAdapter);
+//                    listview.setOnTouchListener(new View.OnTouchListener() {
+//                        // Setting on Touch Listener for handling the touch inside ScrollView
+//                        @Override
+//                        public boolean onTouch(View v, MotionEvent event) {
+//                            // Disallow the touch request for parent scroll on touch of child view
+//                            v.getParent().requestDisallowInterceptTouchEvent(true);
+//                            return false;
+//                        }
+//                    });
 
                     String leastDistanceUrl = DirectionActivity.makeURL(sourceLat, sourceLng, Double.parseDouble(branchLat), Double.parseDouble(branchLng));
                     new LeastDistanceCalculator(leastDistanceUrl).execute();
 
                     //loading of gallery. looks messy? wrap it in function... but nah...
 
-                    for (Bitmap bmp : listBranchGallery) {
-                        ImageView iv = new ImageView(EstablishmentDetails.this);
-                        iv.setImageBitmap(CYM_Utility.getResizedBitmap(bmp, 75, 75));
-                        iv.setPadding(5, 5, 5, 5);
-                        galleryContainer.addView(iv);
-                        float height = CYM_Utility.dipToPixels(getApplicationContext(), 75);
-                        float width = CYM_Utility.dipToPixels(getApplicationContext(), 75);
-                        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams((int)height, (int)width);
-                        iv.setLayoutParams(lp);
-                    }
-
+//                    for (Bitmap bmp : listBranchGallery) {
+//                        ImageView iv = new ImageView(EstablishmentDetails.this);
+//                        iv.setImageBitmap(CYM_Utility.getResizedBitmap(bmp, 75, 75));
+//                        iv.setPadding(5, 5, 5, 5);
+//                        galleryContainer.addView(iv);
+//                        float height = CYM_Utility.dipToPixels(getApplicationContext(), 75);
+//                        float width = CYM_Utility.dipToPixels(getApplicationContext(), 75);
+//                        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams((int)height, (int)width);
+//                        iv.setLayoutParams(lp);
+//                    }
+                    new GalleryLoader(json).execute();
 
 
 
@@ -380,6 +442,61 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
                     JSONObject distance = steps.getJSONObject("distance");
                     Log.i("poop", "distance: " + distance.getString("text"));
                     CYM_Utility.displayText(EstablishmentDetails.this, R.id.distanceTxt, "Distance: " + distance.getString("text"));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    class GalleryLoader extends AsyncTask<String, String, String> {
+
+        private JSONObject json;
+        private ProgressBar progressBar;
+
+        public GalleryLoader(JSONObject json) {
+            this.json = json;
+            listBranchGallery = new ArrayList<>();
+            progressBar = (ProgressBar) findViewById(R.id.progressBar);
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                JSONArray gallery = json.getJSONArray("Gallery");
+                for (int i = 0; i < gallery.length(); i++) {
+                    JSONObject eachGal = gallery.getJSONObject(i);
+                    String url = CYM_Utility.MAPPR_PUBLIC_URL + eachGal.getString("gallery_pic");
+                    listBranchGallery.add(CYM_Utility.loadImageFromServer(url, 75, 75));
+                }
+                return json.toString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            galleryContainer.removeAllViews();
+            galleryContainer.invalidate();
+
+            if (result != null) {
+                try {
+                    for (Bitmap bmp : listBranchGallery) {
+                        ImageView iv = new ImageView(EstablishmentDetails.this);
+                        iv.setImageBitmap(CYM_Utility.getResizedBitmap(bmp, 75, 75));
+                        iv.setPadding(5, 5, 5, 5);
+                        galleryContainer.addView(iv);
+                        float height = CYM_Utility.dipToPixels(getApplicationContext(), 75);
+                        float width = CYM_Utility.dipToPixels(getApplicationContext(), 75);
+                        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams((int)height, (int)width);
+                        iv.setLayoutParams(lp);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

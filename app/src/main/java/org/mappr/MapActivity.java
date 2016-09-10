@@ -56,6 +56,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private Location mLastLocation;
 
     private Map<String, MapprEstablishment> hmEstablishment = new HashMap<>();
+    public static MapprEstablishment preservedEstablishment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +88,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             @Override
             public View getInfoContents(Marker marker) {
                 MapprEstablishment estab = hmEstablishment.get(marker.getSnippet());
+                preservedEstablishment = estab;
                 View v = getLayoutInflater().inflate(R.layout.custom_info_window, null);
                 ImageView estabLogo = (ImageView) v.findViewById(R.id.estabLogo);
                 TextView estabName = (TextView) v.findViewById(R.id.estabName);

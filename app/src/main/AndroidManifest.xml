@@ -63,7 +63,9 @@
         <activity
             android:name=".MapprCategory"
             android:label="@string/title_activity_featured_category"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
         <activity android:name=".MapprDetails" />
         <activity android:name=".MapprLogin" />
         <activity android:name=".MapprRegister" />

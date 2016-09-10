@@ -50,7 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="View Reviews"
+                android:text="Average Reviews"
                 android:layout_margin="0dp"
                 android:id="@+id/textView6"
                 android:layout_gravity="center_horizontal" />
@@ -79,6 +79,7 @@
                     android:onClick="gotoGmaps"/>
             </LinearLayout>
 
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -96,85 +97,50 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="10dp" />
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/descriptionTv"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="10dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Open Hours"
+                android:id="@+id/textView3" />
+
+            <ExpandableListView
+                android:layout_width="match_parent"
+                android:layout_height="61dp"
+                android:id="@+id/expandableSchedule" />
+
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/horizontalScrollView"
-                android:layout_gravity="center_horizontal" >
+                >
 
                 <LinearLayout
                     android:id="@+id/galleryContainer"
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:padding="5dp">
+                    android:padding="5dp"
+                    android:layout_gravity="center"
+                    android:gravity="center">
 
-                    <ImageView
-                        android:layout_width="75dp"
-                        android:layout_height="75dp"
-                        android:id="@+id/imageView7"
-                        android:minHeight="75dp"
-                        android:minWidth="75dp"
-                        android:src="@drawable/default_image"
-                        android:maxHeight="75dp"
-                        android:maxWidth="75dp"
-                        android:longClickable="false"
-                        android:scaleType="centerCrop"
-                        android:layout_margin="10dp" />
+                    <ProgressBar
+                        android:id="@+id/progressBar"
+                        style="?android:attr/progressBarStyleLarge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:indeterminateDrawable="@drawable/progress" >
+                    </ProgressBar>
 
-                    <ImageView
-                        android:layout_width="75dp"
-                        android:layout_height="75dp"
-                        android:id="@+id/imageView6"
-                        android:minHeight="75dp"
-                        android:minWidth="75dp"
-                        android:src="@drawable/default_image"
-                        android:maxHeight="75dp"
-                        android:maxWidth="75dp"
-                        android:longClickable="false"
-                        android:scaleType="centerCrop"
-                        android:layout_margin="10dp" />
-
-                    <ImageView
-                        android:layout_width="75dp"
-                        android:layout_height="75dp"
-                        android:id="@+id/imageView5"
-                        android:minHeight="75dp"
-                        android:minWidth="75dp"
-                        android:src="@drawable/default_image"
-                        android:maxHeight="75dp"
-                        android:maxWidth="75dp"
-                        android:longClickable="false"
-                        android:scaleType="centerCrop"
-                        android:layout_margin="10dp" />
-
-                    <ImageView
-                        android:layout_width="75dp"
-                        android:layout_height="75dp"
-                        android:id="@+id/imageView4"
-                        android:minHeight="75dp"
-                        android:minWidth="75dp"
-                        android:src="@drawable/default_image"
-                        android:maxHeight="75dp"
-                        android:maxWidth="75dp"
-                        android:longClickable="false"
-                        android:scaleType="centerCrop"
-                        android:layout_margin="10dp" />
-
-                    <ImageView
-                        android:layout_width="75dp"
-                        android:layout_height="75dp"
-                        android:id="@+id/imageView3"
-                        android:minHeight="75dp"
-                        android:minWidth="75dp"
-                        android:src="@drawable/default_image"
-                        android:maxHeight="75dp"
-                        android:maxWidth="75dp"
-                        android:longClickable="false"
-                        android:scaleType="centerCrop"
-                        android:layout_margin="10dp" />
                 </LinearLayout>
             </HorizontalScrollView>
+
 
             <ListView
                 android:layout_width="match_parent"
