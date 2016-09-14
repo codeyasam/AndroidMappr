@@ -82,6 +82,8 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
     private List<ScheduleHolder> scheduleHolderList;
     private List<ScheduleHolder> mHeader;
 
+    private int expandClickCount = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,6 +116,7 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
         });
 
         scheduleView = (ExpandableListView) findViewById(R.id.expandableSchedule);
+        //CYM_Utility.setListViewHeightBasedOnChildren(scheduleView);
         scheduleView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
             @Override
             public void onGroupExpand(int groupPosition) {
@@ -122,7 +125,14 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
                     height += scheduleView.getChildAt(i).getMeasuredHeight();
                     height += scheduleView.getDividerHeight();
                 }
-                scheduleView.getLayoutParams().height = (height+6)*10;
+                expandClickCount++;
+                if (expandClickCount == 1) {
+                    int times = groupPosition == 0 ? 3 : 5;
+                    int heightVal = (height + 6) * times;
+                    scheduleView.getLayoutParams().height = heightVal;
+                } else {
+                    scheduleView.getLayoutParams().height = 700;
+                }
             }
         });
 
@@ -131,9 +141,16 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
 
             @Override
             public void onGroupCollapse(int groupPosition) {
-                scheduleView.getLayoutParams().height = 61;
+                expandClickCount--;
+                if (expandClickCount == 0) {
+                    scheduleView.getLayoutParams().height = 122;
+                } else {
+                    int heightVal = groupPosition == 0 ? 530 : 300;
+                    scheduleView.getLayoutParams().height = heightVal;
+                }
             }
         });
+
     }
 
     @Override
@@ -236,13 +253,10 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
 
         private String branchId;
         private String userId;
+        List<ScheduleHolder> prompts = new ArrayList<>();
 
         public DetailLauncher() {
             establishment = MapActivity.preservedEstablishment;
-            reviewHolderList = new ArrayList<>();
-//            listBranchGallery = new ArrayList<>();
-//            galleryContainer.removeAllViews();
-//            galleryContainer.invalidate();
             Log.i("poop", "tinawag ung onResume");
             scheduleHolderList = new ArrayList<>();
             mHeader = new ArrayList<>();
@@ -266,22 +280,6 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
             //this.branchId = "1";
         }
 
-        private void setReviewHolder(JSONObject json) {
-            try {
-                if (json.getString("hasReview").equals("true")) {
-                    JSONArray userObjArr = json.getJSONArray("Users");
-                    JSONArray reviewObjArr = json.getJSONArray("Reviews");
-                    Log.i("poop", "nagset ng review" + reviewObjArr.toString());
-                    if (reviewObjArr.toString().equals("[{}]")) return;
-                    for (int i = 0; i < reviewObjArr.length(); i++) {
-                        reviewHolderList.add(ReviewHolder.instantiateJSONReview(userObjArr.getJSONObject(i), reviewObjArr.getJSONObject(i)));
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        }
 
         private void setCurrentDayOpenHours(JSONObject json) {
             try {
@@ -314,20 +312,11 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
 
                 params.add(new BasicNameValuePair("branch_id", branchId));
                 JSONObject json = JSONParser.makeHttpRequest(DETAILS_URL, "GET", params);
+                mHeader.add(new ScheduleHolder("ABOUT"));
                 setCurrentDayOpenHours(json);
                 JSONObject branch = json.getJSONObject("branch");
                 branchLat = branch.getString("lat");
                 branchLng = branch.getString("lng");
-//                JSONArray gallery = json.getJSONArray("Gallery");
-//                for (int i = 0; i < gallery.length(); i++) {
-//                    JSONObject eachGal = gallery.getJSONObject(i);
-//                    String url = CYM_Utility.MAPPR_PUBLIC_URL + eachGal.getString("gallery_pic");
-//                    listBranchGallery.add(CYM_Utility.loadImageFromServer(url, 75, 75));
-//                }
-
-
-//                setReviewHolder(json);
-
 
                 return json.toString();
             } catch (Exception e) {
@@ -348,8 +337,8 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
                     bookmarkMenu.setTitle(bookmarkState);
 
                     JSONObject branch = json.getJSONObject("branch");
-                    CYM_Utility.displayText(EstablishmentDetails.this, R.id.branchAddress, branch.getString("address"));
-                    CYM_Utility.displayText(EstablishmentDetails.this, R.id.descriptionTv, branch.getString("description"));
+//                    CYM_Utility.displayText(EstablishmentDetails.this, R.id.branchAddress, branch.getString("address"));
+//                    CYM_Utility.displayText(EstablishmentDetails.this, R.id.descriptionTv, branch.getString("description"));
                     CYM_Utility.setRatingBarRate(EstablishmentDetails.this, R.id.branchRating, Float.parseFloat(json.getString("average_rating")));
 
                     if (scheduleHolderList.isEmpty()) {
@@ -359,45 +348,18 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
                     }
 
                     HashMap<ScheduleHolder, List<ScheduleHolder>> listChildData = new HashMap<>();
-                    listChildData.put(mHeader.get(0), scheduleHolderList);
+                    prompts.add(new ScheduleHolder("Address: " + branch.getString("address")));
+                    prompts.add(new ScheduleHolder(branch.getString("description")));
+                    listChildData.put(mHeader.get(0), prompts);
+                    listChildData.put(mHeader.get(1), scheduleHolderList);
                     ScheduleAdapter scheduleHolderArrayAdapter = new ScheduleAdapter(getApplicationContext(), mHeader, listChildData);
                     scheduleView.setAdapter(scheduleHolderArrayAdapter);
-
-//                    if (reviewHolderList.isEmpty()) {
-//                        listview.setVisibility(View.GONE);
-//                    } else {
-//                        listview.setVisibility(View.VISIBLE);
-//                    }
-//
-//                    ArrayAdapter<ReviewHolder> reviewHolderArrayAdapter = new ReviewAdapter(getApplicationContext(), reviewHolderList);
-//                    listview.setAdapter(reviewHolderArrayAdapter);
-//                    listview.setOnTouchListener(new View.OnTouchListener() {
-//                        // Setting on Touch Listener for handling the touch inside ScrollView
-//                        @Override
-//                        public boolean onTouch(View v, MotionEvent event) {
-//                            // Disallow the touch request for parent scroll on touch of child view
-//                            v.getParent().requestDisallowInterceptTouchEvent(true);
-//                            return false;
-//                        }
-//                    });
-
+                    scheduleView.expandGroup(0);
+                    scheduleView.getLayoutParams().height = 300;
                     String leastDistanceUrl = DirectionActivity.makeURL(sourceLat, sourceLng, Double.parseDouble(branchLat), Double.parseDouble(branchLng));
                     new LeastDistanceCalculator(leastDistanceUrl).execute();
-
-                    //loading of gallery. looks messy? wrap it in function... but nah...
-
-//                    for (Bitmap bmp : listBranchGallery) {
-//                        ImageView iv = new ImageView(EstablishmentDetails.this);
-//                        iv.setImageBitmap(CYM_Utility.getResizedBitmap(bmp, 75, 75));
-//                        iv.setPadding(5, 5, 5, 5);
-//                        galleryContainer.addView(iv);
-//                        float height = CYM_Utility.dipToPixels(getApplicationContext(), 75);
-//                        float width = CYM_Utility.dipToPixels(getApplicationContext(), 75);
-//                        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams((int)height, (int)width);
-//                        iv.setLayoutParams(lp);
-//                    }
                     new GalleryLoader(json).execute();
-
+                    new ReviewLoader(json).execute();
 
 
                 } catch (JSONException e) {
@@ -408,6 +370,74 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
             }
         }
 
+    }
+
+    class ReviewLoader extends AsyncTask<String, String, String> {
+
+        private JSONObject json;
+
+        public ReviewLoader(JSONObject json) {
+            reviewHolderList = new ArrayList<>();
+            this.json = json;
+        }
+
+        private void setReviewHolder(JSONObject json) {
+            try {
+                if (json.getString("hasReview").equals("true")) {
+                    JSONArray userObjArr = json.getJSONArray("Users");
+                    JSONArray reviewObjArr = json.getJSONArray("Reviews");
+                    Log.i("poop", "nagset ng review" + reviewObjArr.toString());
+                    if (reviewObjArr.toString().equals("[{}]")) return;
+                    for (int i = 0; i < reviewObjArr.length(); i++) {
+                        reviewHolderList.add(ReviewHolder.instantiateJSONReview(userObjArr.getJSONObject(i), reviewObjArr.getJSONObject(i)));
+                    }
+
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                setReviewHolder(json);
+                return json.toString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            if (result != null) {
+                try {
+                    if (reviewHolderList.isEmpty()) {
+                        listview.setVisibility(View.GONE);
+                    } else {
+                        listview.setVisibility(View.VISIBLE);
+                    }
+
+                    ArrayAdapter<ReviewHolder> reviewHolderArrayAdapter = new ReviewAdapter(getApplicationContext(), reviewHolderList);
+                    listview.setAdapter(reviewHolderArrayAdapter);
+                    listview.setOnTouchListener(new View.OnTouchListener() {
+                        // Setting on Touch Listener for handling the touch inside ScrollView
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            // Disallow the touch request for parent scroll on touch of child view
+                            v.getParent().requestDisallowInterceptTouchEvent(true);
+                            return false;
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
     }
 
     class LeastDistanceCalculator extends AsyncTask<String, String, String> {

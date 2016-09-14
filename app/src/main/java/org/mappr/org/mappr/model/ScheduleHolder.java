@@ -13,6 +13,12 @@ public class ScheduleHolder {
     private String closing_hour;
     private String day_no;
 
+    public String prompt;
+
+    public ScheduleHolder(String prompt) {
+        this.prompt = prompt;
+    }
+
     public ScheduleHolder(String opening_hour, String closing_hour, String day_no) {
         this.opening_hour = opening_hour;
         this.closing_hour = closing_hour;

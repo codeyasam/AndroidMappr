@@ -3,6 +3,7 @@ package org.mappr.org.mappr.model;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,21 +52,27 @@ public class ScheduleAdapter extends BaseExpandableListAdapter {
     public View getChildView(int groupPosition, final int childPosition,
                              boolean isLastChild, View convertView, ViewGroup parent) {
 
-        //final String childText = (String) getChild(groupPosition, childPosition);
-        final ScheduleHolder childScheduleHolder = (ScheduleHolder) getChild(groupPosition, childPosition);
-
-        if (convertView == null) {
+        if (groupPosition == 0) {
+            final ScheduleHolder childScheduleHolder = (ScheduleHolder) getChild(groupPosition, childPosition);
+            LayoutInflater infalInflater = (LayoutInflater) this._context
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = infalInflater.inflate(R.layout.expandable_about_child, null);
+            CYM_Utility.displayText(convertView, R.id.lblAboutChild, childScheduleHolder.prompt);
+        } else {
+            final ScheduleHolder childScheduleHolder = (ScheduleHolder) getChild(groupPosition, childPosition);
+            Log.i("poop", childScheduleHolder.getTimeSelection());
             LayoutInflater infalInflater = (LayoutInflater) this._context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = infalInflater.inflate(R.layout.expandable_schedule_child, null);
+            TextView txtListChild = (TextView) convertView
+                    .findViewById(R.id.lblListItem);
+
+            //txtListChild.setText(childText);
+            txtListChild.setText(childScheduleHolder.getTimeSelection());
+            CYM_Utility.displayText(convertView, R.id.lblDayItem, childScheduleHolder.getDayString());
         }
+        //final String childText = (String) getChild(groupPosition, childPosition);
 
-        TextView txtListChild = (TextView) convertView
-                .findViewById(R.id.lblListItem);
-
-        //txtListChild.setText(childText);
-        txtListChild.setText(childScheduleHolder.getTimeSelection());
-        CYM_Utility.displayText(convertView, R.id.lblDayItem, childScheduleHolder.getDayString());
         return convertView;
     }
 
@@ -94,19 +101,25 @@ public class ScheduleAdapter extends BaseExpandableListAdapter {
     public View getGroupView(int groupPosition, boolean isExpanded,
                              View convertView, ViewGroup parent) {
         //String headerTitle = (String) getGroup(groupPosition);
-        final ScheduleHolder scheduleHolder = (ScheduleHolder) getGroup(groupPosition);
-        if (convertView == null) {
+        if (groupPosition == 0) {
+            Log.i("poop", "starts at 0");
+            final ScheduleHolder scheduleHolder = (ScheduleHolder) getGroup(groupPosition);
+            LayoutInflater infalInflater = (LayoutInflater) this._context
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = infalInflater.inflate(R.layout.expandable_about, null);
+            CYM_Utility.displayText(convertView, R.id.lblAbout, scheduleHolder.prompt);
+        } else {
+            final ScheduleHolder scheduleHolder = (ScheduleHolder) getGroup(groupPosition);
             LayoutInflater infalInflater = (LayoutInflater) this._context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = infalInflater.inflate(R.layout.expandable_schedule, null);
+            TextView lblListHeader = (TextView) convertView
+                    .findViewById(R.id.lblListHeader);
+            lblListHeader.setTypeface(null, Typeface.BOLD);
+            lblListHeader.setText(scheduleHolder.getDayString());
+
+            CYM_Utility.displayText(convertView, R.id.lblListHeaderTime, scheduleHolder.getTimeSelection());
         }
-
-        TextView lblListHeader = (TextView) convertView
-                .findViewById(R.id.lblListHeader);
-        lblListHeader.setTypeface(null, Typeface.BOLD);
-        lblListHeader.setText(scheduleHolder.getDayString());
-
-        CYM_Utility.displayText(convertView, R.id.lblListHeaderTime, scheduleHolder.getTimeSelection());
         return convertView;
     }
 

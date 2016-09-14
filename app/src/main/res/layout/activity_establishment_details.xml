@@ -84,35 +84,39 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Address: Sumapang Bata, Malolos, Bulacan"
+                android:text=""
                 android:id="@+id/branchAddress"
                 android:layout_gravity="center_horizontal"
-                android:layout_margin="10dp" />
+                android:layout_margin="10dp"
+                android:visibility="gone"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Description:"
+                android:text=""
                 android:id="@+id/textView2"
                 android:layout_gravity="center_horizontal"
-                android:layout_margin="10dp" />
+                android:layout_margin="10dp"
+                android:visibility="gone"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/descriptionTv"
                 android:layout_gravity="center_horizontal"
-                android:layout_margin="10dp" />
+                android:layout_margin="10dp"
+                android:visibility="gone"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Open Hours"
-                android:id="@+id/textView3" />
+                android:text=""
+                android:id="@+id/textView3"
+                android:visibility="gone"/>
 
             <ExpandableListView
                 android:layout_width="match_parent"
-                android:layout_height="61dp"
+                android:layout_height="300dp"
                 android:id="@+id/expandableSchedule" />
 
             <HorizontalScrollView
