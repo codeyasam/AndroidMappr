@@ -150,7 +150,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
                 android:id="@+id/listView"
-                android:layout_gravity="center_horizontal" />
+                android:layout_gravity="center_horizontal"
+                android:visibility="gone" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="CALL"
+                android:id="@+id/callBtn"
+                android:onClick="callBtnClick"
+                android:layout_margin="5dp"
+                android:visibility="gone" />
 
         </LinearLayout>
     </ScrollView>

@@ -1,5 +1,6 @@
 package org.mappr;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -8,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationListener;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
@@ -88,7 +90,7 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_establishment_details);
-        listview = (ListView)findViewById(R.id.listView);
+        listview = (ListView) findViewById(R.id.listView);
         galleryContainer = (LinearLayout) findViewById(R.id.galleryContainer);
         settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
@@ -195,6 +197,26 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
         intent.putExtra("destLng", branchLng);
         startActivity(intent);
     }
+    private String branchContactNo = "none";
+    public void callBtnClick(View v) {
+
+        if (!branchContactNo.equals("none")) {
+            Intent callIntent = new Intent(Intent.ACTION_CALL);
+            callIntent.setData(Uri.parse("tel:" + branchContactNo));
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
+            startActivity(callIntent);
+        }
+    }
+
 
     @Override
     public void onLocationChanged(Location location) {
@@ -317,6 +339,7 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
                 JSONObject branch = json.getJSONObject("branch");
                 branchLat = branch.getString("lat");
                 branchLng = branch.getString("lng");
+                branchContactNo = branch.getString("contact_number");
 
                 return json.toString();
             } catch (Exception e) {
@@ -345,6 +368,11 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
                         scheduleView.setVisibility(View.GONE);
                     } else {
                         scheduleView.setVisibility(View.VISIBLE);
+                    }
+
+                    if (!branchContactNo.equals("none")) {
+                        Button callBtn = (Button) findViewById(R.id.callBtn);
+                        callBtn.setVisibility(View.VISIBLE);
                     }
 
                     HashMap<ScheduleHolder, List<ScheduleHolder>> listChildData = new HashMap<>();
