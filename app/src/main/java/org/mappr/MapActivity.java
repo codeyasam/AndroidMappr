@@ -1,6 +1,7 @@
 package org.mappr;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -190,10 +191,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         private String branchID;
         private String categoryID;
         private String searchString;
+        private ProgressDialog progressDialog;
 
         @Override
         protected void onPreExecute() {
-
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(MapActivity.this);
+            progressDialog.setMessage("Fetching branches, Please wait...");
+            progressDialog.setIndeterminate(true);
+            progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.show();
         }
 
         @Override
@@ -232,6 +239,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         @Override
         protected void onPostExecute(String branchesString) {
+            progressDialog.dismiss();
             if (branchesString != null) {
                 try {
                     Log.i("poop", branchesString);

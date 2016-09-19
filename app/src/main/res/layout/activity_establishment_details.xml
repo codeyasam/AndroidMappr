@@ -53,7 +53,8 @@
                 android:text="Average Reviews"
                 android:layout_margin="0dp"
                 android:id="@+id/textView6"
-                android:layout_gravity="center_horizontal" />
+                android:layout_gravity="center_horizontal"
+                android:visibility="gone"/>
 
             <LinearLayout
                 android:orientation="horizontal"

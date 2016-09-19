@@ -1,6 +1,7 @@
 package org.mappr.org.mappr.model;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ProgressBar;
 
 import org.mappr.MapActivity;
 import com.example.codeyasam.mappr.R;
@@ -50,17 +52,32 @@ public class CategoryFragment extends Fragment {
         activity.startActivity(intent);
     }
 
+    private static List<MapprCategory> categoryList = new ArrayList<>();
+
     class CategorySearcher extends AsyncTask<String, String, List<MapprCategory>> {
 
         private CategoryAdapter categoryAdapter;
-        private List<MapprCategory> categoryList;
+        private ProgressBar progressBar;
 
         public CategorySearcher() {
+
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            categoryGrid. setVisibility(View.GONE);
+            progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+            progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
         protected List<MapprCategory> doInBackground(String... args) {
             try {
+                if (!categoryList.isEmpty()) {
+                    categoryAdapter = new CategoryAdapter(getActivity().getApplicationContext(), categoryList);
+                    return categoryList;
+                }
                 List<NameValuePair> params = new ArrayList<>();
                 JSONObject json = JSONParser.makeHttpRequest(CATEGORY_URL, "GET", params);
                 JSONArray featuredCategories = json.getJSONArray("Categories");
@@ -76,6 +93,8 @@ public class CategoryFragment extends Fragment {
 
         @Override
         protected void onPostExecute(List<MapprCategory> categories) {
+            progressBar.setVisibility(View.GONE);
+            categoryGrid.setVisibility(View.VISIBLE);
             if (categories != null && !categories.isEmpty()) {
                 try {
                     categoryGrid.setAdapter(categoryAdapter);

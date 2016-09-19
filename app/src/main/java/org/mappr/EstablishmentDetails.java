@@ -364,10 +364,15 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
 //                    CYM_Utility.displayText(EstablishmentDetails.this, R.id.descriptionTv, branch.getString("description"));
                     CYM_Utility.setRatingBarRate(EstablishmentDetails.this, R.id.branchRating, Float.parseFloat(json.getString("average_rating")));
 
-                    if (scheduleHolderList.isEmpty()) {
-                        scheduleView.setVisibility(View.GONE);
+                    HashMap<ScheduleHolder, List<ScheduleHolder>> listChildData = new HashMap<>();
+                    prompts.add(new ScheduleHolder("Address: " + branch.getString("address")));
+                    prompts.add(new ScheduleHolder(branch.getString("description")));
+
+
+                    if (!scheduleHolderList.isEmpty()) {
+                        listChildData.put(mHeader.get(1), scheduleHolderList);
                     } else {
-                        scheduleView.setVisibility(View.VISIBLE);
+                        prompts.add(new ScheduleHolder("No open hours"));
                     }
 
                     if (!branchContactNo.equals("none")) {
@@ -375,11 +380,7 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
                         callBtn.setVisibility(View.VISIBLE);
                     }
 
-                    HashMap<ScheduleHolder, List<ScheduleHolder>> listChildData = new HashMap<>();
-                    prompts.add(new ScheduleHolder("Address: " + branch.getString("address")));
-                    prompts.add(new ScheduleHolder(branch.getString("description")));
                     listChildData.put(mHeader.get(0), prompts);
-                    listChildData.put(mHeader.get(1), scheduleHolderList);
                     ScheduleAdapter scheduleHolderArrayAdapter = new ScheduleAdapter(getApplicationContext(), mHeader, listChildData);
                     scheduleView.setAdapter(scheduleHolderArrayAdapter);
                     scheduleView.expandGroup(0);

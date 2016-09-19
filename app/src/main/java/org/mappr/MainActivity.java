@@ -31,6 +31,7 @@ import org.mappr.org.mappr.model.CYM_Utility;
 import org.mappr.org.mappr.model.CategoryFragment;
 import org.mappr.org.mappr.model.FavoritesFragment;
 import org.mappr.org.mappr.model.MapprBranch;
+import org.mappr.org.mappr.model.MapprCategory;
 import org.mappr.org.mappr.model.MapprJSONSearch;
 import org.mappr.org.mappr.model.SearchesFragment;
 import org.mappr.org.mappr.model.ViewPageAdapter;
@@ -39,6 +40,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static List<MapprCategory> categoryList;
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a

@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:gravity="center">
 
     <GridView
         android:numColumns="3"
@@ -10,15 +11,19 @@
         android:columnWidth="100dp"
         android:stretchMode="columnWidth"
         android:layout_width="fill_parent"
-        android:layout_height="350dp"
+        android:layout_height="match_parent"
         android:id="@+id/categoryGrid"
         android:padding="20dp"
+        android:visibility="gone"
         />
 
-    <ImageView
-        android:layout_width="match_parent"
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/imageView"
-        android:src="@drawable/logo"/>
+        android:indeterminateDrawable="@drawable/progress"
+        android:layout_gravity="center">
+    </ProgressBar>
 
 </LinearLayout>
