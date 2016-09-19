@@ -40,7 +40,7 @@ public class JSONParser {
 
     }
 
-    public JSONArray getJSONArrayFromUrl(String url) {
+    public static JSONArray getJSONArrayFromUrl(String url) {
 
         StringBuilder builder = new StringBuilder();
         HttpClient client = new DefaultHttpClient();

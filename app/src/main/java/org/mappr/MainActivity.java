@@ -4,8 +4,13 @@ import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.MatrixCursor;
+import android.os.AsyncTask;
+import android.provider.BaseColumns;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -27,9 +32,12 @@ import android.widget.TextView;
 import com.example.codeyasam.mappr.R;
 
 import org.joda.time.DateTime;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.mappr.org.mappr.model.CYM_Utility;
 import org.mappr.org.mappr.model.CategoryFragment;
 import org.mappr.org.mappr.model.FavoritesFragment;
+import org.mappr.org.mappr.model.JSONParser;
 import org.mappr.org.mappr.model.MapprBranch;
 import org.mappr.org.mappr.model.MapprCategory;
 import org.mappr.org.mappr.model.MapprJSONSearch;
@@ -39,6 +47,8 @@ import org.mappr.org.mappr.model.ViewPageAdapter;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
+    public static final String SEARCH_SUGGESTIONS_URL = CYM_Utility.MAPPR_ROOT_URL + "tests/getSearchSuggestions.php";
 
     public static List<MapprCategory> categoryList;
     /**
@@ -101,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private SearchView mSearchView;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -111,8 +122,11 @@ public class MainActivity extends AppCompatActivity {
         // Get the SearchView and set the searchable configuration
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         MenuItem mSearchMenuItem = menu.findItem(R.id.action_settings);
-        SearchView mSearchView = (SearchView) MenuItemCompat.getActionView(mSearchMenuItem);
-        mSearchView.setSearchableInfo(searchManager.getSearchableInfo(new ComponentName(getApplicationContext(), MapActivity.class)));
+        mSearchView = (SearchView) MenuItemCompat.getActionView(mSearchMenuItem);
+        mSearchView.setSuggestionsAdapter(new SimpleCursorAdapter(
+                getApplicationContext(), android.R.layout.simple_list_item_1, null,
+                new String[] { SearchManager.SUGGEST_COLUMN_TEXT_1 },
+                new int[] { android.R.id.text1 }));
         mSearchView.setIconifiedByDefault(false);
 
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -126,12 +140,78 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                return false;
+                if (newText.length() > 0) {
+                    new FetchSearchTermSuggestionsTask(newText).execute(newText);
+                } else {
+                    mSearchView.getSuggestionsAdapter().changeCursor(null);
+                }
+                return true;
             }
         });
 
+        mSearchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+
+            @Override
+            public boolean onSuggestionSelect(int position) {
+                Cursor cursor = (Cursor) mSearchView.getSuggestionsAdapter().getItem(position);
+                String term = cursor.getString(cursor.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1));
+                cursor.close();
+                searchClick(term);
+                return true;
+            }
+
+            @Override
+            public boolean onSuggestionClick(int position) {
+                return onSuggestionSelect(position);
+            }
+        });
 
         return true;
+    }
+
+    public class FetchSearchTermSuggestionsTask extends AsyncTask<String, Void, Cursor> {
+
+        private String searchStr;
+
+        public FetchSearchTermSuggestionsTask(String searchStr) {
+            this.searchStr = searchStr;
+        }
+
+        private final String[] sAutocompleteColNames = new String[] {
+                BaseColumns._ID,                         // necessary for adapter
+                SearchManager.SUGGEST_COLUMN_TEXT_1      // the full search term
+        };
+
+        @Override
+        protected Cursor doInBackground(String... args) {
+            MatrixCursor cursor = new MatrixCursor(sAutocompleteColNames);
+
+            try {
+                JSONObject jsonObject = JSONParser.getJSONfromURL(SEARCH_SUGGESTIONS_URL + "?searchStr=" + searchStr);
+                JSONArray jsonArray = jsonObject.getJSONArray("Suggestions");
+
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    //String term = jsonArray.getString(index);
+                    JSONObject eachJson = jsonArray.getJSONObject(i);
+                    String term = eachJson.getString("name");
+                    String index = eachJson.getString("id");
+
+                    Object[] row = new Object[] { index, term };
+                    cursor.addRow(row);
+                }
+
+                return cursor;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Cursor cursor) {
+            super.onPostExecute(cursor);
+            mSearchView.getSuggestionsAdapter().changeCursor(cursor);
+        }
     }
 
 

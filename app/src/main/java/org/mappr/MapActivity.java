@@ -246,6 +246,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     JSONArray branches = new JSONArray(branchesString);
                     JSONObject firstBranch = branches.getJSONObject(0);
                     Log.i("poop", "length: " + branches.length());
+                    Log.i("poop", "branhesString: " + branchesString);
                     //kind of a hack
                     if (branchesString.equals("[{}]")) {
                         Toast.makeText(MapActivity.this, "No results found", Toast.LENGTH_SHORT).show();
@@ -281,6 +282,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 } catch(Exception e) {
                     e.printStackTrace();
                 }
+            } else {
+                Toast.makeText(MapActivity.this, "No results found", Toast.LENGTH_SHORT).show();
             }
         }
 
