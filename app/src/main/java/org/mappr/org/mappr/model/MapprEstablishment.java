@@ -9,6 +9,8 @@ import org.json.JSONObject;
  */
 public class MapprEstablishment {
 
+    public static MapprEstablishment preservedEstablishment;
+
     private String id;
     private String owner_id;
     private String category_id;

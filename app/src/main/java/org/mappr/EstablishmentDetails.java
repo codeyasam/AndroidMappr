@@ -278,7 +278,7 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
         List<ScheduleHolder> prompts = new ArrayList<>();
 
         public DetailLauncher() {
-            establishment = MapActivity.preservedEstablishment;
+            establishment = MapprEstablishment.preservedEstablishment;
             Log.i("poop", "tinawag ung onResume");
             scheduleHolderList = new ArrayList<>();
             mHeader = new ArrayList<>();

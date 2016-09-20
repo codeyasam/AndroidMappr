@@ -36,6 +36,7 @@ public class FavoriteAdapter extends ArrayAdapter<MapprBranch> {
         try {
             MapprBranch branch = mapprBranches.get(position);
             MapprEstablishment estab = branch.getMapprEstablishment();
+            MapprEstablishment.preservedEstablishment = estab;
             CYM_Utility.setImageOnView(view, R.id.estabLogo, estab.getDisplay_picture());
             CYM_Utility.displayText(view, R.id.estabName, estab.getName());
             CYM_Utility.displayText(view, R.id.branchAddress, branch.getAddress());
