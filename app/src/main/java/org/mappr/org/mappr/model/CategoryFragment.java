@@ -93,10 +93,11 @@ public class CategoryFragment extends Fragment {
 
         @Override
         protected void onPostExecute(List<MapprCategory> categories) {
-            progressBar.setVisibility(View.GONE);
-            categoryGrid.setVisibility(View.VISIBLE);
+
             if (categories != null && !categories.isEmpty()) {
                 try {
+                    progressBar.setVisibility(View.GONE);
+                    categoryGrid.setVisibility(View.VISIBLE);
                     categoryGrid.setAdapter(categoryAdapter);
                     categoryGrid.setOnItemClickListener(customOnClickMethod());
                 } catch (Exception e) {
