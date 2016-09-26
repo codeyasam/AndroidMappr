@@ -229,6 +229,12 @@ public class MapprEndUser {
                         MapprSession.logUser(activity, json.getString("id"));
                         //activity.startActivity(intent);
                         activity.finish();
+                    } else {
+                        if (json.has("msg")) {
+                            CYM_Utility.mAlertDialog(json.getString("msg"), activity);
+                        } else {
+                            CYM_Utility.mAlertDialog("Failed to create an account, try again.", activity);
+                        }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

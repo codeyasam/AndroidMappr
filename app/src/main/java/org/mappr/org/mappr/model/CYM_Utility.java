@@ -38,10 +38,10 @@ import java.net.URL;
  */
 public class CYM_Utility {
 
-    //public static final String MAPPR_ROOT_URL = "http://192.168.42.8/thesis/";
-    //public static final String MAPPR_PUBLIC_URL = MAPPR_ROOT_URL + "Public/";
-    public static final String MAPPR_ROOT_URL = "http://codeyasam.com/capstone/";
-    public static final String MAPPR_PUBLIC_URL = MAPPR_ROOT_URL;
+    public static final String MAPPR_ROOT_URL = "http://192.168.42.68/thesis/";
+    public static final String MAPPR_PUBLIC_URL = MAPPR_ROOT_URL + "Public/";
+    //public static final String MAPPR_ROOT_URL = "http://codeyasam.com/capstone/";
+    //public static final String MAPPR_PUBLIC_URL = MAPPR_ROOT_URL;
     public static final String MAPPR_OPT = "MAPPR_OPT";
     public static final String OPT_BY_QRCODE = "111";
     public static final String OPT_BY_CATEGORY = "777";
@@ -188,6 +188,13 @@ public class CYM_Utility {
         builder.setMessage(message);
         builder.setNegativeButton("CANCEL", null);
         builder.setPositiveButton("OK", clickListener);
+        builder.show();
+    }
+
+    public static void mAlertDialog(String message, Activity context) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage(message);
+        builder.setNegativeButton("OK", null);
         builder.show();
     }
 

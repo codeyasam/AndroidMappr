@@ -110,6 +110,22 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
     public void registerUser(View v) {
+        String username = CYM_Utility.getText(RegisterActivity.this, R.id.usernameTxt).trim();
+        String password = CYM_Utility.getText(RegisterActivity.this, R.id.passwordTxt).trim();
+        String confPass = CYM_Utility.getText(RegisterActivity.this, R.id.confPass).trim();
+        String firstName = CYM_Utility.getText(RegisterActivity.this, R.id.firstNameTxt).trim();
+        String lastName = CYM_Utility.getText(RegisterActivity.this, R.id.lastNameTxt).trim();
+        String email = CYM_Utility.getText(RegisterActivity.this, R.id.emailTxt).trim();
+
+        if (username.isEmpty() || password.isEmpty() || firstName.isEmpty() ||
+                lastName.isEmpty() || email.isEmpty() || confPass.isEmpty()) {
+            CYM_Utility.mAlertDialog("Fill all required fields",  RegisterActivity.this);
+            return;
+        } else if (!password.equals(confPass)) {
+            CYM_Utility.mAlertDialog("Passwords don't match", RegisterActivity.this);
+            return;
+        }
+
         endUser.setUsername(CYM_Utility.getText(RegisterActivity.this, R.id.usernameTxt));
         endUser.setPassword(CYM_Utility.getText(RegisterActivity.this, R.id.passwordTxt));
         endUser.setFirstName(CYM_Utility.getText(RegisterActivity.this, R.id.firstNameTxt));

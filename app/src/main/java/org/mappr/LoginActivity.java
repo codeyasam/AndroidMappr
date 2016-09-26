@@ -59,6 +59,11 @@ public class LoginActivity extends AppCompatActivity {
 
     public void loginClick(View v) {
         Log.i("poop", "login clicked");
+        if (CYM_Utility.getText(LoginActivity.this, R.id.usernameTxt).trim().isEmpty() ||
+                CYM_Utility.getText(LoginActivity.this, R.id.passwordTxt).trim().isEmpty()) {
+            CYM_Utility.mAlertDialog("Fill all required fields", LoginActivity.this);
+            return;
+        }
         new LoginConnector().execute();
     }
 
