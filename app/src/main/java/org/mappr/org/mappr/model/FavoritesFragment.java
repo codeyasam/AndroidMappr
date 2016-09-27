@@ -132,6 +132,14 @@ public class FavoritesFragment extends Fragment implements View.OnClickListener 
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            TextView tv = (TextView) view.findViewById(R.id.emptyBookmarkTxt);
+            tv.setText("Loading Favorites...");
+            tv.setVisibility(View.VISIBLE);
+        }
+
+        @Override
         protected String doInBackground(String... args) {
             try {
                 List<NameValuePair> params = new ArrayList<>();
@@ -152,15 +160,17 @@ public class FavoritesFragment extends Fragment implements View.OnClickListener 
         protected void onPostExecute(String result) {
             if (result != null) {
                 try {
+                    TextView tv = (TextView) view.findViewById(R.id.emptyBookmarkTxt);
+                    tv.setText("Favorites Empty");
                     Log.i("poop", result);
                     if (!branchesList.isEmpty()) {
                         view.findViewById(R.id.emptyBookmarkTxt).setVisibility(View.INVISIBLE);
                         view.findViewById(R.id.favBranchList).setVisibility(View.VISIBLE);
-                        ArrayAdapter<MapprBranch> adapter = new FavoriteAdapter(getActivity(), branchesList);
-                        listView.setAdapter(adapter);
                     } else {
                         view.findViewById(R.id.emptyBookmarkTxt).setVisibility(View.VISIBLE);
                     }
+                    ArrayAdapter<MapprBranch> adapter = new FavoriteAdapter(getActivity(), branchesList);
+                    listView.setAdapter(adapter);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -9,6 +9,8 @@ import android.widget.ArrayAdapter;
 
 import com.example.codeyasam.mappr.R;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
@@ -28,6 +30,7 @@ public class RouteAdapter extends ArrayAdapter<MapprRoute> {
     private GoogleMap mMap;
     private Polyline line;
 
+
     public RouteAdapter(Context mContext, List<MapprRoute> mapprRoutes, GoogleMap mMap, Polyline line) {
         super(mContext, android.R.layout.simple_list_item_2, mapprRoutes);
         this.mContext = mContext;
@@ -43,9 +46,9 @@ public class RouteAdapter extends ArrayAdapter<MapprRoute> {
 
         try {
             MapprRoute mapprRoute = mapprRoutes.get(position);
-            CYM_Utility.displayText(view, R.id.etaTxt, mapprRoute.getEstimatedTimeArrival());
-            CYM_Utility.displayText(view, R.id.viaTxt, mapprRoute.getViaSummary());
-            CYM_Utility.displayText(view, R.id.distanceTxt, mapprRoute.getDistance());
+            CYM_Utility.displayText(view, R.id.etaTxt, "ETA: " + mapprRoute.getEstimatedTimeArrival());
+            CYM_Utility.displayText(view, R.id.viaTxt, "Via: " + mapprRoute.getViaSummary());
+            CYM_Utility.displayText(view, R.id.distanceTxt, "Distance: " + mapprRoute.getDistance());
             view.setOnClickListener(getAdapterOnClickListener(mapprRoute.getEncodedString()));
         } catch (Exception e) {
             e.printStackTrace();

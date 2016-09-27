@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical" >
 
 
     <TextView
@@ -11,7 +11,8 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Medium Text"
         android:id="@+id/etaTxt"
-        android:layout_gravity="center_horizontal" />
+        android:layout_margin="5dp"
+        android:textColor="@color/directionsTextColor" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -19,7 +20,8 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Medium Text"
         android:id="@+id/viaTxt"
-        android:layout_gravity="center_horizontal" />
+        android:layout_margin="5dp"
+        android:textColor="@color/directionsTextColor" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -27,6 +29,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Medium Text"
         android:id="@+id/distanceTxt"
-        android:layout_gravity="center_horizontal" />
+        android:layout_margin="5dp"
+        android:textColor="@color/directionsTextColor" />
 
 </LinearLayout>

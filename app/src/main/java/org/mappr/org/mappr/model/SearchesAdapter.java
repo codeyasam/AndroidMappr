@@ -39,21 +39,21 @@ public class SearchesAdapter extends ArrayAdapter<MapprJSONSearch> {
         try {
             MapprJSONSearch mapprJSONSearch = mapprJSONSearchList.get(position);
             if (mapprJSONSearch.hasBranch) {
-                CYM_Utility.displayText(view, R.id.searcbEstabName, mapprJSONSearch.getMapprBranch().getMapprEstablishment().getName());
-                CYM_Utility.displayText(view, R.id.branchAddress, mapprJSONSearch.getMapprBranch().getAddress());
+                CYM_Utility.displayText(view, R.id.searcbEstabName, "Searched: " + mapprJSONSearch.getMapprBranch().getMapprEstablishment().getName());
+                CYM_Utility.displayText(view, R.id.branchAddress, "Address: " + mapprJSONSearch.getMapprBranch().getAddress());
             } else {
                 Log.i("poop", "dumaaan ng searches adpater");
-                CYM_Utility.displayText(view, R.id.searcbEstabName, mapprJSONSearch.getDisplayValue());
+                CYM_Utility.displayText(view, R.id.searcbEstabName, "Searched: " + mapprJSONSearch.getDisplayValue());
                 view.findViewById(R.id.branchAddress).setVisibility(View.GONE);
             }
 
             String searchBy = mapprJSONSearch.getMappr_opt();
             if (searchBy.equals(CYM_Utility.OPT_BY_CATEGORY)) {
-                searchBy = "CATEGORY";
+                searchBy = "by Category";
             } else if (searchBy.equals(CYM_Utility.OPT_BY_STRING)) {
-                searchBy = "Establishment";
+                searchBy = "by Establishment";
             } else if (searchBy.equals(CYM_Utility.OPT_BY_QRCODE)) {
-                searchBy = "QR CODE SCANNER";
+                searchBy = "by QR Code Scanner";
             } else {
                 searchBy = "SELECTS";
             }

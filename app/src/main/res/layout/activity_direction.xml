@@ -15,6 +15,17 @@
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"/>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="DIRECTIONS"
+        android:textStyle="bold"
+        android:id="@+id/textView4"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/white"
+        android:padding="5dp" />
+
     <ListView
         android:layout_width="match_parent"
         android:layout_height="0dp"
