@@ -108,6 +108,8 @@ public class LoginActivity extends AppCompatActivity {
                         MapprSession.isLoggedIn = true;
                         MapprSession.logUser(LoginActivity.this, json.getString("user_id"));
                         finish();
+                    } else {
+                        CYM_Utility.mAlertDialog("wrong username or password", LoginActivity.this);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
