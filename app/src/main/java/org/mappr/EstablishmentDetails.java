@@ -164,7 +164,7 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
         final String userId = settings.getString(MapprSession.LOGGED_USER_ID, "");
         task.setBranchId(branchId);
         task.setUserId(userId);
-        task.execute();
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         buildGoogleApiClient();
 //        if (!MapprSession.isLoggedIn) {  //for debugging
@@ -360,8 +360,6 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
                     bookmarkMenu.setTitle(bookmarkState);
 
                     JSONObject branch = json.getJSONObject("branch");
-//                    CYM_Utility.displayText(EstablishmentDetails.this, R.id.branchAddress, branch.getString("address"));
-//                    CYM_Utility.displayText(EstablishmentDetails.this, R.id.descriptionTv, branch.getString("description"));
                     CYM_Utility.setRatingBarRate(EstablishmentDetails.this, R.id.branchRating, Float.parseFloat(json.getString("average_rating")));
 
                     HashMap<ScheduleHolder, List<ScheduleHolder>> listChildData = new HashMap<>();
@@ -386,9 +384,9 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
                     scheduleView.expandGroup(0);
                     scheduleView.getLayoutParams().height = 300;
                     String leastDistanceUrl = DirectionActivity.makeURL(sourceLat, sourceLng, Double.parseDouble(branchLat), Double.parseDouble(branchLng));
-                    new LeastDistanceCalculator(leastDistanceUrl).execute();
-                    new GalleryLoader(json).execute();
-                    new ReviewLoader(json).execute();
+                    new LeastDistanceCalculator(leastDistanceUrl).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    new GalleryLoader(json).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    new ReviewLoader(json).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
 
                 } catch (JSONException e) {
