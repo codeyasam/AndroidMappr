@@ -28,7 +28,7 @@ public class MapprBookmark {
 
     public void manageBookmark() {
         Log.i("poop", "bookmard click3");
-        new BookmarkManager().execute();
+        new BookmarkManager().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     class BookmarkManager extends AsyncTask<String, String, String> {
