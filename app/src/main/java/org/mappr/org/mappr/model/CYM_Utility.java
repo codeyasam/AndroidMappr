@@ -16,6 +16,8 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.media.ExifInterface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.DisplayMetrics;
@@ -267,5 +269,14 @@ public class CYM_Utility {
         params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
         listView.setLayoutParams(params);
         listView.requestLayout();
+    }
+
+    public static boolean isOnline(Context activity) {
+        ConnectivityManager cm = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+            return true;
+        }
+        return false;
     }
 }
