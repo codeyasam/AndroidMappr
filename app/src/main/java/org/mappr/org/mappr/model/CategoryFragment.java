@@ -39,8 +39,13 @@ public class CategoryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.activity_main_category, container, false);
         categoryGrid = (GridView) view.findViewById(R.id.categoryGrid);
-        categorySearcher = new CategorySearcher();
-        categorySearcher.execute();
+        try {
+            categorySearcher = new CategorySearcher();
+            categorySearcher.execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return view;
     }
 
