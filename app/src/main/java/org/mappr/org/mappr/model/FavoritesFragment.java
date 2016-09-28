@@ -73,9 +73,15 @@ public class FavoritesFragment extends Fragment implements View.OnClickListener 
             tv.setVisibility(View.VISIBLE);
             tv.setOnClickListener(this);
         } else {
-            tv.setVisibility(View.GONE);
-            favoritesLoader = new FavoritesLoader(userId);
-            favoritesLoader.execute();
+            boolean result = CYM_Utility.isOnline(getActivity().getApplicationContext());
+            if (result) {
+                tv.setVisibility(View.GONE);
+                favoritesLoader = new FavoritesLoader(userId);
+                favoritesLoader.execute();
+            } else {
+                tv.setVisibility(View.VISIBLE);
+                tv.setText("No Internet  Connectivity");
+            }
         }
     }
 

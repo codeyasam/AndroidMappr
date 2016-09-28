@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ProgressBar;
 
+import org.mappr.MainActivity;
 import org.mappr.MapActivity;
 import com.example.codeyasam.mappr.R;
 
@@ -40,8 +41,13 @@ public class CategoryFragment extends Fragment {
         view = inflater.inflate(R.layout.activity_main_category, container, false);
         categoryGrid = (GridView) view.findViewById(R.id.categoryGrid);
         try {
-            categorySearcher = new CategorySearcher();
-            categorySearcher.execute();
+            boolean result = CYM_Utility.isOnline(getActivity().getApplicationContext());
+            if (result) {
+                categorySearcher = new CategorySearcher();
+                categorySearcher.execute();
+            } else {
+                CYM_Utility.mAlertDialog("No Internet Connectivity", getActivity());
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
