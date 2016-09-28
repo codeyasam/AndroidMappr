@@ -198,7 +198,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             progressDialog = new ProgressDialog(MapActivity.this);
             progressDialog.setMessage("Fetching branches, Please wait...");
             progressDialog.setIndeterminate(true);
-            progressDialog.setCanceledOnTouchOutside(false);
+            //progressDialog.setCanceledOnTouchOutside(false);
             progressDialog.show();
         }
 
@@ -220,12 +220,21 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 JSONObject json = JSONParser.makeHttpRequest(PLOTTER_URL, "GET", params);
                 JSONArray estabs = json.getJSONArray("Establishments");
 
-                for (int i = 0; i< estabs.length(); i++) {
-                    JSONObject eachEstab = estabs.getJSONObject(i);
-                    hmEstablishment.put(eachEstab.getString("id"), MapprEstablishment.instantiateJSONEstablishment(eachEstab));
-                }
+//                for (int i = 0; i< estabs.length(); i++) {
+//                    JSONObject eachEstab = estabs.getJSONObject(i);
+//                    hmEstablishment.put(eachEstab.getString("id"), MapprEstablishment.instantiateJSONEstablishment(eachEstab));
+//                }
 
                 JSONArray branches = json.getJSONArray("Branches");
+                for (int i = 0; i < branches.length(); i++) {
+                    JSONObject eachBranch = branches.getJSONObject(i);
+                    if (!hmEstablishment.containsKey(eachBranch.getString("estab_id"))) {
+                        JSONObject eachEstab = MapprEstablishment.getEstabJSONbyId(estabs, eachBranch.getString("estab_id"));
+                        hmEstablishment.put(eachEstab.getString("id"), MapprEstablishment.instantiateJSONEstablishment(eachEstab));
+                    }
+                    publishProgress(eachBranch.toString());
+                }
+
                 return branches.toString();
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -271,7 +280,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                             }
                         }
 
-                        mMap.addMarker(options);
+                        //mMap.addMarker(options);
                     }
                     //for debugging
 //                    CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, 10);
@@ -286,6 +295,30 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         }
 
+        @Override
+        protected void onProgressUpdate(String... values) {
+            super.onProgressUpdate(values);
+            try {
+                JSONObject eachBranch = new JSONObject(values[0]);
+                LatLng latlng = new LatLng(Double.parseDouble(eachBranch.getString("lat")), Double.parseDouble(eachBranch.getString("lng")));
+                MarkerOptions options = new MarkerOptions()
+                        .title(eachBranch.getString("id"))
+                        .position(latlng)
+                        .snippet(eachBranch.getString("estab_id"));
+
+                if (mapperOpt.equals(CYM_Utility.OPT_BY_QRCODE)) {
+                    if (eachBranch.getString("id").equals(branchID)) {
+                        implementSearchHistory(eachBranch, branchID);
+                        options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+                    }
+                }
+
+                mMap.addMarker(options);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
 
         public void setMapperOpt(String mapperOpt) {
             this.mapperOpt = mapperOpt;
