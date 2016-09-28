@@ -1,6 +1,8 @@
 package org.mappr.org.mappr.model;
 
 import android.graphics.Bitmap;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -94,4 +96,17 @@ public class MapprEstablishment {
         return null;
     }
 
+    public static JSONObject getEstabJSONbyId(JSONArray estabs, String estabID) {
+        try {
+            for (int i = 0; i < estabs.length(); i++) {
+                JSONObject eachEstab = estabs.getJSONObject(i);
+                if (eachEstab.getString("id").equals(estabID)) {
+                    return eachEstab;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
