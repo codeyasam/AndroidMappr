@@ -70,6 +70,8 @@ public class ScheduleHolder {
                 mTimeArr[0] = String.valueOf(Integer.parseInt(mTimeArr[0]) - 12);
             } else if (mTimeArr[0].equals("00")) {
                 mTimeArr[0] = String.valueOf(Integer.parseInt(mTimeArr[0]) + 12);
+            } else if (Integer.parseInt(mTimeArr[0]) < 12) {
+                mTimeArr[0] = String.valueOf(Integer.parseInt(mTimeArr[0]));
             }
 
             return mTimeArr[0] + ":" + mTimeArr[1] + period;

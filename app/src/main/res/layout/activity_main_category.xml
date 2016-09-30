@@ -17,13 +17,20 @@
         android:visibility="gone"
         />
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleLarge"
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:indeterminateDrawable="@drawable/progress"
-        android:layout_gravity="center">
-    </ProgressBar>
+        android:text="Loading Categories..."
+        android:id="@+id/progressBar"
+        android:layout_gravity="center_horizontal" />
+
+    <!--<ProgressBar-->
+        <!--android:id="@+id/progressBar"-->
+        <!--style="?android:attr/progressBarStyleLarge"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:indeterminateDrawable="@drawable/progress"-->
+        <!--android:layout_gravity="center">-->
+    <!--</ProgressBar>-->
 
 </LinearLayout>

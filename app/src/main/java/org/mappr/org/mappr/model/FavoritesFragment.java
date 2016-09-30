@@ -77,7 +77,7 @@ public class FavoritesFragment extends Fragment implements View.OnClickListener 
             if (result) {
                 tv.setVisibility(View.GONE);
                 favoritesLoader = new FavoritesLoader(userId);
-                favoritesLoader.execute();
+                favoritesLoader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             } else {
                 tv.setVisibility(View.VISIBLE);
                 tv.setText("No Internet  Connectivity");

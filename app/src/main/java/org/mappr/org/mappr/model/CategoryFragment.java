@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import org.mappr.MainActivity;
 import org.mappr.MapActivity;
@@ -35,18 +36,21 @@ public class CategoryFragment extends Fragment {
     private CategorySearcher categorySearcher;
     private View view;
     private GridView categoryGrid;
+    private TextView progressBar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.activity_main_category, container, false);
         categoryGrid = (GridView) view.findViewById(R.id.categoryGrid);
+        progressBar = (TextView) view.findViewById(R.id.progressBar);
         try {
             boolean result = CYM_Utility.isOnline(getActivity().getApplicationContext());
             if (result) {
                 categorySearcher = new CategorySearcher();
-                categorySearcher.execute();
+                categorySearcher.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             } else {
-                CYM_Utility.mAlertDialog("No Internet Connectivity", getActivity());
+                //CYM_Utility.mAlertDialog("No Internet Connectivity", getActivity());
+                progressBar.setText("No Internet Connectivity");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -68,7 +72,7 @@ public class CategoryFragment extends Fragment {
     class CategorySearcher extends AsyncTask<String, String, List<MapprCategory>> {
 
         private CategoryAdapter categoryAdapter;
-        private ProgressBar progressBar;
+        //private ProgressBar progressBar;
 
         public CategorySearcher() {
 
@@ -78,7 +82,7 @@ public class CategoryFragment extends Fragment {
         protected void onPreExecute() {
             super.onPreExecute();
             categoryGrid. setVisibility(View.GONE);
-            progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+            //progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
             progressBar.setVisibility(View.VISIBLE);
         }
 
