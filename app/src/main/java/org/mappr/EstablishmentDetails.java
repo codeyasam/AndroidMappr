@@ -91,6 +91,7 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_establishment_details);
         listview = (ListView) findViewById(R.id.listView);
+        CYM_Utility.setListViewHeightBasedOnChildren(listview);
         galleryContainer = (LinearLayout) findViewById(R.id.galleryContainer);
         settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
@@ -450,15 +451,6 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
 
                     ArrayAdapter<ReviewHolder> reviewHolderArrayAdapter = new ReviewAdapter(getApplicationContext(), reviewHolderList);
                     listview.setAdapter(reviewHolderArrayAdapter);
-                    listview.setOnTouchListener(new View.OnTouchListener() {
-                        // Setting on Touch Listener for handling the touch inside ScrollView
-                        @Override
-                        public boolean onTouch(View v, MotionEvent event) {
-                            // Disallow the touch request for parent scroll on touch of child view
-                            v.getParent().requestDisallowInterceptTouchEvent(true);
-                            return false;
-                        }
-                    });
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

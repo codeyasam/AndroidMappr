@@ -94,7 +94,11 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(mViewPager);
 
         final TabLayout.Tab category = tabLayout.getTabAt(0);
-        category.setIcon(R.drawable.cameralogo);
+        category.setIcon(android.R.drawable.ic_dialog_dialer);
+        final TabLayout.Tab favorites = tabLayout.getTabAt(1);
+        favorites.setIcon(android.R.drawable.star_big_off);
+        final TabLayout.Tab recentSearches = tabLayout.getTabAt(2);
+        recentSearches.setIcon(android.R.drawable.ic_menu_recent_history);
     }
 
     //search by string
@@ -326,7 +330,7 @@ public class MainActivity extends AppCompatActivity {
                 case 1:
                     return "FAVORITES";
                 case 2:
-                    return "RECENT SEARCHES";
+                    return "SEARCHES";
             }
             return null;
         }

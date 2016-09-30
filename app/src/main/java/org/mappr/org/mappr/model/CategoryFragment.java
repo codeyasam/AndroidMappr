@@ -47,7 +47,7 @@ public class CategoryFragment extends Fragment {
             boolean result = CYM_Utility.isOnline(getActivity().getApplicationContext());
             if (result) {
                 categorySearcher = new CategorySearcher();
-                categorySearcher.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                categorySearcher.execute();
             } else {
                 //CYM_Utility.mAlertDialog("No Internet Connectivity", getActivity());
                 progressBar.setText("No Internet Connectivity");
@@ -104,6 +104,12 @@ public class CategoryFragment extends Fragment {
             }
 
             return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(String... values) {
+            super.onProgressUpdate(values);
+
         }
 
         @Override
