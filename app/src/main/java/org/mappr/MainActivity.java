@@ -4,9 +4,14 @@ import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.MatrixCursor;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.MenuItemCompat;
@@ -41,6 +46,7 @@ import org.mappr.org.mappr.model.JSONParser;
 import org.mappr.org.mappr.model.MapprBranch;
 import org.mappr.org.mappr.model.MapprCategory;
 import org.mappr.org.mappr.model.MapprJSONSearch;
+import org.mappr.org.mappr.model.MapprSession;
 import org.mappr.org.mappr.model.SearchesFragment;
 import org.mappr.org.mappr.model.ViewPageAdapter;
 
@@ -74,6 +80,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main2);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Drawable drawable = getResources().getDrawable(R.drawable.logo);
+        Bitmap bm = ((BitmapDrawable) drawable).getBitmap();
+        toolbar.setNavigationIcon(new BitmapDrawable(getResources(), CYM_Utility.getResizedBitmap(bm, 70, 80)));
+        toolbar.setTitle("mappr");
         setSupportActionBar(toolbar);
 
         setupmFragments();
@@ -113,6 +123,23 @@ public class MainActivity extends AppCompatActivity {
         Log.i("poop", "poop");
         Intent intent = new Intent(this.getApplicationContext(), QrCodeScanner.class);
         startActivity(intent);
+    }
+
+    private void setupVisibleMenu(Menu menu) {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        MenuItem loginMenu = menu.findItem(R.id.to_login);
+        MenuItem registerMenu = menu.findItem(R.id.to_register);
+        if (!settings.getString(MapprSession.LOGGED_USER_ID, "").isEmpty()) {
+            loginMenu.setVisible(false);
+            registerMenu.setVisible(false);
+        }
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        setupVisibleMenu(menu);
+        super.onPrepareOptionsMenu(menu);
+        return true;
     }
 
     private SearchView mSearchView;
@@ -252,11 +279,19 @@ public class MainActivity extends AppCompatActivity {
             });
         } else if (id == R.id.scan_qrcode) {
             scanQrCode();
+        } else if (id == R.id.to_login) {
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.to_register) {
+            Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
     }
-    
+
+
+
 
     /**
      * A placeholder fragment containing a simple view.

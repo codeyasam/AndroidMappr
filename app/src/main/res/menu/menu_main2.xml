@@ -12,8 +12,22 @@
 
     <item
         android:id="@+id/scan_qrcode"
-        android:orderInCategory="100"
+        android:orderInCategory="101"
         android:title="scan"
         android:icon="@drawable/searchqricon"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/to_login"
+        android:orderInCategory="104"
+        android:title="Login"
+        app:showAsAction="never|collapseActionView" />
+
+    <item
+        android:id="@+id/to_register"
+        android:orderInCategory="105"
+        android:title="Register"
+        app:showAsAction="never|collapseActionView" />
+
+
 </menu>

@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:gravity="center_horizontal"
+    android:gravity="center"
     android:orientation="vertical"
     tools:context="org.mappr.RegisterActivity">
 
@@ -48,7 +48,7 @@
         android:layout_gravity="center_horizontal" />
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="CONNECT WITH FACEBOOK"
         android:id="@+id/connectFbBtn"
@@ -72,8 +72,17 @@
         android:hint="password"
         android:layout_gravity="center_horizontal" />
 
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:id="@+id/confPass"
+        android:hint="confirm password"
+        android:layout_gravity="center_horizontal" />
+
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="REGISTER"
         android:id="@+id/registerBtn"

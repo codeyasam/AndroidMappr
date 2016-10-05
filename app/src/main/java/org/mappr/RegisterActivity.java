@@ -48,7 +48,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupFacebookButton();
-        setContentView(R.layout.activity_mappr_register);
+        setContentView(R.layout.activity_register);
         endUser = new MapprEndUser(RegisterActivity.this);
         Button connectFbBtn = (Button) findViewById(R.id.connectFbBtn);
         connectFbBtn.setOnClickListener(this);

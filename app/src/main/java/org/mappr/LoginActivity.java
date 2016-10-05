@@ -1,5 +1,6 @@
 package org.mappr;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -31,7 +32,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mappr_login);
+        setContentView(R.layout.activity_login);
 
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
@@ -80,9 +81,14 @@ public class LoginActivity extends AppCompatActivity {
 
     class LoginConnector extends AsyncTask<String, String, String> {
 
+        ProgressDialog progressDialog;
+
         @Override
         protected void onPreExecute() {
-
+            progressDialog = new ProgressDialog(LoginActivity.this);
+            progressDialog.setMessage("Logging In...");
+            progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.show();
         }
 
         @Override
@@ -101,6 +107,7 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
+            progressDialog.dismiss();
             if (result != null) {
                 try {
                     JSONObject json = new JSONObject(result);
