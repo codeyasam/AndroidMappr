@@ -29,5 +29,15 @@
         android:title="Register"
         app:showAsAction="never|collapseActionView" />
 
+    <item
+        android:id="@+id/to_logout"
+        android:orderInCategory="106"
+        android:title="Logout"
+        app:showAsAction="never|collapseActionView" />
 
+    <item
+        android:id="@+id/to_edit_profile"
+        android:orderInCategory="107"
+        android:title="Edit Profile"
+        app:showAsAction="never|collapseActionView" />
 </menu>

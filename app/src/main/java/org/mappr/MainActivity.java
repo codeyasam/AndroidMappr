@@ -129,10 +129,20 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         MenuItem loginMenu = menu.findItem(R.id.to_login);
         MenuItem registerMenu = menu.findItem(R.id.to_register);
+        MenuItem logoutMenu = menu.findItem(R.id.to_logout);
+        MenuItem editProfile = menu.findItem(R.id.to_edit_profile);
         if (!settings.getString(MapprSession.LOGGED_USER_ID, "").isEmpty()) {
             loginMenu.setVisible(false);
             registerMenu.setVisible(false);
+            logoutMenu.setVisible(true);
+            editProfile.setVisible(true);
+        } else {
+            logoutMenu.setVisible(false);
+            editProfile.setVisible(false);
+            loginMenu.setVisible(true);
+            registerMenu.setVisible(true);
         }
+        Log.i("poop", "setupVisibleMenu is called");
     }
 
     @Override
@@ -285,6 +295,10 @@ public class MainActivity extends AppCompatActivity {
         } else if (id == R.id.to_register) {
             Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
             startActivity(intent);
+        } else if (id == R.id.to_logout) {
+            MapprSession.logoutUser(MainActivity.this);
+        } else if (id == R.id.to_edit_profile) {
+            //Intent intent = new Intent(getApplicationContext(), );
         }
 
         return super.onOptionsItemSelected(item);

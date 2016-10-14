@@ -42,7 +42,8 @@ public class MapprBranch {
     }
 
     public String getAddress() {
-        return address;
+        //return address;
+        return CYM_Utility.getDecodeString(address);
     }
 
     public void setAddress(String address) {

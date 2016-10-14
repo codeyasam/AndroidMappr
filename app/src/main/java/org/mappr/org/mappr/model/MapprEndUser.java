@@ -45,7 +45,8 @@ public class MapprEndUser {
     }
 
     public String getUsername() {
-        return username;
+        //return username;
+        return CYM_Utility.getDecodeString(username);
     }
 
     public void setUsername(String username) {
@@ -53,7 +54,8 @@ public class MapprEndUser {
     }
 
     public String getFirstName() {
-        return firstName;
+        //return firstName;
+        return CYM_Utility.getDecodeString(firstName);
     }
 
     public void setFirstName(String firstName) {
@@ -61,7 +63,8 @@ public class MapprEndUser {
     }
 
     public String getPassword() {
-        return password;
+        //return password;
+        return CYM_Utility.getDecodeString(password);
     }
 
     public void setPassword(String password) {
@@ -69,7 +72,8 @@ public class MapprEndUser {
     }
 
     public String getLastName() {
-        return lastName;
+        //return lastName;
+        return CYM_Utility.getDecodeString(lastName);
     }
 
     public void setLastName(String lastName) {
@@ -85,7 +89,8 @@ public class MapprEndUser {
     }
 
     public String getContact() {
-        return contact;
+        //return contact;
+        return CYM_Utility.getDecodeString(contact);
     }
 
     public void setContact(String contact) {
@@ -93,7 +98,8 @@ public class MapprEndUser {
     }
 
     public String getHometown() {
-        return hometown;
+        //return hometown;
+        return CYM_Utility.getDecodeString(hometown);
     }
 
     public void setHometown(String hometown) {

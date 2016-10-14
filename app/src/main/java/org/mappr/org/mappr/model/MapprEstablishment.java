@@ -47,7 +47,8 @@ public class MapprEstablishment {
     }
 
     public String getName() {
-        return name;
+        //return name;
+        return CYM_Utility.getDecodeString(name);
     }
 
     public void setName(String name) {
@@ -55,7 +56,8 @@ public class MapprEstablishment {
     }
 
     public String getDescription() {
-        return description;
+        //return description;
+        return CYM_Utility.getDecodeString(description);
     }
 
     public void setDescription(String description) {
@@ -71,7 +73,8 @@ public class MapprEstablishment {
     }
 
     public String getTags() {
-        return tags;
+        //return tags;
+        return CYM_Utility.getDecodeString(tags);
     }
 
     public void setTags(String tags) {

@@ -21,7 +21,8 @@ public class MapprCategory {
     }
 
     public String getName() {
-        return name;
+        //return name;
+        return CYM_Utility.getDecodeString(name);
     }
 
     public void setName(String name) {
@@ -30,6 +31,7 @@ public class MapprCategory {
 
     public String getFeatured_category() {
         return featured_category;
+        //return CYM_Utility.getDecodeString(featured_category);
     }
 
     public void setFeatured_category(String featured_category) {
@@ -45,7 +47,8 @@ public class MapprCategory {
     }
 
     public String getDescription() {
-        return description;
+        //return description;
+        return CYM_Utility.getDecodeString(description);
     }
 
     public void setDescription(String description) {

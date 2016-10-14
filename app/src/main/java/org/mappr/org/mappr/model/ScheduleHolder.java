@@ -16,7 +16,8 @@ public class ScheduleHolder {
     public String prompt;
 
     public ScheduleHolder(String prompt) {
-        this.prompt = prompt;
+        //this.prompt = prompt;
+        this.prompt = CYM_Utility.getDecodeString(prompt);
     }
 
     public ScheduleHolder(String opening_hour, String closing_hour, String day_no) {

@@ -72,6 +72,9 @@ public class FavoritesFragment extends Fragment implements View.OnClickListener 
         if (userId.isEmpty()) {
             tv.setVisibility(View.VISIBLE);
             tv.setOnClickListener(this);
+            branchesList = new ArrayList<>();
+            ArrayAdapter<MapprBranch> adapter = new FavoriteAdapter(getActivity(), branchesList);
+            listView.setAdapter(adapter);
         } else {
             boolean result = CYM_Utility.isOnline(getActivity().getApplicationContext());
             if (result) {

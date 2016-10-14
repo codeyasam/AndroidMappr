@@ -23,5 +23,8 @@ public class MapprSession {
         isLoggedIn = true;
     }
 
-
+    public static void logoutUser(Activity activity) {
+        logUser(activity, "");
+        isLoggedIn = false;
+    }
 }

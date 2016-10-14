@@ -32,6 +32,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -57,6 +58,8 @@ public class CYM_Utility {
     public static final String MAPPR_TO_PROCESS = "MAPPR_TO_PROCESS";
     public static final String TO_REVIEW = "to_review";
     public static final String TO_BOOKMARK = "to_bookmark";
+
+    public static final String MAPPR_ENCODING_TYPE = "ISO-8859-1";
 
     public static Bitmap getRoundedCornerBitmap(Bitmap bitmap) {
         Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
@@ -278,5 +281,15 @@ public class CYM_Utility {
             return true;
         }
         return false;
+    }
+
+    public static String getDecodeString(String s) {
+        try {
+            byte[] bytes = s.getBytes(MAPPR_ENCODING_TYPE);
+            return new String(bytes, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

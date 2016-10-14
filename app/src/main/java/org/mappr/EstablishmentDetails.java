@@ -116,6 +116,8 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
 
         scheduleView = (ExpandableListView) findViewById(R.id.expandableSchedule);
         //CYM_Utility.setListViewHeightBasedOnChildren(scheduleView);
+
+        //List view expand listener
         scheduleView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
             @Override
             public void onGroupExpand(int groupPosition) {
@@ -132,6 +134,7 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
                 } else {
                     scheduleView.getLayoutParams().height = 700;
                 }
+
             }
         });
 
@@ -360,11 +363,10 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
                     CYM_Utility.setRatingBarRate(EstablishmentDetails.this, R.id.branchRating, Float.parseFloat(json.getString("average_rating")));
 
                     HashMap<ScheduleHolder, List<ScheduleHolder>> listChildData = new HashMap<>();
-                    String description = branch.getString("description");
-                    byte[] bytes = description.getBytes("ISO-8859-1");
+                    //String description = branch.getString("description");
+                    //byte[] bytes = description.getBytes("ISO-8859-1");
                     prompts.add(new ScheduleHolder("Address: " + branch.getString("address")));
-                    prompts.add(new ScheduleHolder(new String(bytes, "UTF-8")));
-
+                    prompts.add(new ScheduleHolder(branch.getString("description")));
 
                     if (!scheduleHolderList.isEmpty()) {
                         listChildData.put(mHeader.get(1), scheduleHolderList);
