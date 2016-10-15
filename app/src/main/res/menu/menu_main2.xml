@@ -31,7 +31,7 @@
 
     <item
         android:id="@+id/to_logout"
-        android:orderInCategory="106"
+        android:orderInCategory="110"
         android:title="Logout"
         app:showAsAction="never|collapseActionView" />
 
@@ -39,5 +39,11 @@
         android:id="@+id/to_edit_profile"
         android:orderInCategory="107"
         android:title="Edit Profile"
+        app:showAsAction="never|collapseActionView" />
+
+    <item
+        android:id="@+id/to_change_password"
+        android:orderInCategory="108"
+        android:title="Change Password"
         app:showAsAction="never|collapseActionView" />
 </menu>

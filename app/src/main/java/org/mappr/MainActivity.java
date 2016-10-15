@@ -131,14 +131,17 @@ public class MainActivity extends AppCompatActivity {
         MenuItem registerMenu = menu.findItem(R.id.to_register);
         MenuItem logoutMenu = menu.findItem(R.id.to_logout);
         MenuItem editProfile = menu.findItem(R.id.to_edit_profile);
+        MenuItem changePass = menu.findItem(R.id.to_change_password);
         if (!settings.getString(MapprSession.LOGGED_USER_ID, "").isEmpty()) {
             loginMenu.setVisible(false);
             registerMenu.setVisible(false);
             logoutMenu.setVisible(true);
             editProfile.setVisible(true);
+            changePass.setVisible(true);
         } else {
             logoutMenu.setVisible(false);
             editProfile.setVisible(false);
+            changePass.setVisible(false);
             loginMenu.setVisible(true);
             registerMenu.setVisible(true);
         }
@@ -299,6 +302,9 @@ public class MainActivity extends AppCompatActivity {
             MapprSession.logoutUser(MainActivity.this);
         } else if (id == R.id.to_edit_profile) {
             //Intent intent = new Intent(getApplicationContext(), );
+        } else if (id == R.id.to_change_password) {
+            Intent intent = new Intent(getApplicationContext(), ChangePassActivity.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
