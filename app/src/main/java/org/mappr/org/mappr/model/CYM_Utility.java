@@ -41,7 +41,7 @@ import java.net.URL;
  */
 public class CYM_Utility {
 
-    public static final String MAPPR_ROOT_URL = "http://192.168.42.241/thesis/";
+    public static final String MAPPR_ROOT_URL = "http://192.168.42.225/thesis/";
     public static final String MAPPR_PUBLIC_URL = MAPPR_ROOT_URL + "Public/";
     //public static final String MAPPR_ROOT_URL = "http://codeyasam.com/capstone/";
     //public static final String MAPPR_PUBLIC_URL = MAPPR_ROOT_URL;
@@ -288,6 +288,17 @@ public class CYM_Utility {
             byte[] bytes = s.getBytes(MAPPR_ENCODING_TYPE);
             return new String(bytes, "UTF-8");
         } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static Bitmap getBitmapFromUrl(String url) {
+        try {
+            URL pictureURL = new URL(url);
+            Bitmap bitmap = BitmapFactory.decodeStream(pictureURL.openConnection().getInputStream());
+            return bitmap;
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
