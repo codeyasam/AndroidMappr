@@ -301,7 +301,8 @@ public class MainActivity extends AppCompatActivity {
         } else if (id == R.id.to_logout) {
             MapprSession.logoutUser(MainActivity.this);
         } else if (id == R.id.to_edit_profile) {
-            //Intent intent = new Intent(getApplicationContext(), );
+            Intent intent = new Intent(getApplicationContext(), EditProfileActivity.class);
+            startActivity(intent);
         } else if (id == R.id.to_change_password) {
             Intent intent = new Intent(getApplicationContext(), ChangePassActivity.class);
             startActivity(intent);
