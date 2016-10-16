@@ -148,10 +148,29 @@ public class MapprEndUser {
     public static MapprEndUser instantiateJSONUser(JSONObject jsonUser) {
         try {
             MapprEndUser userObj = new MapprEndUser();
+            userObj.setId(jsonUser.getString("id"));
             userObj.setFirstName(jsonUser.getString("first_name"));
             userObj.setLastName(jsonUser.getString("last_name"));
             userObj.setDisplay_picture_path(jsonUser.getString("display_picture"));
             userObj.setDisplay_picture(CYM_Utility.loadImageFromServer(userObj.getDisplay_picture_path(), 50, 50));
+            //userObj.setDisplay_picture(CYM_Utility.getBitmapFromUrl(userObj.getDisplay_picture_path()));
+            return userObj;
+        } catch(Exception e) {
+
+        }
+
+        return null;
+    }
+
+    public static MapprEndUser instantiateJSONUser(JSONObject jsonUser, int width, int height) {
+        try {
+            MapprEndUser userObj = new MapprEndUser();
+            userObj.setId(jsonUser.getString("id"));
+            userObj.setFirstName(jsonUser.getString("first_name"));
+            userObj.setLastName(jsonUser.getString("last_name"));
+            userObj.setDisplay_picture_path(jsonUser.getString("display_picture"));
+            userObj.setDisplay_picture(CYM_Utility.loadImageFromServer(userObj.getDisplay_picture_path(), width, height));
+            //userObj.setDisplay_picture(CYM_Utility.getBitmapFromUrl(userObj.getDisplay_picture_path()));
             return userObj;
         } catch(Exception e) {
 
