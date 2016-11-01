@@ -17,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.example.codeyasam.mappr.MapprSession;
@@ -53,6 +54,8 @@ public class EditProfileActivity extends AppCompatActivity {
         MapprEndUser.setDefaultImage(EditProfileActivity.this, R.id.displayPicture, R.drawable.defaultavatar);
         ProfileLoader profileLoader = new ProfileLoader();
         profileLoader.execute();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     public void editProfile(View v) {
@@ -67,6 +70,14 @@ public class EditProfileActivity extends AppCompatActivity {
         endUser.setFirstName(firstName);
         endUser.setLastName(lastName);
         new ProfileEditor().execute();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     class ProfileLoader extends AsyncTask<String, String, String> {

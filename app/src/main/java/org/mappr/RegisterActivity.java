@@ -13,6 +13,7 @@ import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
@@ -80,6 +81,15 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
 
         MapprEndUser.setDefaultImage(RegisterActivity.this, R.id.displayPicture, R.drawable.cameralogo);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void setupFacebookButton() {

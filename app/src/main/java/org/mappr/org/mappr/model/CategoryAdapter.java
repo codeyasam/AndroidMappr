@@ -1,13 +1,17 @@
 package org.mappr.org.mappr.model;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
 
 import com.example.codeyasam.mappr.R;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -34,6 +38,8 @@ public class CategoryAdapter extends ArrayAdapter {
             MapprCategory category = categoryList.get(position);
             CYM_Utility.setImageOnView(view, R.id.categoryDpImg, category.getDisplay_picture());
             CYM_Utility.displayText(view, R.id.categoryNameTxt, category.getName());
+            TextView tv = (TextView) view.findViewById(R.id.categoryNameTxt);
+            tv.setTextColor(Color.BLACK);
         } catch (Exception e) {
             e.printStackTrace();
         }

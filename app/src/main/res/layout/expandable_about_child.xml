@@ -9,5 +9,6 @@
         android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"
         android:textSize="17dp"
         android:text="New Text"
-        android:id="@+id/lblAboutChild" />
+        android:id="@+id/lblAboutChild"
+        android:textColor="@color/black_overlay" />
 </LinearLayout>

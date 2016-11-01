@@ -32,6 +32,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.ArrayAdapter;
+import android.widget.CursorAdapter;
 import android.widget.TextView;
 
 import com.example.codeyasam.mappr.R;
@@ -50,13 +52,15 @@ import org.mappr.org.mappr.model.MapprSession;
 import org.mappr.org.mappr.model.SearchesFragment;
 import org.mappr.org.mappr.model.ViewPageAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     public static final String SEARCH_SUGGESTIONS_URL = CYM_Utility.MAPPR_ROOT_URL + "tests/getSearchSuggestions.php";
 
-    public static List<MapprCategory> categoryList;
+    public static List<MapprCategory> categoryList = new ArrayList<>();
+    public static List<MapprBranch> branchesList = new ArrayList<>();
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -74,8 +78,17 @@ public class MainActivity extends AppCompatActivity {
 
     private MenuItem scanMenuItem;
 
+    public void OverrideFonts(){
+        FontsOverride.setDefaultFont(this, "DEFAULT", "fonts/good-dog.otf");
+        FontsOverride.setDefaultFont(this, "MONOSPACE", "fonts/good-dog.otf");
+        FontsOverride.setDefaultFont(this, "SERIF", "fonts/good-dog.otf");
+        FontsOverride.setDefaultFont(this, "SANS_SERIF", "fonts/good-dog.otf");
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        OverrideFonts();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
@@ -83,12 +96,12 @@ public class MainActivity extends AppCompatActivity {
         Drawable drawable = getResources().getDrawable(R.drawable.logo);
         Bitmap bm = ((BitmapDrawable) drawable).getBitmap();
         toolbar.setNavigationIcon(new BitmapDrawable(getResources(), CYM_Utility.getResizedBitmap(bm, 70, 80)));
-        toolbar.setTitle("mappr");
+        toolbar.setTitle("Coin One");
         setSupportActionBar(toolbar);
 
         setupmFragments();
         DateTime dateTime = new DateTime();
-        Log.i("poop", String.valueOf(dateTime.getDayOfWeek()));
+        //Log.i("poop", String.valueOf(dateTime.getDayOfWeek()));
     }
 
     private void setupmFragments() {
@@ -168,9 +181,9 @@ public class MainActivity extends AppCompatActivity {
         MenuItem mSearchMenuItem = menu.findItem(R.id.action_settings);
         mSearchView = (SearchView) MenuItemCompat.getActionView(mSearchMenuItem);
         mSearchView.setSuggestionsAdapter(new SimpleCursorAdapter(
-                getApplicationContext(), android.R.layout.simple_list_item_1, null,
-                new String[] { SearchManager.SUGGEST_COLUMN_TEXT_1 },
-                new int[] { android.R.id.text1 }));
+                getApplicationContext(), R.layout.li_query_suggestion, null,
+                new String[]{SearchManager.SUGGEST_COLUMN_TEXT_1},
+                new int[]{android.R.id.text1}));
         mSearchView.setIconifiedByDefault(false);
 
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {

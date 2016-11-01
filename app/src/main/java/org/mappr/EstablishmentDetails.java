@@ -10,8 +10,10 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -54,7 +56,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class EstablishmentDetails extends AppCompatActivity implements LocationListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class EstablishmentDetails extends AppCompatActivity implements LocationListener,
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
+        SwipeRefreshLayout.OnRefreshListener {
     private static final String DETAILS_URL = CYM_Utility.MAPPR_ROOT_URL + "tests/getFullDetails.php";
     private MapprTour mapprTour = new MapprTour();
 
@@ -62,6 +66,7 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
     private MenuItem bookmarkMenu;
     private Button loginBtn;
     private RatingBar ratingBar;
+    private SwipeRefreshLayout swipeLayout;
 
     private GoogleApiClient mGoogleApiClient;
     private double sourceLat;
@@ -153,6 +158,9 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
             }
         });
 
+        swipeLayout = (SwipeRefreshLayout) findViewById(R.id.estabDetailsRefresh);
+        swipeLayout.setOnRefreshListener(this);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -351,9 +359,12 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
 
         @Override
         protected void onPostExecute(String result) {
+            if (swipeLayout.isRefreshing()) {
+                swipeLayout.setRefreshing(false);
+            }
             if (result != null) {
                 try {
-                    Log.i("poop", result);
+                    Log.i("poop detailpost: ", result);
                     JSONObject json = new JSONObject(result);
 
                     String bookmarkState = json.getString("isBookmarked").equals("true") ? "BOOKMARKED" : "BOOKMARK";
@@ -389,7 +400,7 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
                     new GalleryLoader(json).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     new ReviewLoader(json).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
-
+                    Log.i("poop", "review loader ends");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 } catch (Exception e) {
@@ -506,6 +517,8 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
         public GalleryLoader(JSONObject json) {
             this.json = json;
             listBranchGallery = new ArrayList<>();
+            galleryContainer.removeAllViews();
+            galleryContainer.invalidate();
             progressBar = (ProgressBar) findViewById(R.id.progressBar);
             progressBar.setVisibility(View.VISIBLE);
         }
@@ -530,9 +543,9 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-
-            galleryContainer.removeAllViews();
-            galleryContainer.invalidate();
+            progressBar.setVisibility(View.GONE);
+//            galleryContainer.removeAllViews();
+//            galleryContainer.invalidate();
 
             if (result != null) {
                 try {
@@ -567,6 +580,9 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
         switch (id) {
             case R.id.action_bookmark:
                 bookmarkBranch();
+                break;
+            case android.R.id.home:
+                finish();
                 break;
             default:
                 break;
@@ -607,6 +623,17 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
     public boolean onPrepareOptionsMenu(Menu menu) {
         bookmarkMenu = menu.findItem(R.id.action_bookmark);
         return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public void onRefresh() {
+        ratingBar.setRating(0);
+        DetailLauncher task = new DetailLauncher();
+        final String branchId = getIntent().getStringExtra("branch_id");
+        final String userId = settings.getString(MapprSession.LOGGED_USER_ID, "");
+        task.setBranchId(branchId);
+        task.setUserId(userId);
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
 

@@ -1,5 +1,6 @@
 package org.mappr;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -79,6 +80,7 @@ public class ReviewActivty extends AppCompatActivity {
         private String branchRate;
         private String comment;
         private String mappr_from;
+        private ProgressDialog progressDialog;
 
         public ReviewPublisher(String branchId, String branchRate, String userId, String comment, String mappr_from) {
             this.branchId = branchId;
@@ -87,6 +89,11 @@ public class ReviewActivty extends AppCompatActivity {
             this.comment = comment;
             this.mappr_from = mappr_from;
             Log.i("poop", this.toString());
+
+            progressDialog = new ProgressDialog(ReviewActivty.this);
+            progressDialog.setMessage("Publishing Review. Please wait...");
+            progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.show();
         }
 
         @Override
@@ -114,6 +121,7 @@ public class ReviewActivty extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
+            progressDialog.dismiss();
             Log.i("poop", result);
             if (result != null) {
                 try {
@@ -142,10 +150,15 @@ public class ReviewActivty extends AppCompatActivity {
         private String user_id;
         private String branch_id;
         private Bitmap displayPicture;
+        private ProgressDialog progressDialog;
 
         public CurrentUserLoader(String user_id, String branch_id) {
             this.user_id = user_id;
             this.branch_id = branch_id;
+            progressDialog = new ProgressDialog(ReviewActivty.this);
+            progressDialog.setMessage("Please wait...");
+            progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.show();
         }
 
         @Override
@@ -165,6 +178,7 @@ public class ReviewActivty extends AppCompatActivity {
 
         @Override
         protected  void onPostExecute(String result) {
+            progressDialog.dismiss();
             if (result != null) {
                 try {
                     Log.i("poop", result);

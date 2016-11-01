@@ -1,15 +1,18 @@
 package org.mappr;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -29,6 +32,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -57,6 +62,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private Location mLastLocation;
 
     private Map<String, MapprEstablishment> hmEstablishment = new HashMap<>();
+    private Polyline line;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +77,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         searchRequestHandler();
         Log.i("poop", "map activity restarted");
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
     @Override
@@ -78,6 +87,25 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mMap = googleMap;
         mMap.getUiSettings().setMapToolbarEnabled(false);
         mMap.setOnInfoWindowClickListener(this);
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                Log.i("poop", "marker is clicked");
+                if (mLastLocation != null) {
+                    try {
+                        DirectionRouter directionRouter = new DirectionRouter(mLastLocation.getLatitude(), mLastLocation.getLongitude(),
+                                marker.getPosition().latitude, marker.getPosition().longitude);
+                        directionRouter.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+                return false;
+            }
+        });
         mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
 
             @Override
@@ -108,6 +136,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             return;
         }
         mMap.setMyLocationEnabled(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -285,6 +321,20 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     //for debugging
 //                    CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, 10);
 //                    mMap.moveCamera(update);
+                    if (mapperOpt.equals(CYM_Utility.OPT_BY_QRCODE)) {
+                        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, 10);
+                        mMap.moveCamera(update);
+                        if (mLastLocation != null) {
+                            try {
+                                DirectionRouter directionRouter = new DirectionRouter(mLastLocation.getLatitude(), mLastLocation.getLongitude(),
+                                        ll.latitude, ll.longitude);
+                                directionRouter.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                    }
                 } catch(JSONException e) {
                     e.printStackTrace();
                 } catch(Exception e) {
@@ -355,6 +405,67 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             implementedQrSearch = true;
         }
 
+    }
+
+
+    class DirectionRouter extends AsyncTask<String, String, String> {
+
+        private double sourceLat;
+        private double sourceLng;
+        private double destLat;
+        private double destLng;
+        ProgressDialog progressDialog;
+
+        public DirectionRouter(double sourceLat, double sourceLng, double destLat, double destlng) {
+            this.sourceLat = sourceLat;
+            this.sourceLng = sourceLng;
+            this.destLat = destLat;
+            this.destLng = destlng;
+            progressDialog = new ProgressDialog(MapActivity.this);
+            progressDialog.setMessage("Routing Destination...");
+            progressDialog.setCanceledOnTouchOutside(true);
+            progressDialog.show();
+
+            if (line != null) {
+                line.remove();
+            }
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                String directionURL = DirectionActivity.makeURL(sourceLat, sourceLng, destLat, destLng);
+                JSONObject json = JSONParser.getJSONfromURL(directionURL);
+                return json.toString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            progressDialog.dismiss();
+            if (result != null) {
+                try {
+                    final JSONObject json = new JSONObject(result);
+                    JSONArray routeArray = json.getJSONArray("routes");
+                    JSONObject routes = routeArray.getJSONObject(0);
+                    JSONObject overviewPolylines = routes.getJSONObject("overview_polyline");
+                    String encodedString = overviewPolylines.getString("points");
+                    List<LatLng> list = DirectionActivity.decodePoly(encodedString);
+                    line = mMap.addPolyline(new PolylineOptions()
+                                    .addAll(list)
+                                    .width(12)
+                                    .color(Color.parseColor("#05b1fb"))//Google maps blue color
+                                    .geodesic(true)
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     @Override

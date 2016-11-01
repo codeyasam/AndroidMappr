@@ -15,7 +15,8 @@
             android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"
             android:textSize="17dp"
             android:id="@+id/lblListHeader"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:textColor="@color/black_overlay" />
 
         <TextView
             android:layout_width="0dp"
@@ -23,7 +24,8 @@
             android:paddingRight="?android:attr/expandableListPreferredItemPaddingLeft"
             android:textSize="17dp"
             android:id="@+id/lblListHeaderTime"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:textColor="@color/black_overlay" />
     </LinearLayout>
 
 

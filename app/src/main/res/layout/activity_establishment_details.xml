@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/estabDetailsRefresh"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.mappr.mappr.EstablishmentDetailsActivity">
+    android:layout_height="wrap_content"
+    tools:context="org.mappr.EstablishmentDetailsActivity">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+         >
 
         <LinearLayout
             android:orientation="vertical"
             android:gravity="center_horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content" >
 
             <ImageView
                 android:layout_width="100dp"
@@ -23,7 +25,7 @@
                 android:src="@drawable/default_image"
                 android:longClickable="false"
                 android:scaleType="centerCrop"
-                android:layout_margin="10dp"/>
+                android:layout_margin="30dp" />
 
             <RatingBar
                 android:layout_width="wrap_content"
@@ -120,6 +122,15 @@
                 android:layout_height="300dp"
                 android:id="@+id/expandableSchedule" />
 
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminateDrawable="@drawable/progress"
+                android:layout_gravity="center_horizontal" >
+            </ProgressBar>
+
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -130,19 +141,11 @@
                 <LinearLayout
                     android:id="@+id/galleryContainer"
                     android:orientation="horizontal"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:padding="5dp"
                     android:layout_gravity="center"
                     android:gravity="center">
-
-                    <ProgressBar
-                        android:id="@+id/progressBar"
-                        style="?android:attr/progressBarStyleLarge"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:indeterminateDrawable="@drawable/progress" >
-                    </ProgressBar>
 
                 </LinearLayout>
             </HorizontalScrollView>
@@ -165,5 +168,4 @@
 
         </LinearLayout>
     </ScrollView>
-
-</LinearLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>

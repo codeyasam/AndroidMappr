@@ -3,35 +3,146 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/white</item>
+        <!--<item name="colorPrimaryDark">#ccc</item>-->
+        <!--<item name="colorAccent">@color/colorAccent</item>-->
+
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+        <!--<item name = "android:windowActionBar">true</item>-->
+        <!--<item name = "android:windowNoTitle">false</item>-->
+        <item name = "buttonStyle">@style/ButtonMod</item>
+        <item name = "android:buttonStyle">@style/ButtonMod</item>
+        <item name = "android:textViewStyle">@style/TextViewMod</item>
+        <item name = "android:editTextStyle">@style/EditTextMod</item>
+        <!--<item name = "actionBarStyle">@style/ActionBar</item>-->
+        <!--<item name = "android:actionBarStyle">@style/ActionBar</item>-->
+        <!--<item name = "android:windowActionBarOverlay">true</item>-->
+        <item name = "android:windowContentOverlay">@null</item>
+        <item name = "android:windowBackground">@drawable/app_bg</item>
+        <item name="android:actionMenuTextAppearance">@style/MenuTextStyle</item>
+        <item name="android:typeface">serif</item>
+        <item name="android:textSize">20sp</item>
+        <!--<item name = "android:tabWidgetStyle">@style/TabLayoutMod</item>-->
+        <!--<item name="android:actionMenuTextAppearance">@style/MenuTextStyle</item>-->
+        <!--<item name="android:typeface">serif</item>-->
+       
     </style>
 
-    <style name="AppTheme.NoActionBar">
+    <style name="AppTheme.NoActionBar" parent="AppTheme">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppThemeSec" parent="Theme.AppCompat.Light">
+        <!-- Customize your theme here. -->
+        <item name="android:windowBackground">@drawable/app_bg</item>
+        <item name="android:textColorPrimary">@color/black_overlay</item>
+        <item name="android:actionBarStyle">@style/MyActionBar</item>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
-    <style name="FullscreenTheme" parent="AppTheme">
-        <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
-        <item name="android:windowActionBarOverlay">true</item>
-        <item name="android:windowBackground">@null</item>
-        <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
-        <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
+        <!-- Support library compatibility -->
+        <item name="actionBarStyle">@style/MyActionBar</item>
     </style>
 
-    <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
-        <item name="android:background">@color/black_overlay</item>
+    <!-- ActionBar styles -->
+
+    <style name="MyActionBar"
+        parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse" >
+        <item name="android:background">@color/white</item>
+        <!-- Support library compatibility -->
+        <item name="background">@color/white</item>
     </style>
 
-    <style name="SplashTheme">
+
+
+    <style name="AppThemeSec.AppBarOverlay" parent="AppThemeSec" />
+
+
+    <style name="AppTheme.AppBarOverlay" parent="AppTheme" />
+
+    <style name="AppTheme.PopupOverlay" parent="AppTheme" />
+
+
+    <!--<style name="FullscreenTheme" parent="AppTheme">-->
+    <!--<item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>-->
+    <!--<item name="android:windowActionBarOverlay">true</item>-->
+    <!--<item name="android:windowBackground">@null</item>-->
+    <!--<item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>-->
+    <!--<item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>-->
+    <!--</style>-->
+
+    <!--<style name="FullscreenActionBarStyle" parent="AppTheme">-->
+        <!--&lt;!&ndash;<item name="android:background">@color/white</item>&ndash;&gt;-->
+    <!--</style>-->
+
+    <style name="SplashTheme" parent="AppTheme">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowBackground">@drawable/splash_screen</item>
     </style>
+
+
+    <style name="NoActionBar" parent="AppTheme">
+        <item name = "android:windowActionBar">false</item>
+        <item name = "android:windowNoTitle">true</item>
+    </style>
+
+    <!-- CUSTOM COMPONENTS STYLES -->
+
+    <!-- OVERRIDING EXISTING -->
+
+    <style name="MenuTextStyle" parent="android:style/TextAppearance">
+        <item name="android:textSize">21sp</item>
+        <item name="android:typeface">serif</item>
+        <!--<item name="android:textColor">#fff</item>-->
+    </style>
+
+    <!--<style name="ActionBar" parent="@android:style/Widget.ActionBar">-->
+        <!--&lt;!&ndash; <item name="android:layout_marginBottom">-20dp</item> &ndash;&gt;-->
+        <!--<item name="android:height">70dp</item>-->
+        <!--<item name="android:background">@drawable/action_bar</item>-->
+        <!--<item name="android:color">#00000000</item>-->
+        <!--<item name="android:paddingBottom">12dp</item>-->
+        <!--<item name="android:titleTextStyle">@style/MyActionBar.TitleTextStyle</item>-->
+    <!--</style>-->
+
+    <!--<style name="MyActionBar.TitleTextStyle" parent="@android:style/TextAppearance">-->
+        <!--&lt;!&ndash;<item name="android:textColor">#fff</item>&ndash;&gt;-->
+        <!--<item name="android:textSize">20sp</item>-->
+        <!--<item name="android:layout_marginLeft">10dp</item>-->
+        <!--<item name="android:typeface">serif</item>-->
+    <!--</style>-->
+
+    <style name="ButtonMod" parent="@android:style/Widget.Button" >
+        <item name="android:background">@drawable/round_corner_button</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">#fff</item>
+        <item name="android:typeface">serif</item>
+    </style>
+
+    <style name="TextViewMod" parent="@android:style/Widget.TextView" >
+        <item name="android:textSize">20sp</item>
+        <item name="android:typeface">serif</item>
+    </style>
+
+    <style name="EditTextMod" parent="@android:style/Widget.EditText" >
+        <item name="android:textSize">20sp</item>
+        <item name="android:typeface">serif</item>
+    </style>
+
+    <style name="RadioButtonMod" parent="@android:style/Widget.CompoundButton" >
+        <item name="android:textSize">27sp</item>
+        <item name="android:typeface">serif</item>
+    </style>
+
+
+    <!-- STYLES -->
+
+    <style name="FontDefault" parent="@android:style/TextAppearance.Medium">
+         <item name="android:fontFamily">sans-serif-condensed</item>
+         <item name="android:textSize">30sp</item>
+        <item name="android:typeface">serif</item>
+    </style>
+
 </resources>

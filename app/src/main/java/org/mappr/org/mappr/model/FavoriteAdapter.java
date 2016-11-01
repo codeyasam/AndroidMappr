@@ -36,11 +36,11 @@ public class FavoriteAdapter extends ArrayAdapter<MapprBranch> {
         try {
             MapprBranch branch = mapprBranches.get(position);
             MapprEstablishment estab = branch.getMapprEstablishment();
-            MapprEstablishment.preservedEstablishment = estab;
+            //MapprEstablishment.preservedEstablishment = estab;
             CYM_Utility.setImageOnView(view, R.id.estabLogo, estab.getDisplay_picture());
             CYM_Utility.displayText(view, R.id.estabName, estab.getName());
             CYM_Utility.displayText(view, R.id.branchAddress, branch.getAddress());
-            view.setOnClickListener(getAdapterOnClickListener(branch.getId()));
+            view.setOnClickListener(getAdapterOnClickListener(branch.getId(), estab));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -50,14 +50,14 @@ public class FavoriteAdapter extends ArrayAdapter<MapprBranch> {
         return view;
     }
 
-    private View.OnClickListener getAdapterOnClickListener(final String branch_id) {
+    private View.OnClickListener getAdapterOnClickListener(final String branch_id, final MapprEstablishment estab) {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //                MapprJSONSearch mapprJSONSearch = new MapprJSONSearch(CYM_Utility.OPT_BY_CATEGORY, mapprCategory.getId());
 //                mapprJSONSearch.setDisplayValue(mapprCategory.getName());
 //                mapprJSONSearch.saveSearchRequest(context.getApplicationContext());
-
+                MapprEstablishment.preservedEstablishment = estab;
                 Intent intent = new Intent(context.getApplicationContext(), EstablishmentDetails.class);
                 intent.putExtra("branch_id", branch_id);
                 intent.putExtra(CYM_Utility.MAPPR_FORM, CYM_Utility.FROM_FAVORITES);

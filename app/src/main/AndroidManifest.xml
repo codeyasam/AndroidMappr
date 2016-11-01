@@ -28,7 +28,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/logo"
         android:label="@string/app_name"
         android:logo="@drawable/logo"
         android:supportsRtl="true"
@@ -89,22 +89,25 @@
             android:label="" />
         <activity
             android:name="org.mappr.MapActivity"
-            android:icon="@drawable/logo"
-            android:label="mappr" />
+            android:theme="@style/AppThemeSec"/>
         <activity
             android:name="org.mappr.EstablishmentDetails"
-            android:label="" />
+            android:theme="@style/AppThemeSec" />
         <activity
             android:name="org.mappr.ReviewActivty"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name="org.mappr.LoginActivity" />
+        <activity android:name="org.mappr.LoginActivity"
+            android:label="Login"
+            android:theme="@style/AppThemeSec" />
         <activity
             android:name="org.mappr.DirectionActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="org.mappr.FavoritesActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name="org.mappr.RegisterActivity" />
+        <activity android:name="org.mappr.RegisterActivity"
+            android:label="Register"
+            android:theme="@style/AppThemeSec" />
         <!-- end of org.mappr -->
         <activity
             android:name="org.mappr.MainActivity"
@@ -114,7 +117,9 @@
                 android:resource="@xml/searchable"
                 android:value="search seasrch" />
         </activity>
-        <activity android:name="org.mappr.QrCodeScanner" />
+        <activity android:name="org.mappr.QrCodeScanner"
+            android:label="QR Code Scanner"
+            android:theme="@style/AppThemeSec"/>
         <activity
             android:name="org.mappr.SplashActivity"
             android:theme="@style/SplashTheme">
@@ -126,8 +131,11 @@
         </activity>
         <activity
             android:name="org.mappr.ChangePassActivity"
-            android:label="Change Password" />
-        <activity android:name="org.mappr.EditProfileActivity"></activity>
+            android:label="Change Password"
+            android:theme="@style/AppThemeSec"/>
+        <activity android:name="org.mappr.EditProfileActivity"
+            android:label="Edit Profile"
+            android:theme="@style/AppThemeSec"></activity>
     </application>
 
 </manifest>

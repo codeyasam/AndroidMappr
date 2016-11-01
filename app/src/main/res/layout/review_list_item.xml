@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:layout_marginLeft="10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,7 +14,8 @@
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:id="@+id/userDisplayPic" />
+            android:id="@+id/userDisplayPic"
+            android:layout_margin="5dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -21,7 +23,8 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Small Text"
             android:id="@+id/fullName"
-            android:layout_gravity="center_vertical"/>
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/black_overlay" />
 
         <TextView
             android:layout_width="match_parent"
@@ -31,6 +34,8 @@
             android:id="@+id/submitDate"
             android:gravity="right"
             android:layout_gravity="center_vertical"
+            android:textColor="@color/black_overlay"
+            android:layout_marginRight="10dp"
             />
     </LinearLayout>
 
@@ -40,7 +45,8 @@
         style="?android:attr/ratingBarStyleSmall"
         android:id="@+id/branchRating"
         android:numStars="5"
-        android:layout_gravity="left" />
+        android:layout_gravity="left"
+        android:layout_marginLeft="10dp"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -49,6 +55,8 @@
         android:text="Small Text"
         android:id="@+id/userComment"
         android:layout_gravity="center_vertical"
-        android:singleLine="false"/>
+        android:singleLine="false"
+        android:textColor="@color/black_overlay"
+        android:layout_marginLeft="10dp"/>
 
 </LinearLayout>

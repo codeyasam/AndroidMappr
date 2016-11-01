@@ -1,6 +1,7 @@
 package org.mappr.org.mappr.model;
 
 import org.json.JSONObject;
+import org.mappr.EstablishmentDetails;
 
 /**
  * Created by codeyasam on 9/10/16.
@@ -95,6 +96,11 @@ public class ScheduleHolder {
     }
 
     public String getDayString() {
-        return day_no_string[Integer.parseInt(day_no)];
+        try {
+            return day_no_string[Integer.parseInt(day_no)];
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }

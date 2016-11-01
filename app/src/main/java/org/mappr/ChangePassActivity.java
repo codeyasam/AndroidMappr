@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.example.codeyasam.mappr.MapprSession;
@@ -29,6 +30,7 @@ public class ChangePassActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_pass);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     public void changePass(View v) {
@@ -48,6 +50,14 @@ public class ChangePassActivity extends AppCompatActivity {
 
         ChangePassExecutor task = new ChangePassExecutor(oldPass, newPass, userId);
         task.execute();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     class ChangePassExecutor extends AsyncTask<String, String, String> {
