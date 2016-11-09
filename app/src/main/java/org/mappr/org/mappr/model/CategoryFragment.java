@@ -40,6 +40,7 @@ public class CategoryFragment extends Fragment implements SwipeRefreshLayout.OnR
     private GridView categoryGrid;
     private TextView progressBar;
     private SwipeRefreshLayout swipeLayout;
+    private boolean enableRefresh = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -55,7 +56,7 @@ public class CategoryFragment extends Fragment implements SwipeRefreshLayout.OnR
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if(firstVisibleItem == 0 && !swipeLayout.isRefreshing()){
+                if(firstVisibleItem == 0 && !swipeLayout.isRefreshing() && enableRefresh){
                     swipeLayout.setEnabled(true);
                 } else {
                     swipeLayout.setEnabled(false);
@@ -86,7 +87,7 @@ public class CategoryFragment extends Fragment implements SwipeRefreshLayout.OnR
                 }
             } else {
                 //CYM_Utility.mAlertDialog("No Internet Connectivity", getActivity());
-                progressBar.setText("No Internet Connectivity");
+                progressBar.setText("No Internet Connection");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -170,6 +171,7 @@ public class CategoryFragment extends Fragment implements SwipeRefreshLayout.OnR
                     categoryGrid.setVisibility(View.VISIBLE);
                     categoryGrid.setAdapter(categoryAdapter);
                     categoryGrid.setOnItemClickListener(customOnClickMethod());
+                    enableRefresh = true;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

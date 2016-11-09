@@ -44,6 +44,7 @@ import org.json.JSONObject;
 import org.mappr.org.mappr.model.CYM_Utility;
 import org.mappr.org.mappr.model.JSONParser;
 import org.mappr.org.mappr.model.MapprBranch;
+import org.mappr.org.mappr.model.MapprCategory;
 import org.mappr.org.mappr.model.MapprEstablishment;
 import org.mappr.org.mappr.model.MapprJSONSearch;
 
@@ -56,6 +57,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private static final String PLOTTER_URL = CYM_Utility.MAPPR_ROOT_URL + "tests/getMarkerOptions.php";
+    private static final String RATING_LOADER_URL = CYM_Utility.MAPPR_ROOT_URL + "tests/getAverageRating.php";
     public static boolean implementedQrSearch = false;
 
     private GoogleMap mMap;
@@ -106,6 +108,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         return super.onOptionsItemSelected(item);
     }
 
+    private String lastMarkerId = "";
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -115,11 +118,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
             @Override
             public boolean onMarkerClick(Marker marker) {
-                Log.i("poop", "marker is clicked");
-                if (mLastLocation != null) {
+                Log.i("poop", "marker is clicked id: " + marker.getId());
+                //Load the average rating
+                //Log.i("poop", marker.getTitle());
+                //AverageRatingLoader task = new AverageRatingLoader(marker.getTitle());
+                //task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
+                if (mLastLocation != null && !lastMarkerId.equals(marker.getTitle())) {
                     try {
                         DirectionRouter directionRouter = new DirectionRouter(mLastLocation.getLatitude(), mLastLocation.getLongitude(),
-                                marker.getPosition().latitude, marker.getPosition().longitude);
+                                marker.getPosition().latitude, marker.getPosition().longitude, marker.getTitle());
                         directionRouter.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -242,6 +249,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         private String branchID;
         private String categoryID;
         private String searchString;
+        private String qrMarkerId;
         private ProgressDialog progressDialog;
 
         @Override
@@ -302,13 +310,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             progressDialog.dismiss();
             if (branchesString != null) {
                 try {
-                    Log.i("poop", branchesString);
+                    Log.i("poop", branchesString + " onpsot");
                     JSONArray branches = new JSONArray(branchesString);
+                    if (branches.length() < 1) {
+                        Toast.makeText(MapActivity.this, "No results found", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     JSONObject firstBranch = branches.getJSONObject(0);
                     Log.i("poop", "length: " + branches.length());
                     Log.i("poop", "branhesString: " + branchesString);
                     //kind of a hack
-                    if (branchesString.equals("[{}]")) {
+                    if (branchesString.equals("[]")) {
                         Toast.makeText(MapActivity.this, "No results found", Toast.LENGTH_SHORT).show();
                         return;
                     } else{
@@ -329,6 +341,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                                 implementSearchHistory(eachBranch, branchID);
                                 options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
                                 ll = new LatLng(Double.parseDouble(eachBranch.getString("lat")), Double.parseDouble(eachBranch.getString("lng")));
+                                qrMarkerId = eachBranch.getString("id");
                             }
                         }
 
@@ -343,7 +356,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         if (mLastLocation != null) {
                             try {
                                 DirectionRouter directionRouter = new DirectionRouter(mLastLocation.getLatitude(), mLastLocation.getLongitude(),
-                                        ll.latitude, ll.longitude);
+                                        ll.latitude, ll.longitude, qrMarkerId);
                                 directionRouter.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -371,6 +384,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         .title(eachBranch.getString("id"))
                         .position(latlng)
                         .snippet(eachBranch.getString("estab_id"));
+//                        .icon(BitmapDescriptorFactory.fromBitmap(MapprCategory.getBitmapById(eachBranch.getString("category_id"))));
+
+                MapprEstablishment estab = hmEstablishment.get(eachBranch.getString("estab_id"));
+                options.icon(BitmapDescriptorFactory.fromBitmap(MapprCategory.getBitmapById(estab.getCategory_id())));
 
                 if (mapperOpt.equals(CYM_Utility.OPT_BY_QRCODE)) {
                     if (eachBranch.getString("id").equals(branchID)) {
@@ -429,13 +446,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         private double sourceLng;
         private double destLat;
         private double destLng;
+        private String markerId;
         ProgressDialog progressDialog;
 
-        public DirectionRouter(double sourceLat, double sourceLng, double destLat, double destlng) {
+        public DirectionRouter(double sourceLat, double sourceLng, double destLat, double destlng, String markerId) {
             this.sourceLat = sourceLat;
             this.sourceLng = sourceLng;
             this.destLat = destLat;
             this.destLng = destlng;
+            this.markerId = markerId;
             progressDialog = new ProgressDialog(MapActivity.this);
             progressDialog.setMessage("Routing Destination...");
             progressDialog.setCanceledOnTouchOutside(true);
@@ -476,6 +495,47 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                                     .color(Color.parseColor("#05b1fb"))//Google maps blue color
                                     .geodesic(true)
                     );
+
+                    lastMarkerId = markerId;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    class AverageRatingLoader extends AsyncTask<String, String, String> {
+
+        private String branchID;
+
+        public AverageRatingLoader(String branchID) {
+            this.branchID = branchID;
+        }
+
+        @Override
+        protected String doInBackground(String... args) {
+            try {
+                List<NameValuePair> params = new ArrayList<>();
+                params.add(new BasicNameValuePair("branch_id", branchID));
+                JSONObject json = JSONParser.makeHttpRequest(RATING_LOADER_URL, "GET", params);
+                //JSONObject json = JSONParser.getJSONfromURL(RATING_LOADER_URL + "?branch_id" + branchID);
+                Log.i("poop", RATING_LOADER_URL);
+                return json.toString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Log.i("poop", "json result: " + result);
+            super.onPostExecute(result);
+            if (result != null) {
+                try {
+                    JSONObject json = new JSONObject(result);
+                    //CYM_Utility.setRatingBarRate(MapActivity.this, R.id.ratingInfoWindow, Float.parseFloat(json.getString("average_rating")));
+                    //Log.i("poop", "average rating: " + json.getString("average_rating"));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

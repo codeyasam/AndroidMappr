@@ -4,6 +4,10 @@ import android.graphics.Bitmap;
 import android.util.Log;
 
 import org.json.JSONObject;
+import org.mappr.MainActivity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by codeyasam on 7/17/16.
@@ -75,4 +79,19 @@ public class MapprCategory {
     private String featured_category;
     private Bitmap display_picture;
     private String description;
+
+    public static Bitmap getBitmapById(String categId) {
+        try {
+            Log.i("pooping", "poop");
+            for (MapprCategory eachCategory : MainActivity.categoryList) {
+                Log.i("pooping", "eachCateg" + eachCategory.getName() + " id: " + eachCategory.getId());
+                if (eachCategory.getId().equals(categId)) {
+                    return eachCategory.getDisplay_picture();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

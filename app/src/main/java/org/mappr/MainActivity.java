@@ -35,6 +35,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.codeyasam.mappr.R;
 
@@ -77,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager mViewPager;
 
     private MenuItem scanMenuItem;
-
+//
     public void OverrideFonts(){
         FontsOverride.setDefaultFont(this, "DEFAULT", "fonts/good-dog.otf");
         FontsOverride.setDefaultFont(this, "MONOSPACE", "fonts/good-dog.otf");
@@ -92,15 +93,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        Drawable drawable = getResources().getDrawable(R.drawable.logo);
-        Bitmap bm = ((BitmapDrawable) drawable).getBitmap();
-        toolbar.setNavigationIcon(new BitmapDrawable(getResources(), CYM_Utility.getResizedBitmap(bm, 70, 80)));
-        toolbar.setTitle("Coin One");
-        setSupportActionBar(toolbar);
+        try {
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            Drawable drawable = getResources().getDrawable(R.mipmap.ic_launcher);
+            Bitmap bm = ((BitmapDrawable) drawable).getBitmap();
+            toolbar.setNavigationIcon(new BitmapDrawable(getResources(), CYM_Utility.getResizedBitmap(bm, 70, 80)));
+            toolbar.setTitle("Coin One");
+            setSupportActionBar(toolbar);
 
-        setupmFragments();
-        DateTime dateTime = new DateTime();
+            setupmFragments();
+            DateTime dateTime = new DateTime();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
         //Log.i("poop", String.valueOf(dateTime.getDayOfWeek()));
     }
 
@@ -117,11 +124,11 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(mViewPager);
 
         final TabLayout.Tab category = tabLayout.getTabAt(0);
-        category.setIcon(android.R.drawable.ic_dialog_dialer);
+        category.setIcon(R.drawable.category_icon);
         final TabLayout.Tab favorites = tabLayout.getTabAt(1);
-        favorites.setIcon(android.R.drawable.star_big_off);
+        favorites.setIcon(R.drawable.favorites_icon);
         final TabLayout.Tab recentSearches = tabLayout.getTabAt(2);
-        recentSearches.setIcon(android.R.drawable.ic_menu_recent_history);
+        recentSearches.setIcon(R.drawable.searches_icon);
     }
 
     //search by string
@@ -313,6 +320,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         } else if (id == R.id.to_logout) {
             MapprSession.logoutUser(MainActivity.this);
+            Toast.makeText(getApplicationContext(), "Logged out", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.to_edit_profile) {
             Intent intent = new Intent(getApplicationContext(), EditProfileActivity.class);
             startActivity(intent);

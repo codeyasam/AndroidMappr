@@ -7,6 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:layout_gravity="center"
     tools:context="org.mappr.ReviewActivty">
 
     <LinearLayout
@@ -33,7 +34,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/reviewTxt"
             android:layout_gravity="center_horizontal"
-            android:hint="write a review"/>
+            android:hint="Write a Review"/>
 
         <LinearLayout
             android:layout_height="wrap_content"
@@ -67,6 +68,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Cancel"
+                android:background="@drawable/round_corner_normal"
+                android:textColor="#333333"
+                android:textSize="20sp"
                 android:id="@+id/cancelBtn"
                 android:onClick="btnClick"/>
 
@@ -75,6 +79,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Publish"
+                android:background="@drawable/round_corner_button"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
                 android:id="@+id/publishBtn"
                 android:onClick="btnClick"/>
 

@@ -30,7 +30,6 @@
         android:allowBackup="true"
         android:icon="@drawable/logo"
         android:label="@string/app_name"
-        android:logo="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
@@ -86,42 +85,67 @@
         <!-- org.mappr - this part of project is created to apply the gui that are now being implemented -->
         <activity
             android:name="org.mappr.MainActivityBAK"
-            android:label="" />
+            android:configChanges="orientation|keyboardHidden"
+            android:label=""
+            android:screenOrientation="portrait" />
         <activity
             android:name="org.mappr.MapActivity"
-            android:theme="@style/AppThemeSec"/>
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
         <activity
             android:name="org.mappr.EstablishmentDetails"
-            android:theme="@style/AppThemeSec" />
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppCoinOneBW" />
         <activity
             android:name="org.mappr.ReviewActivty"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name="org.mappr.LoginActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppCoinOneBW" />
+        <activity
+            android:name="org.mappr.LoginActivity"
+            android:configChanges="orientation|keyboardHidden"
             android:label="Login"
-            android:theme="@style/AppThemeSec" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppCoinOneBW" />
         <activity
             android:name="org.mappr.DirectionActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="org.mappr.FavoritesActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name="org.mappr.RegisterActivity"
+        <activity
+            android:name="org.mappr.RegisterActivity"
+            android:configChanges="orientation|keyboardHidden"
             android:label="Register"
-            android:theme="@style/AppThemeSec" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppCoinOneBW" />
         <!-- end of org.mappr -->
         <activity
             android:name="org.mappr.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppCoinOneMainBW">
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable"
                 android:value="search seasrch" />
         </activity>
-        <activity android:name="org.mappr.QrCodeScanner"
+        <activity
+            android:name="org.mappr.QrCodeScanner"
+            android:configChanges="orientation|keyboardHidden"
             android:label="QR Code Scanner"
-            android:theme="@style/AppThemeSec"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
         <activity
             android:name="org.mappr.SplashActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -131,11 +155,17 @@
         </activity>
         <activity
             android:name="org.mappr.ChangePassActivity"
+            android:configChanges="orientation|keyboardHidden"
             android:label="Change Password"
-            android:theme="@style/AppThemeSec"/>
-        <activity android:name="org.mappr.EditProfileActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppCoinOneBW" />
+        <activity
+            android:name="org.mappr.EditProfileActivity"
+            android:configChanges="orientation|keyboardHidden"
             android:label="Edit Profile"
-            android:theme="@style/AppThemeSec"></activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppCoinOneBW" />
+        <activity android:name="org.mappr.GalleryImage"></activity>
     </application>
 
 </manifest>

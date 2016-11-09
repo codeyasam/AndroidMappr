@@ -67,6 +67,7 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
     private Button loginBtn;
     private RatingBar ratingBar;
     private SwipeRefreshLayout swipeLayout;
+    private Button goButton;
 
     private GoogleApiClient mGoogleApiClient;
     private double sourceLat;
@@ -77,7 +78,7 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
 
     //release references
     private ListView listview;
-    private List<Bitmap> listBranchGallery = new ArrayList<>();
+    public  static List<Bitmap> listBranchGallery;
     private MapprEstablishment establishment;
     private List<ReviewHolder> reviewHolderList;
     private LinearLayout galleryContainer;
@@ -85,14 +86,23 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
     private List<ScheduleHolder> scheduleHolderList;
     private List<ScheduleHolder> mHeader;
 
-    private int expandClickCount = 0;
+    public void OverrideFonts(){
+        FontsOverride.setDefaultFont(this, "DEFAULT", "fonts/good-dog.otf");
+        FontsOverride.setDefaultFont(this, "MONOSPACE", "fonts/good-dog.otf");
+        FontsOverride.setDefaultFont(this, "SERIF", "fonts/good-dog.otf");
+        FontsOverride.setDefaultFont(this, "SANS_SERIF", "fonts/good-dog.otf");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        OverrideFonts();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_establishment_details);
+        listBranchGallery = new ArrayList<>();
         listview = (ListView) findViewById(R.id.listView);
-        CYM_Utility.setListViewHeightBasedOnChildren(listview);
+        goButton = (Button) findViewById(R.id.goButton);
+        goButton.setEnabled(false);
         galleryContainer = (LinearLayout) findViewById(R.id.galleryContainer);
         settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
@@ -120,26 +130,13 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
         });
 
         scheduleView = (ExpandableListView) findViewById(R.id.expandableSchedule);
-        //CYM_Utility.setListViewHeightBasedOnChildren(scheduleView);
+
 
         //List view expand listener
         scheduleView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
             @Override
             public void onGroupExpand(int groupPosition) {
-                int height = 0;
-                for (int i = 0; i < scheduleView.getChildCount(); i++) {
-                    height += scheduleView.getChildAt(i).getMeasuredHeight();
-                    height += scheduleView.getDividerHeight();
-                }
-                expandClickCount++;
-                if (expandClickCount == 1) {
-                    int times = groupPosition == 0 ? 3 : 5;
-                    int heightVal = (height + 6) * times;
-                    scheduleView.getLayoutParams().height = heightVal;
-                } else {
-                    scheduleView.getLayoutParams().height = 700;
-                }
-
+                CYM_Utility.setListViewHeightBasedOnChildren(scheduleView);
             }
         });
 
@@ -148,13 +145,7 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
 
             @Override
             public void onGroupCollapse(int groupPosition) {
-                expandClickCount--;
-                if (expandClickCount == 0) {
-                    scheduleView.getLayoutParams().height = 122;
-                } else {
-                    int heightVal = groupPosition == 0 ? 530 : 300;
-                    scheduleView.getLayoutParams().height = heightVal;
-                }
+                CYM_Utility.setListViewHeightBasedOnChildren(scheduleView);
             }
         });
 
@@ -359,6 +350,7 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
 
         @Override
         protected void onPostExecute(String result) {
+            goButton.setEnabled(true);
             if (swipeLayout.isRefreshing()) {
                 swipeLayout.setRefreshing(false);
             }
@@ -377,6 +369,7 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
                     //String description = branch.getString("description");
                     //byte[] bytes = description.getBytes("ISO-8859-1");
                     prompts.add(new ScheduleHolder("Address: " + branch.getString("address")));
+                    prompts.add(new ScheduleHolder(establishment.getDescription()));
                     prompts.add(new ScheduleHolder(branch.getString("description")));
 
                     if (!scheduleHolderList.isEmpty()) {
@@ -394,10 +387,15 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
                     ScheduleAdapter scheduleHolderArrayAdapter = new ScheduleAdapter(getApplicationContext(), mHeader, listChildData);
                     scheduleView.setAdapter(scheduleHolderArrayAdapter);
                     scheduleView.expandGroup(0);
-                    scheduleView.getLayoutParams().height = 300;
+                    CYM_Utility.setListViewHeightBasedOnChildren(scheduleView);
+                    //scheduleView.getLayoutParams().height = 300;
                     String leastDistanceUrl = DirectionActivity.makeURL(sourceLat, sourceLng, Double.parseDouble(branchLat), Double.parseDouble(branchLng));
                     new LeastDistanceCalculator(leastDistanceUrl).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                    new GalleryLoader(json).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+                    if (listBranchGallery.isEmpty()) {
+                        new GalleryLoader(json).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    }
+
                     new ReviewLoader(json).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
                     Log.i("poop", "review loader ends");
@@ -462,6 +460,7 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
 
                     ArrayAdapter<ReviewHolder> reviewHolderArrayAdapter = new ReviewAdapter(getApplicationContext(), reviewHolderList);
                     listview.setAdapter(reviewHolderArrayAdapter);
+                    CYM_Utility.setListViewHeightBasedOnItems(listview);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -509,6 +508,7 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
         }
     }
 
+
     class GalleryLoader extends AsyncTask<String, String, String> {
 
         private JSONObject json;
@@ -530,7 +530,24 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
                 for (int i = 0; i < gallery.length(); i++) {
                     JSONObject eachGal = gallery.getJSONObject(i);
                     String url = CYM_Utility.MAPPR_PUBLIC_URL + eachGal.getString("gallery_pic");
-                    listBranchGallery.add(CYM_Utility.loadImageFromServer(url, 75, 75));
+                    final Bitmap bmp = CYM_Utility.loadImageFromServer(url, 75, 75);
+                    listBranchGallery.add(bmp);
+//                    urlList.add(url);
+                    final int position = i;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ImageView iv = new ImageView(EstablishmentDetails.this);
+                            iv.setImageBitmap(CYM_Utility.getResizedBitmap(bmp, 300, 300));
+                            iv.setPadding(5, 5, 5, 5);
+                            iv.setOnClickListener(setGalleryOnClick(position));
+                            galleryContainer.addView(iv);
+                            float height = CYM_Utility.dipToPixels(getApplicationContext(), 75);
+                            float width = CYM_Utility.dipToPixels(getApplicationContext(), 75);
+                            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams((int)height, (int)width);
+                            iv.setLayoutParams(lp);
+                        }
+                    });
                 }
                 return json.toString();
             } catch (Exception e) {
@@ -540,30 +557,49 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
             return null;
         }
 
+
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             progressBar.setVisibility(View.GONE);
-//            galleryContainer.removeAllViews();
-//            galleryContainer.invalidate();
 
             if (result != null) {
                 try {
-                    for (Bitmap bmp : listBranchGallery) {
-                        ImageView iv = new ImageView(EstablishmentDetails.this);
-                        iv.setImageBitmap(CYM_Utility.getResizedBitmap(bmp, 75, 75));
-                        iv.setPadding(5, 5, 5, 5);
-                        galleryContainer.addView(iv);
-                        float height = CYM_Utility.dipToPixels(getApplicationContext(), 75);
-                        float width = CYM_Utility.dipToPixels(getApplicationContext(), 75);
-                        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams((int)height, (int)width);
-                        iv.setLayoutParams(lp);
-                    }
+//                    runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            int position = 0;
+//                            for (Bitmap bmp : listBranchGallery) {
+//                                ImageView iv = new ImageView(EstablishmentDetails.this);
+//                                iv.setImageBitmap(CYM_Utility.getResizedBitmap(bmp, 75, 75));
+//                                iv.setPadding(5, 5, 5, 5);
+//                                iv.setOnClickListener(setGalleryOnClick(position));
+//                                galleryContainer.addView(iv);
+//                                float height = CYM_Utility.dipToPixels(getApplicationContext(), 75);
+//                                float width = CYM_Utility.dipToPixels(getApplicationContext(), 75);
+//                                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams((int)height, (int)width);
+//                                iv.setLayoutParams(lp);
+//                                position++;
+//                            }
+//                        }
+//                    });
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }
+
+        private View.OnClickListener setGalleryOnClick(final int position) {
+            return new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(EstablishmentDetails.this, GalleryImage.class);
+                    intent.putExtra("imageUrl", position);
+                    startActivity(intent);
+                }
+            };
+        }
+
     }
 
 
@@ -628,6 +664,7 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
     @Override
     public void onRefresh() {
         ratingBar.setRating(0);
+        listBranchGallery = new ArrayList<>();
         DetailLauncher task = new DetailLauncher();
         final String branchId = getIntent().getStringExtra("branch_id");
         final String userId = settings.getString(MapprSession.LOGGED_USER_ID, "");

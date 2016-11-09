@@ -15,4 +15,5 @@
     <string name="title_activity_main2">Main2Activity</string>
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="fav_login"><a href="#">Click here to login</a></string>
+    <string name="title_activity_gallery">GalleryActivity</string>
 </resources>

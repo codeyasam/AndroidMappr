@@ -42,8 +42,11 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="SUBMIT"
+        android:text="SAVE PASSWORD"
         android:id="@+id/changePass"
+        android:background="@drawable/round_corner_button"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
         android:onClick="changePass"
         android:layout_gravity="center_horizontal" />
 

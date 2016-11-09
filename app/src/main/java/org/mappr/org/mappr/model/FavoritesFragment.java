@@ -51,6 +51,7 @@ public class FavoritesFragment extends Fragment implements View.OnClickListener,
     private ListView listView;
     private FavoritesLoader favoritesLoader;
     private SwipeRefreshLayout swipeLayout;
+    private boolean enableRefresh = false;
 
     @Nullable
     @Override
@@ -67,7 +68,7 @@ public class FavoritesFragment extends Fragment implements View.OnClickListener,
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if(firstVisibleItem == 0 && listIsAtTop()){
+                if(firstVisibleItem == 0 && listIsAtTop() && !swipeLayout.isRefreshing() && enableRefresh){
                     swipeLayout.setEnabled(true);
                 } else {
                     swipeLayout.setEnabled(false);
@@ -96,6 +97,8 @@ public class FavoritesFragment extends Fragment implements View.OnClickListener,
         String userId = settings.getString(MapprSession.LOGGED_USER_ID, "");
         TextView tv = (TextView) view.findViewById(R.id.loginTxt);
         if (userId.isEmpty()) {
+            TextView loadingText = (TextView) view.findViewById(R.id.emptyBookmarkTxt);
+            loadingText.setVisibility(View.GONE);
             tv.setVisibility(View.VISIBLE);
             tv.setOnClickListener(this);
             MainActivity.branchesList = new ArrayList<>();
@@ -114,7 +117,7 @@ public class FavoritesFragment extends Fragment implements View.OnClickListener,
                 }
             } else {
                 tv.setVisibility(View.VISIBLE);
-                tv.setText("No Internet  Connectivity");
+                tv.setText("No Internet  Connection");
             }
         }
     }
@@ -223,6 +226,7 @@ public class FavoritesFragment extends Fragment implements View.OnClickListener,
                     }
                     ArrayAdapter<MapprBranch> adapter = new FavoriteAdapter(getActivity(), MainActivity.branchesList);
                     listView.setAdapter(adapter);
+                    enableRefresh = true;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

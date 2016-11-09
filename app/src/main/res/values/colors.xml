@@ -4,11 +4,12 @@
     <color name="colorPrimary">#323232</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="black_overlay">#66000000</color>
+    <color name="black_overlay">#000000</color>
 
     <color name="color_preloader_start">#000000</color>
     <color name="color_preloader_center">#000000</color>
     <color name="color_preloader_end">#ff56a9c7</color>
     <color name="directionsTextColor">#7F7F7F</color>
     <color name="white">#FFFFFF</color>
+    <color name="yellow">#FFFFB700</color>
 </resources>

@@ -1,6 +1,8 @@
 package org.mappr.org.mappr.model;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -135,12 +137,12 @@ public class MapprEndUser {
         ivImage.setImageBitmap(CYM_Utility.getRoundedCornerBitmap(bm));
     }
 
-    public void registerUser() {
-        new RegisterExecuter().execute();
-    }
+//    public void registerUser() {
+//        new RegisterExecuter().execute();
+//    }
 
-    public void registerUser(String branchId) {
-        RegisterExecuter task = new RegisterExecuter();
+    public void registerUser(String branchId, Context context) {
+        RegisterExecuter task = new RegisterExecuter(context);
         task.setBranchId(branchId);
         task.execute();
     }
@@ -191,7 +193,7 @@ public class MapprEndUser {
     private String email;
     private String contact;
     private String hometown;
-    private String display_picture_path = "DISPLAY_PICTURES/defaultavatar.png";
+    private String display_picture_path = "http://www.codeyasam.com/capstone/Public/DISPLAY_PICTURES/defaultavatar.png";
 
 
     private Bitmap display_picture;
@@ -210,6 +212,21 @@ public class MapprEndUser {
         }
 
         private String branchId;
+        private Context context;
+        private ProgressDialog progressDialog;
+
+        public RegisterExecuter(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(context);
+            progressDialog.setMessage("Please Wait...");
+            progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.show();
+        }
 
         @Override
         protected String doInBackground(String... args) {
@@ -240,6 +257,7 @@ public class MapprEndUser {
 
         @Override
         protected void onPostExecute(String result) {
+            progressDialog.dismiss();
             if (result != null) {
                 try {
                     JSONObject json = new JSONObject(result);

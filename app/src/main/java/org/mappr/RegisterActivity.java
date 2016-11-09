@@ -141,7 +141,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         endUser.setFirstName(CYM_Utility.getText(RegisterActivity.this, R.id.firstNameTxt));
         endUser.setLastName(CYM_Utility.getText(RegisterActivity.this, R.id.lastNameTxt));
         endUser.setEmail(CYM_Utility.getText(RegisterActivity.this, R.id.emailTxt));
-        endUser.registerUser(branchId);
+        endUser.registerUser(branchId, RegisterActivity.this);
     }
 
     private Uri imageUri;

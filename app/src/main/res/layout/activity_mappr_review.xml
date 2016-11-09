@@ -67,16 +67,24 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Cancel"
+                android:background="@drawable/round_corner_normal"
+                android:textColor="#333333"
+                android:textSize="20sp"
                 android:id="@+id/cancelBtn"
-                android:onClick="btnClick"/>
+                android:onClick="btnClick"
+                android:layout_margin="2dp" />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Publish"
+                android:background="@drawable/round_corner_button"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
                 android:id="@+id/publishBtn"
-                android:onClick="btnClick"/>
+                android:onClick="btnClick"
+                android:layout_margin="2dp" />
 
         </LinearLayout>
     </LinearLayout>

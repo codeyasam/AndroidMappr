@@ -6,7 +6,7 @@
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title=""
-        android:icon="@android:drawable/ic_menu_search"
+        android:icon="@drawable/search_icon"
         app:showAsAction="always|collapseActionView"
         app:actionViewClass="android.support.v7.widget.SearchView"  />
 
@@ -14,7 +14,7 @@
         android:id="@+id/scan_qrcode"
         android:orderInCategory="101"
         android:title="scan"
-        android:icon="@drawable/searchqricon"
+        android:icon="@drawable/qr_code_icon"
         app:showAsAction="always" />
 
     <item

@@ -1,10 +1,13 @@
 package org.mappr.org.mappr.model;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.List;
 
 /**
  * Created by codeyasam on 6/3/16.
@@ -92,6 +95,7 @@ public class MapprEstablishment {
             estab.setOwner_id(eachEstab.getString("owner_id"));
             Bitmap bmp = CYM_Utility.loadImageFromServer(CYM_Utility.MAPPR_PUBLIC_URL + eachEstab.getString("display_picture"), 100, 100);
             estab.setDisplay_picture(bmp);
+            Log.i("poop", "description result: " + estab.getDescription());
             return estab;
         } catch (JSONException e) {
             e.printStackTrace();

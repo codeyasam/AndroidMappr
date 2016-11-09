@@ -10,13 +10,14 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-         >
+        android:padding="10dp" >
 
         <LinearLayout
             android:orientation="vertical"
             android:gravity="center_horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp">
 
             <ImageView
                 android:layout_width="100dp"
@@ -32,7 +33,9 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/branchRating"
                 style="?android:attr/ratingBarStyleSmall"
-                android:layout_gravity="center_horizontal" />
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -40,8 +43,10 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="Establishment"
                 android:id="@+id/estabName"
+                android:textSize="30dp"
                 android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true" />
+                android:layout_centerHorizontal="true"
+                android:textIsSelectable="false" />
 
             <RatingBar
                 android:layout_width="wrap_content"
@@ -77,10 +82,25 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Show Direction"
+                    android:background="@drawable/round_corner_normal"
+                    android:textColor="#333333"
+                    android:textSize="20sp"
                     android:id="@+id/goButton"
                     android:layout_gravity="center"
                     android:onClick="gotoGmaps"/>
             </LinearLayout>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="CALL"
+                android:id="@+id/callBtn"
+                android:onClick="callBtnClick"
+                android:background="@drawable/round_corner_button"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:layout_margin="5dp"
+                android:visibility="gone" />
 
 
             <TextView
@@ -119,7 +139,7 @@
 
             <ExpandableListView
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="0dp"
                 android:id="@+id/expandableSchedule" />
 
             <ProgressBar
@@ -150,18 +170,9 @@
                 </LinearLayout>
             </HorizontalScrollView>
 
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="CALL"
-                android:id="@+id/callBtn"
-                android:onClick="callBtnClick"
-                android:layout_margin="5dp"
-                android:visibility="gone" />
-
             <ListView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:id="@+id/listView"
                 android:layout_gravity="center_horizontal"
                 android:visibility="gone" />
