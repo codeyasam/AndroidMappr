@@ -4,6 +4,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.example.codeyasam.mappr.R;
+
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
@@ -61,9 +63,11 @@ public class MapprBookmark {
                     JSONObject json = new JSONObject(result);
                     if (json.getString("success").equals("create")) {
                         Log.i("poop", "bookmarked created/deleted");
-                        bookmarkMenu.setTitle("BOOKMARKED");
+                        bookmarkMenu.setIcon(R.drawable.bookmarked);
+//                        bookmarkMenu.setTitle("BOOKMARKED");
                     } else if (json.getString("success").equals("delete")) {
-                        bookmarkMenu.setTitle("BOOKMARK");
+//                        bookmarkMenu.setTitle("BOOKMARK");
+                        bookmarkMenu.setIcon(R.drawable.add_bookmark);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

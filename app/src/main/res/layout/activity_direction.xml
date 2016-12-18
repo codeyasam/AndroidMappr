@@ -15,17 +15,36 @@
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"/>
 
-    <TextView
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="DIRECTIONS"
-        android:textStyle="bold"
-        android:id="@+id/textView4"
-        android:background="@color/colorPrimary"
-        android:textColor="@color/white"
-        android:padding="5dp" />
+        android:padding="5dp">
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/red_pin"
+            android:id="@+id/imageView2" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="DIRECTIONS"
+            android:textStyle="bold"
+            android:id="@+id/textView4"
+            android:padding="5dp" />
+
+
+        <!--android:background="@color/colorPrimary"
+            android:textColor="@color/white"-->
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#ccc"
+        android:orientation="horizontal"></LinearLayout>
     <ListView
         android:layout_width="match_parent"
         android:layout_height="0dp"

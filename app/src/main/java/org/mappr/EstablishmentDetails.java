@@ -326,7 +326,7 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
         protected String doInBackground(String... args) {
             try {
                 List<NameValuePair> params = new ArrayList<NameValuePair>();
-//                String user_id = settings.getString(MapprSession.LOGGED_USER_ID, "");
+
                 if (!userId.isEmpty()) {
                     params.add(new BasicNameValuePair("user_id", userId));
                 }
@@ -360,17 +360,17 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
                     JSONObject json = new JSONObject(result);
 
                     String bookmarkState = json.getString("isBookmarked").equals("true") ? "BOOKMARKED" : "BOOKMARK";
-                    bookmarkMenu.setTitle(bookmarkState);
+
+                    if(bookmarkState.equals("BOOKMARKED")) bookmarkMenu.setIcon(R.drawable.bookmarked);
+                    else bookmarkMenu.setIcon(R.drawable.add_bookmark);
 
                     JSONObject branch = json.getJSONObject("branch");
                     CYM_Utility.setRatingBarRate(EstablishmentDetails.this, R.id.branchRating, Float.parseFloat(json.getString("average_rating")));
 
                     HashMap<ScheduleHolder, List<ScheduleHolder>> listChildData = new HashMap<>();
-                    //String description = branch.getString("description");
-                    //byte[] bytes = description.getBytes("ISO-8859-1");
+                    prompts.add(new ScheduleHolder("\"" + establishment.getDescription()+ "\""));
                     prompts.add(new ScheduleHolder("Address: " + branch.getString("address")));
-                    prompts.add(new ScheduleHolder(establishment.getDescription()));
-                    prompts.add(new ScheduleHolder(branch.getString("description")));
+                    prompts.add(new ScheduleHolder("Description: " + branch.getString("description")));
 
                     if (!scheduleHolderList.isEmpty()) {
                         listChildData.put(mHeader.get(1), scheduleHolderList);
@@ -388,7 +388,7 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
                     scheduleView.setAdapter(scheduleHolderArrayAdapter);
                     scheduleView.expandGroup(0);
                     CYM_Utility.setListViewHeightBasedOnChildren(scheduleView);
-                    //scheduleView.getLayoutParams().height = 300;
+
                     String leastDistanceUrl = DirectionActivity.makeURL(sourceLat, sourceLng, Double.parseDouble(branchLat), Double.parseDouble(branchLng));
                     new LeastDistanceCalculator(leastDistanceUrl).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
@@ -532,22 +532,6 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
                     String url = CYM_Utility.MAPPR_PUBLIC_URL + eachGal.getString("gallery_pic");
                     final Bitmap bmp = CYM_Utility.loadImageFromServer(url, 75, 75);
                     listBranchGallery.add(bmp);
-//                    urlList.add(url);
-                    final int position = i;
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            ImageView iv = new ImageView(EstablishmentDetails.this);
-                            iv.setImageBitmap(CYM_Utility.getResizedBitmap(bmp, 300, 300));
-                            iv.setPadding(5, 5, 5, 5);
-                            iv.setOnClickListener(setGalleryOnClick(position));
-                            galleryContainer.addView(iv);
-                            float height = CYM_Utility.dipToPixels(getApplicationContext(), 75);
-                            float width = CYM_Utility.dipToPixels(getApplicationContext(), 75);
-                            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams((int)height, (int)width);
-                            iv.setLayoutParams(lp);
-                        }
-                    });
                 }
                 return json.toString();
             } catch (Exception e) {
@@ -565,24 +549,19 @@ public class EstablishmentDetails extends AppCompatActivity implements LocationL
 
             if (result != null) {
                 try {
-//                    runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            int position = 0;
-//                            for (Bitmap bmp : listBranchGallery) {
-//                                ImageView iv = new ImageView(EstablishmentDetails.this);
-//                                iv.setImageBitmap(CYM_Utility.getResizedBitmap(bmp, 75, 75));
-//                                iv.setPadding(5, 5, 5, 5);
-//                                iv.setOnClickListener(setGalleryOnClick(position));
-//                                galleryContainer.addView(iv);
-//                                float height = CYM_Utility.dipToPixels(getApplicationContext(), 75);
-//                                float width = CYM_Utility.dipToPixels(getApplicationContext(), 75);
-//                                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams((int)height, (int)width);
-//                                iv.setLayoutParams(lp);
-//                                position++;
-//                            }
-//                        }
-//                    });
+                    int position = 0;
+                    for (Bitmap bmp : listBranchGallery) {
+                        ImageView iv = new ImageView(EstablishmentDetails.this);
+                        iv.setImageBitmap(CYM_Utility.getResizedBitmap(bmp, 75, 75));
+                        iv.setPadding(5, 5, 5, 5);
+                        iv.setOnClickListener(setGalleryOnClick(position));
+                        galleryContainer.addView(iv);
+                        float height = CYM_Utility.dipToPixels(getApplicationContext(), 75);
+                        float width = CYM_Utility.dipToPixels(getApplicationContext(), 75);
+                        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams((int)height, (int)width);
+                        iv.setLayoutParams(lp);
+                        position++;
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

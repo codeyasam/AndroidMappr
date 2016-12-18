@@ -6,6 +6,7 @@
     <item
         android:id="@+id/action_bookmark"
         android:orderInCategory="100"
-        android:title="Bookmark"
+        android:title=""
+        android:icon="@drawable/add_bookmark"
         app:showAsAction="always" />
 </menu>

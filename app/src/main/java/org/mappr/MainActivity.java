@@ -54,6 +54,7 @@ import org.mappr.org.mappr.model.SearchesFragment;
 import org.mappr.org.mappr.model.ViewPageAdapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -62,6 +63,9 @@ public class MainActivity extends AppCompatActivity {
 
     public static List<MapprCategory> categoryList = new ArrayList<>();
     public static List<MapprBranch> branchesList = new ArrayList<>();
+
+    public static List<MapprCategory> parentCategoryList = new ArrayList<>();
+    public static HashMap<String, List<MapprCategory>> hmMapprCategory = new HashMap<>();
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -127,8 +131,8 @@ public class MainActivity extends AppCompatActivity {
         category.setIcon(R.drawable.category_icon);
         final TabLayout.Tab favorites = tabLayout.getTabAt(1);
         favorites.setIcon(R.drawable.favorites_icon);
-        final TabLayout.Tab recentSearches = tabLayout.getTabAt(2);
-        recentSearches.setIcon(R.drawable.searches_icon);
+//        final TabLayout.Tab recentSearches = tabLayout.getTabAt(2);
+//        recentSearches.setIcon(R.drawable.searches_icon);
     }
 
     //search by string
@@ -396,7 +400,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 3;
+            return 2;
         }
 
         @Override

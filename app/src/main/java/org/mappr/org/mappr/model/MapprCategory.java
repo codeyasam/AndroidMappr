@@ -55,8 +55,25 @@ public class MapprCategory {
         return CYM_Utility.getDecodeString(description);
     }
 
+    public String getParent_category_id() {
+        return parent_category_id;
+    }
+
+    public void setParent_category_id(String parent_category_id) {
+        this.parent_category_id = parent_category_id;
+    }
+
     public void setDescription(String description) {
         this.description = description;
+    }
+
+
+    public String getCateg_order() {
+        return categ_order;
+    }
+
+    public void setCateg_order(String categ_order) {
+        this.categ_order = categ_order;
     }
 
     public static MapprCategory instantiateJSONCategory(JSONObject jsonCategory) {
@@ -67,6 +84,8 @@ public class MapprCategory {
             category.setDescription(jsonCategory.getString("description"));
             category.setDisplay_picture(CYM_Utility.loadImageFromServer(CYM_Utility.MAPPR_PUBLIC_URL + jsonCategory.getString("display_picture"), 50, 50));
             category.setFeatured_category(jsonCategory.getString("featured_category"));
+            category.setParent_category_id(jsonCategory.getString("parent_category_id"));
+            category.setCateg_order(jsonCategory.getString("categ_order"));
             return category;
         } catch (Exception e) {
             e.printStackTrace();
@@ -74,11 +93,14 @@ public class MapprCategory {
         return null;
     }
 
+
     private String id;
     private String name;
     private String featured_category;
     private Bitmap display_picture;
     private String description;
+    private String parent_category_id;
+    private String categ_order;
 
     public static Bitmap getBitmapById(String categId) {
         try {

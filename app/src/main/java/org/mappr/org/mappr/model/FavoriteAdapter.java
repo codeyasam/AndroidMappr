@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by codeyasam on 6/17/16.
  */
-public class FavoriteAdapter extends ArrayAdapter<MapprBranch> {
+public class  FavoriteAdapter extends ArrayAdapter<MapprBranch> {
 
     Context context;
     List<MapprBranch> mapprBranches;

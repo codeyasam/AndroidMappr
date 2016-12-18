@@ -6,8 +6,7 @@
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center">
+    android:orientation="vertical">
 
     <GridView
         android:numColumns="3"
@@ -23,11 +22,11 @@
         />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:text="Loading Categories..."
         android:id="@+id/progressBar"
-        android:layout_gravity="center_horizontal" />
+        android:gravity="center" />
 
     <!--<ProgressBar-->
         <!--android:id="@+id/progressBar"-->
@@ -37,6 +36,13 @@
         <!--android:indeterminateDrawable="@drawable/progress"-->
         <!--android:layout_gravity="center">-->
     <!--</ProgressBar>-->
+
+    <ExpandableListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/expandableParentCateg"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp" />
 
 </LinearLayout>
 </android.support.v4.widget.SwipeRefreshLayout>

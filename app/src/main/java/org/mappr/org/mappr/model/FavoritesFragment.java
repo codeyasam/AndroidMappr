@@ -59,8 +59,10 @@ public class FavoritesFragment extends Fragment implements View.OnClickListener,
         view = inflater.inflate(R.layout.activity_favorites, container, false);
         swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.refreshFavs);
         swipeLayout.setOnRefreshListener(this);
+        settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
         listView = (ListView) view.findViewById(R.id.favBranchList);
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
 
@@ -77,7 +79,6 @@ public class FavoritesFragment extends Fragment implements View.OnClickListener,
         });
 
         MainActivity.branchesList = new ArrayList<>();
-        settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
         return view;
     }
 
@@ -168,8 +169,22 @@ public class FavoritesFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onRefresh() {
         String userId = settings.getString(MapprSession.LOGGED_USER_ID, "");
-        favoritesLoader = new FavoritesLoader(userId);
-        favoritesLoader.execute();
+
+
+        if (userId.isEmpty()) {
+            TextView loginTxt = (TextView) view.findViewById(R.id.loginTxt);
+            loginTxt.setVisibility(View.VISIBLE);
+            TextView loadingText = (TextView) view.findViewById(R.id.emptyBookmarkTxt);
+            loadingText.setVisibility(View.GONE);
+            swipeLayout.setRefreshing(false);
+            MainActivity.branchesList = new ArrayList<>();
+            ArrayAdapter<MapprBranch> adapter = new FavoriteAdapter(getActivity(), MainActivity.branchesList);
+            listView.setAdapter(adapter);
+        } else {
+            favoritesLoader = new FavoritesLoader(userId);
+            favoritesLoader.execute();
+        }
+
     }
 
     class FavoritesLoader extends AsyncTask<String, String, String> {

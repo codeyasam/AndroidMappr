@@ -2,6 +2,7 @@ package org.mappr;
 
 import android.app.ProgressDialog;
 import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
@@ -24,6 +25,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
@@ -144,7 +146,7 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
             String sourceLng = String.valueOf(mLastLocation.getLongitude());
             new DirectionRouter(sourceLat, sourceLng, destLat, destLng).execute();
             LatLng destLatlng = new LatLng(Double.parseDouble(destLat), Double.parseDouble(destLng));
-            mMap.addMarker(new MarkerOptions().position(destLatlng).title("Your destination"));
+            mMap.addMarker(new MarkerOptions().position(destLatlng).title("Your destination").icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.red_pin))));
             mMap.moveCamera(update);
         }
 

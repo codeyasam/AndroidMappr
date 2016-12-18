@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.AsyncTask;
@@ -280,10 +282,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 JSONObject json = JSONParser.makeHttpRequest(PLOTTER_URL, "GET", params);
                 JSONArray estabs = json.getJSONArray("Establishments");
 
-//                for (int i = 0; i< estabs.length(); i++) {
-//                    JSONObject eachEstab = estabs.getJSONObject(i);
-//                    hmEstablishment.put(eachEstab.getString("id"), MapprEstablishment.instantiateJSONEstablishment(eachEstab));
-//                }
 
                 JSONArray branches = json.getJSONArray("Branches");
                 for (int i = 0; i < branches.length(); i++) {
@@ -339,7 +337,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         if (mapperOpt.equals(CYM_Utility.OPT_BY_QRCODE)) {
                             if (eachBranch.getString("id").equals(branchID)) {
                                 implementSearchHistory(eachBranch, branchID);
-                                options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+                                options.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.blue_pin)));
                                 ll = new LatLng(Double.parseDouble(eachBranch.getString("lat")), Double.parseDouble(eachBranch.getString("lng")));
                                 qrMarkerId = eachBranch.getString("id");
                             }
@@ -378,6 +376,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         protected void onProgressUpdate(String... values) {
             super.onProgressUpdate(values);
             try {
+
                 JSONObject eachBranch = new JSONObject(values[0]);
                 LatLng latlng = new LatLng(Double.parseDouble(eachBranch.getString("lat")), Double.parseDouble(eachBranch.getString("lng")));
                 MarkerOptions options = new MarkerOptions()
@@ -392,7 +391,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 if (mapperOpt.equals(CYM_Utility.OPT_BY_QRCODE)) {
                     if (eachBranch.getString("id").equals(branchID)) {
                         implementSearchHistory(eachBranch, branchID);
-                        options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+                        options.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.blue_pin)));
                     }
                 }
 
