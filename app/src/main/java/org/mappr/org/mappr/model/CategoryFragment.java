@@ -30,6 +30,7 @@ import org.apache.http.NameValuePair;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -81,27 +82,6 @@ public class CategoryFragment extends Fragment implements SwipeRefreshLayout.OnR
     @Override
     public void onResume() {
         super.onResume();
-        // previous version of categories
-//        try {
-//            boolean result = CYM_Utility.isOnline(getActivity().getApplicationContext());
-//            if (result) {
-//                Log.i("poop", MainActivity.categoryList.size() + ": ");
-//                if (MainActivity.categoryList.isEmpty()) {
-//                    categorySearcher = new CategorySearcher();
-//                    categorySearcher.execute();
-//                } else {
-//                    CategoryAdapter categoryAdapter = new CategoryAdapter(getActivity().getApplicationContext(), MainActivity.categoryList);
-//                    progressBar.setVisibility(View.GONE);
-//                    categoryGrid.setVisibility(View.VISIBLE);
-//                    categoryGrid.setAdapter(categoryAdapter);
-//                    categoryGrid.setOnItemClickListener(customOnClickMethod());
-//                }
-//            } else {
-//                progressBar.setText("No Internet Connection");
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
 
         try {
             boolean result = CYM_Utility.isOnline(getActivity().getApplicationContext());
@@ -141,6 +121,23 @@ public class CategoryFragment extends Fragment implements SwipeRefreshLayout.OnR
             }
         });
 
+        expandableParentCategories.setOnScrollListener(new AbsListView.OnScrollListener() {
+
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (firstVisibleItem == 0 && listIsAtTop() && !swipeLayout.isRefreshing() && enableRefresh) {
+                    swipeLayout.setEnabled(true);
+                } else {
+                    swipeLayout.setEnabled(false);
+                }
+            }
+        });
+
         expandableAdapter = new ParentCategoryAdapter(getActivity().getApplicationContext(),
                 MainActivity.parentCategoryList, MainActivity.hmMapprCategory, getActivity());
         expandableParentCategories.setAdapter(expandableAdapter);
@@ -163,8 +160,14 @@ public class CategoryFragment extends Fragment implements SwipeRefreshLayout.OnR
 
     @Override
     public void onRefresh() {
-        categorySearcher = new CategorySearcher();
-        categorySearcher.execute();
+//        categorySearcher = new CategorySearcher();
+//        categorySearcher.execute();
+        MainActivity.parentCategoryList = new ArrayList<>();
+        MainActivity.hmMapprCategory = new HashMap<>();
+        expandableAdapter.notifyDataSetChanged();
+        expandableParentCategories.setVisibility(View.GONE);
+        progressBar.setVisibility(View.VISIBLE);
+        onResume();
     }
 
     class CategorySearcher extends AsyncTask<String, String, List<MapprCategory>> {
@@ -261,11 +264,18 @@ public class CategoryFragment extends Fragment implements SwipeRefreshLayout.OnR
             super.onPostExecute(result);
             if (result != null) {
                 try {
+                    if (swipeLayout.isRefreshing()) {
+                        swipeLayout.setRefreshing(false);
+                        expandableParentCategories.setVisibility(View.VISIBLE);
+                        progressBar.setVisibility(View.GONE);
+                    }
+
                     JSONObject json = new JSONObject(result);
                     JSONArray jsonArray = json.getJSONArray("ParentCategories");
                     for (int i = 0; i < jsonArray.length(); i++) {
                         new EachParentCategoryLoader(jsonArray.getJSONObject(i)).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     }
+                    enableRefresh = true;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
